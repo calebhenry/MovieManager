@@ -1,0 +1,1 @@
+C:\Users\caleb\Documents\MovieManager\moviemanager.client\obj\Debug\moviemanager.client.esproj.CoreCompileInputs.cache
