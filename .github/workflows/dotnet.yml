@@ -23,7 +23,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --logger "trx;LogFileName=test-results.trx" -results-directory "TestResults"
+      run: dotnet test --logger trx -results-directory "TestResults"
     - uses: actions/upload-artifact@v4
       if: success() || failure()
       with:
