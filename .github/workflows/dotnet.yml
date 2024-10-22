@@ -28,11 +28,11 @@ jobs:
       if: success() || failure()
       with:
         name: test-results
-        path: dotnet-nunit.xml
+        path: test-results.trx
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
         name: NUnit Tests
-        path: reports/*.trx
-        reporter: dotnet-nunit
+        path: TestResults/*.trx
+        reporter: dotnet-trx
