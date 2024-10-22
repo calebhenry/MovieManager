@@ -1,24 +1,27 @@
 ﻿using MovieManager.Server.Models;
+using MovieManager.Server.Repositories;
 
 namespace MovieManager.Server.Services
 {
     public class MovieService : IMovieService
     {
-        private List<Movie> movies;
+        private List<Movie> Movies;
+        private IMovieRepository MovieRepository;
 
-        public MovieService()
+        public MovieService(IMovieRepository repository)
         {
-            movies = new List<Movie>();
+            Movies = new List<Movie>();
+            MovieRepository = repository;
         }
 
         public List<Movie> GetMovies()
         {
-            return movies;
+            return MovieRepository.GetMovies();
         }
 
         public void AddMovie(Movie movie)
         {
-            movies.Add(movie);
+            MovieRepository.AddMovie(movie);
         }
     }
 }

@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<Showtime> Showtimes { get; set; }
+        public List<Ticket> Tickets { get; set; }
     }
 }
