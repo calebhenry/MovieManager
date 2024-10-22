@@ -22,8 +22,17 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-  test:
-    runs-on: ubuntu-latest
-    steps:
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - uses: actions/upload-artifact@v4  # upload test results
+      if: success() || failure()        # run this step even if previous step failed
+      with:
+        name: test-results
+        path: nunit.xml
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: NUnit Tests
+        path: reports/nunit.xml    # Path to test results
+        reporter: dotnet-nunit
