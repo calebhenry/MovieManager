@@ -4,3 +4,8 @@ GET {{MovieManager.Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{MovieManager.Server_HostAddress}}/movie/
+Accept: application/json
+
+###

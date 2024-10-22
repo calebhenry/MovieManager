@@ -17,9 +17,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpGet(Name = "GetMovies")]
-        public List<Movie> Get()
+        public IEnumerable<Movie> GetMovies()
         {
-            return movieService.GetMovies();
+            return movieService.GetMovies().ToArray();
         }
     }
 }

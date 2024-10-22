@@ -28,7 +28,6 @@ namespace MovieManager.Server.Repositories
                     Showtime = DateTime.UtcNow,
                     Price = 2.50,
                     NumAvailible = 20,
-                    Movie = movie1,
                 },
                 new Ticket()
                 {
@@ -37,7 +36,6 @@ namespace MovieManager.Server.Repositories
                     Showtime = DateTime.UtcNow.AddHours(-2),
                     Price = 2.0,
                     NumAvailible = 25,
-                    Movie = movie1,
                 }
             };
 
@@ -60,7 +58,6 @@ namespace MovieManager.Server.Repositories
                     Showtime = DateTime.UtcNow,
                     Price = 2.50,
                     NumAvailible = 20,
-                    Movie = movie1,
                 },
                 new Ticket()
                 {
@@ -69,11 +66,10 @@ namespace MovieManager.Server.Repositories
                     Showtime = DateTime.UtcNow.AddHours(-2),
                     Price = 2.0,
                     NumAvailible = 25,
-                    Movie = movie1,
                 }
             };
 
-            movie1.Tickets = ticket1;
+            movie1.Tickets = ticket2;
 
             Movies.Add(movie1);
             Movies.Add(movie2);

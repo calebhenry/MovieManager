@@ -46,7 +46,11 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
-            }
+            },
+            '^/movie': {
+                target,
+                secure: false
+            },
         },
         port: 5173,
         https: {

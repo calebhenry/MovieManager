@@ -1,0 +1,11 @@
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.home {
+    height: 100%;
+    width: 100%;
+    justify-content: flex-start;
+    align-content: center;
+}

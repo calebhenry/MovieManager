@@ -1,4 +1,6 @@
-﻿namespace MovieManager.Server.Models
+﻿using System.Text.Json.Serialization;
+
+namespace MovieManager.Server.Models
 {
     public class Ticket
     {
@@ -9,6 +11,7 @@
         public int NumAvailible { get; set; }
 
         // Here for the EF core link
+        [JsonIgnore]
         public Movie Movie { get; set; }
     }
 }

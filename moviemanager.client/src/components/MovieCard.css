@@ -1,0 +1,8 @@
+.movie-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    border-color: darkslategrey;
+    background-color: black;
+    max-width: 25vw;
+}
