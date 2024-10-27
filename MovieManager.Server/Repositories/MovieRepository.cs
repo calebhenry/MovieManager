@@ -85,5 +85,10 @@ namespace MovieManager.Server.Repositories
         {
             Movies.Add(movie);
         }
+
+        public void RemoveMovie(Movie movie) 
+        {
+            Movies.Remove(Movies.First(m => m.Id == movie.Id));
+        }
     }
 }

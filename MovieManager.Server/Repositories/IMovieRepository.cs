@@ -6,5 +6,6 @@ namespace MovieManager.Server.Repositories
     {
         public List<Movie> GetMovies();
         public void AddMovie(Movie movie);
+        public void RemoveMovie(Movie movie);
     }
 }
