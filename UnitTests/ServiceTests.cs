@@ -7,13 +7,13 @@ namespace UnitTests
 {
     public class ServiceTests
     {
-        private Mock<IMovieRepository> _mockRepository;
+        private Mock<MovieRepository> _mockRepository;
         private MovieService _movieService;
 
         [SetUp]
         public void Setup()
         {
-            _mockRepository = new Mock<IMovieRepository>();
+            _mockRepository = new Mock<MovieRepository>();
             _movieService = new MovieService(_mockRepository.Object);
         }
 

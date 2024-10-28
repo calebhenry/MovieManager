@@ -89,41 +89,41 @@ namespace MovieManager.Server.Repositories
             carts.Add(cart2);
         }
 
-        public List<Movie> GetMovies()
+        public virtual List<Movie> GetMovies()
         {
             return movies;
         }
 
-        public void AddMovie(Movie movie)
+        public virtual void AddMovie(Movie movie)
         {
             movies.Add(movie);
         }
 
-        public void RemoveMovie(Movie movie)
+        public virtual void RemoveMovie(Movie movie)
         {
             movies.Remove(movie);
         }
 
-        public List<Ticket> GetTickets() {
+        public virtual List<Ticket> GetTickets() {
             return tickets; 
         }
 
-        public void AddCart(Cart cart)
+        public virtual void AddCart(Cart cart)
         {
             carts.Add(cart);
         }
 
-        public void AddTicket(Ticket ticket)
+        public virtual void AddTicket(Ticket ticket)
         {
             tickets.Add(ticket);
         }
 
-        public void RemoveTicket(Ticket ticket)
+        public virtual void RemoveTicket(Ticket ticket)
         {
             tickets.Remove(ticket);
         }
 
-        public List<Cart> GetCarts() {
+        public virtual List<Cart> GetCarts() {
             return carts;
         }
     }
