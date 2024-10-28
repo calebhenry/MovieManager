@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieManager.Server.Models;
 using MovieManager.Server.Services;
+using System.Diagnostics.Eventing.Reader;
 using System.Net;
 
 namespace MovieManager.Server.Controllers
@@ -10,9 +11,9 @@ namespace MovieManager.Server.Controllers
     public class MovieController : ControllerBase
     {
 
-        private IMovieService movieService;
+        private MovieService movieService;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(MovieService movieService)
         {
             this.movieService = movieService;
         }
@@ -35,6 +36,24 @@ namespace MovieManager.Server.Controllers
         {
             movieService.RemoveMovie(movie);
             return HttpStatusCode.OK;
+        }
+
+        [HttpPut("removeticketfromcart")]
+        public Cart RemoveTicketFromCart(int ticketId, int cartId)
+        { 
+            var cart = movieService.RemoveTicket(ticketId, cartId);
+            if (cart != null)
+            {
+                return cart;
+            }
+            else
+            {
+                cart = new Cart();
+                cart.Id = ticketId;
+                cart.Tickets = new List<Ticket>();
+                movieService.AddCart(cart);
+                return cart;
+            }
         }
     }
 }

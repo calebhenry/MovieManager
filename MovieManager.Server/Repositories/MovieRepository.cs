@@ -3,14 +3,17 @@ using System;
 
 namespace MovieManager.Server.Repositories
 {
-    public class MovieRepository : IMovieRepository
+    public class MovieRepository 
     {
-        private List<Movie> Movies;
-        private List<Cart> Carts;
+        private List<Movie> movies;
+        private List<Cart> carts;
+        private List<Ticket> tickets;
 
         public MovieRepository() 
         {
-            Movies = new List<Movie>();
+            movies = new List<Movie>();
+            carts = new List<Cart>();
+            tickets = new List<Ticket>();
             Movie movie1 = new Movie() 
             {
                 Id = 1,
@@ -69,26 +72,59 @@ namespace MovieManager.Server.Repositories
                 }
             };
 
-            movie1.Tickets = ticket2;
-
-            Movies.Add(movie1);
-            Movies.Add(movie2);
-            Carts = new();
+            movie2.Tickets = ticket2;
+            tickets.Add(ticket2[0]);
+            tickets.Add(ticket2[1]);
+            tickets.Add(ticket1[0]);
+            tickets.Add(ticket1[1]);
+            movies.Add(movie1);
+            movies.Add(movie2);
+            Cart cart1 = new Cart();
+            cart1.Id = 0;
+            cart1.Tickets = new List<Ticket>() { ticket1[0], ticket2[0] };
+            Cart cart2 = new Cart();
+            cart2.Id = 0;
+            cart2.Tickets = new List<Ticket>() { ticket1[1], ticket2[1] };
+            carts.Add(cart1);
+            carts.Add(cart2);
         }
 
         public List<Movie> GetMovies()
         {
-            return Movies;
+            return movies;
         }
 
         public void AddMovie(Movie movie)
         {
-            Movies.Add(movie);
+            movies.Add(movie);
         }
 
-        public void RemoveMovie(Movie movie) 
+        public void RemoveMovie(Movie movie)
         {
-            Movies.Remove(Movies.First(m => m.Id == movie.Id));
+            movies.Remove(movie);
+        }
+
+        public List<Ticket> GetTickets() {
+            return tickets; 
+        }
+
+        public void AddCart(Cart cart)
+        {
+            carts.Add(cart);
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            tickets.Add(ticket);
+        }
+
+        public void RemoveTicket(Ticket ticket)
+        {
+            tickets.Remove(ticket);
+        }
+
+        public List<Cart> GetCarts() {
+            return carts;
         }
     }
 }

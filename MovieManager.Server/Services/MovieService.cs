@@ -1,27 +1,61 @@
-﻿using MovieManager.Server.Models;
+using MovieManager.Server.Models;
 using MovieManager.Server.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieManager.Server.Services
 {
-    public class MovieService : IMovieService
+    public class MovieService
     {
-        private List<Movie> Movies;
-        private IMovieRepository MovieRepository;
+        private MovieRepository movieRepository;
 
-        public MovieService(IMovieRepository repository)
+        public MovieService(MovieRepository repository)
         {
-            Movies = new List<Movie>();
-            MovieRepository = repository;
+            movieRepository = repository;
         }
 
         public List<Movie> GetMovies()
         {
-            return MovieRepository.GetMovies();
+            return movieRepository.GetMovies();
         }
 
         public void AddMovie(Movie movie)
         {
-            MovieRepository.AddMovie(movie);
+            movieRepository.AddMovie(movie);
+        }
+
+        public void RemoveTicket(Ticket ticket)
+        {
+            movieRepository.RemoveTicket(ticket);
+        }
+
+        public void AddCart(Cart cart)
+        {
+            movieRepository.AddCart(cart);
+        }
+
+        public Cart? RemoveTicket(int ticketId, int cartId)
+        {
+            foreach (var cart in movieRepository.GetCarts())
+            {
+                if (cart.Id == cartId)
+                {
+                    foreach (var ticket in cart.Tickets)
+                    {
+                        if (ticket.Id == ticketId)
+                        {
+                            cart.Tickets.Remove(ticket);
+                            return cart;
+                        }
+                    }
+                    return cart;
+                }
+            }
+            return null;
+        }
+
+        public void RemoveMovie(Movie movie)
+        {
+            MovieRepository.RemoveMovie(movie);
         }
 
         public void RemoveMovie(Movie movie)
