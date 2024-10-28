@@ -1,4 +1,4 @@
-﻿using MovieManager.Server.Models;
+using MovieManager.Server.Models;
 using System;
 
 namespace MovieManager.Server.Repositories

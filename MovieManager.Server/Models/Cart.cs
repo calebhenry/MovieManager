@@ -1,4 +1,4 @@
-﻿namespace MovieManager.Server.Models
+namespace MovieManager.Server.Models
 {
     public class Cart
     {
