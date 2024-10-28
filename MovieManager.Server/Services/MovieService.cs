@@ -55,12 +55,7 @@ namespace MovieManager.Server.Services
 
         public void RemoveMovie(Movie movie)
         {
-            MovieRepository.RemoveMovie(movie);
-        }
-
-        public void RemoveMovie(Movie movie)
-        {
-            MovieRepository.RemoveMovie(movie);
+            movieRepository.RemoveMovie(movie);
         }
     }
 }
