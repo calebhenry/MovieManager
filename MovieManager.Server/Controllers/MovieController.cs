@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieManager.Server.Models;
 using MovieManager.Server.Services;
+using System.Net;
 
 namespace MovieManager.Server.Controllers
 {
@@ -16,10 +17,24 @@ namespace MovieManager.Server.Controllers
             this.movieService = movieService;
         }
 
-        [HttpGet(Name = "GetMovies")]
+        [HttpGet("getmovies", Name = "GetMovies")]
         public IEnumerable<Movie> GetMovies()
         {
             return movieService.GetMovies().ToArray();
+        }
+
+        [HttpPost("addmovie", Name = "AddMovie")]
+        public HttpStatusCode AddMovie(Movie movie)
+        {
+            movieService.AddMovie(movie);
+            return HttpStatusCode.OK;
+        }
+
+        [HttpPost("removemovie", Name = "RemoveMovie")]
+        public HttpStatusCode RemoveMovie(Movie movie)
+        {
+            movieService.RemoveMovie(movie);
+            return HttpStatusCode.OK;
         }
     }
 }
