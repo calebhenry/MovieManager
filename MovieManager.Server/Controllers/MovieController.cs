@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieManager.Server.Models;
 using MovieManager.Server.Services;
+using System.Diagnostics.Eventing.Reader;
 using System.Net;
 
 namespace MovieManager.Server.Controllers
@@ -35,6 +36,25 @@ namespace MovieManager.Server.Controllers
         {
             movieService.RemoveMovie(movie);
             return HttpStatusCode.OK;
+        }
+
+        [HttpPut("removeticketfromcart")]
+        public Cart RemoveTicketFromCart(int ticketId, int cartId)
+        { 
+            var cart = movieService.RemoveTicket(ticketId, cartId);
+            if (cart != null)
+            {
+                return cart;
+            }
+            else
+            {
+                // todo return error code instead
+                cart = new Cart();
+                cart.Id = ticketId;
+                cart.Tickets = new List<Ticket>();
+                movieService.AddCart(cart);
+                return cart;
+            }
         }
     }
 }
