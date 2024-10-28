@@ -23,5 +23,10 @@ namespace MovieManager.Server.Services
         {
             MovieRepository.AddMovie(movie);
         }
+
+        public void RemoveMovie(Movie movie)
+        {
+            MovieRepository.RemoveMovie(movie);
+        }
     }
 }
