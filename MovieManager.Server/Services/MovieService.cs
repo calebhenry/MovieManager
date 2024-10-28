@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieManager.Server.Services
 {
-    public class MovieService
+    public class MovieService : IMovieService
     {
-        private MovieRepository movieRepository;
+        private IMovieRepository movieRepository;
 
-        public MovieService(MovieRepository repository)
+        public MovieService(IMovieRepository repository)
         {
             movieRepository = repository;
         }

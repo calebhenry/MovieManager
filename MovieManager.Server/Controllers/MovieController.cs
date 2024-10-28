@@ -11,9 +11,9 @@ namespace MovieManager.Server.Controllers
     public class MovieController : ControllerBase
     {
 
-        private MovieService movieService;
+        private IMovieService movieService;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService)
         {
             this.movieService = movieService;
         }
@@ -48,6 +48,7 @@ namespace MovieManager.Server.Controllers
             }
             else
             {
+                // todo return error code instead
                 cart = new Cart();
                 cart.Id = ticketId;
                 cart.Tickets = new List<Ticket>();

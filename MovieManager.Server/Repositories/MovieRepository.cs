@@ -3,18 +3,18 @@ using System;
 
 namespace MovieManager.Server.Repositories
 {
-    public class MovieRepository 
+    public class MovieRepository : IMovieRepository
     {
         private List<Movie> movies;
         private List<Cart> carts;
         private List<Ticket> tickets;
 
-        public MovieRepository() 
+        public MovieRepository()
         {
             movies = new List<Movie>();
             carts = new List<Cart>();
             tickets = new List<Ticket>();
-            Movie movie1 = new Movie() 
+            Movie movie1 = new Movie()
             {
                 Id = 1,
                 Name = "Grand Budapest Hotel",
@@ -89,41 +89,43 @@ namespace MovieManager.Server.Repositories
             carts.Add(cart2);
         }
 
-        public virtual List<Movie> GetMovies()
+        public List<Movie> GetMovies()
         {
             return movies;
         }
 
-        public virtual void AddMovie(Movie movie)
+        public void AddMovie(Movie movie)
         {
             movies.Add(movie);
         }
 
-        public virtual void RemoveMovie(Movie movie)
+        public void RemoveMovie(Movie movie)
         {
             movies.Remove(movie);
         }
 
-        public virtual List<Ticket> GetTickets() {
-            return tickets; 
+        public List<Ticket> GetTickets()
+        {
+            return tickets;
         }
 
-        public virtual void AddCart(Cart cart)
+        public void AddCart(Cart cart)
         {
             carts.Add(cart);
         }
 
-        public virtual void AddTicket(Ticket ticket)
+        public void AddTicket(Ticket ticket)
         {
             tickets.Add(ticket);
         }
 
-        public virtual void RemoveTicket(Ticket ticket)
+        public void RemoveTicket(Ticket ticket)
         {
             tickets.Remove(ticket);
         }
 
-        public virtual List<Cart> GetCarts() {
+        public List<Cart> GetCarts()
+        {
             return carts;
         }
     }
