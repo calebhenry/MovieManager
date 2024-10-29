@@ -38,16 +38,6 @@ namespace MovieManager.Server.Controllers
             return HttpStatusCode.OK;
         }
 
-        [HttpPost("addtickettocart", Name = "AddTicketToCart")]
-        public HttpStatusCode AddTicketToCart(int cartId, int ticketId, int quantity)
-        {
-            if (movieService.AddTicketToCart(cartId, ticketId, quantity))
-            {
-                return HttpStatusCode.OK;
-            }
-            return HttpStatusCode.NotFound;
-        }
-
         [HttpPut("removeticketfromcart")]
         public Cart RemoveTicketFromCart(int ticketId, int cartId)
         { 
@@ -61,7 +51,7 @@ namespace MovieManager.Server.Controllers
                 // todo return error code instead
                 cart = new Cart();
                 cart.Id = ticketId;
-                cart.Tickets = new Dictionary<Ticket, int>();
+                cart.Tickets = new List<Ticket>();
                 movieService.AddCart(cart);
                 return cart;
             }
