@@ -73,7 +73,6 @@ namespace MovieManager.Server.Repositories
 
             Movies.Add(movie1);
             Movies.Add(movie2);
-            Carts = new();
         }
 
         public List<Movie> GetMovies()
@@ -89,6 +88,44 @@ namespace MovieManager.Server.Repositories
         public void RemoveMovie(Movie movie) 
         {
             Movies.Remove(Movies.First(m => m.Id == movie.Id));
+        }
+
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            if(!string.IsNullOrEmpty(cardNumber) && !string.IsNullOrEmpty(exp) && !string.IsNullOrEmpty(cardholderName) && !string.IsNullOrEmpty(cvc))
+            {
+                throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
+            }
+
+            if(cardNumber.Length != 16)
+            {
+                throw new ArgumentException("Card number is invalid. Payment could not be processed.");
+            }
+
+            if(cvc.Length != 3)
+            {
+                throw new ArgumentException("CVC is invalid. Payment could not be processed.");
+            }
+
+            if(exp.Length != 6)
+            {
+                throw new ArgumentException("Expiration date is invalid. Payment could not be processed.");
+            }
+
+            string currentMonth = DateTime.Now.ToString("MM");
+            string currentYear = DateTime.Now.ToString("yyyy");
+
+            int month = (int)exp[0..2];
+            int year = (int)exp[2..6];
+
+            if(year < currentYear || (year == currentYear && month < currentMonth))
+            {
+                throw new ArgumentException("Card is expired. Payment could not be processed.");
+            }
+
+            //update ticket quantities- has to be done after Dylan's PR since he's changing the cart class
+
+            //empty cart- has to be done after Dylan's PR since he's changing the cart class
         }
     }
 }

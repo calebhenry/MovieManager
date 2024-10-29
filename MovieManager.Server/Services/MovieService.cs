@@ -28,5 +28,10 @@ namespace MovieManager.Server.Services
         {
             MovieRepository.RemoveMovie(movie);
         }
+
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            MovieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+        }
     }
 }
