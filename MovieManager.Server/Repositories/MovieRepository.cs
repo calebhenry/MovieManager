@@ -92,7 +92,7 @@ namespace MovieManager.Server.Repositories
 
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
-            if(!string.IsNullOrEmpty(cardNumber) && !string.IsNullOrEmpty(exp) && !string.IsNullOrEmpty(cardholderName) && !string.IsNullOrEmpty(cvc))
+            if(string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
             {
                 throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
             }
@@ -112,13 +112,10 @@ namespace MovieManager.Server.Repositories
                 throw new ArgumentException("Expiration date is invalid. Payment could not be processed.");
             }
 
-            string currentMonth = DateTime.Now.ToString("MM");
-            string currentYear = DateTime.Now.ToString("yyyy");
+            int month = int.Parse(exp[0..2]);
+            int year = int.Parse(exp[2..6]);
 
-            int month = (int)exp[0..2];
-            int year = (int)exp[2..6];
-
-            if(year < currentYear || (year == currentYear && month < currentMonth))
+            if(year < DateTime.Now.Year || (year == DateTime.Now.Year && month < DateTime.Now.Month))
             {
                 throw new ArgumentException("Card is expired. Payment could not be processed.");
             }
