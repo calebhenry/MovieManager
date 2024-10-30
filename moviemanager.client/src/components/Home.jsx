@@ -11,7 +11,7 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await fetch('movie');  // Replace with your API endpoint
+                const response = await fetch('movie/getmovies');  // Replace with your API endpoint
                 const data = await response.json();
                 setMovies(data);
             } catch (error) {

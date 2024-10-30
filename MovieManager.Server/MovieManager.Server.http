@@ -1,11 +1,14 @@
+<<<<<<< HEAD
 @MovieManager.Server_HostAddress = http://localhost:5018
 
-GET {{MovieManager.Server_HostAddress}}/weatherforecast/
+GET {{MovieManager.Server_HostAddress}}/movie
 Accept: application/json
 
-###
+=======
+@MovieManager.Server_HostAddress = http://localhost:5018
 
 GET {{MovieManager.Server_HostAddress}}/movie/
 Accept: application/json
 
+>>>>>>> added removedTicketFromCart
 ###
