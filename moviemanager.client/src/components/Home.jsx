@@ -1,7 +1,3 @@
-/**
- * @author Caleb Henry
- */
-
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import '../components/Home.css';
@@ -9,6 +5,7 @@ import '../components/Home.css';
 const Home = () => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); // For error state handling
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -17,6 +14,7 @@ const Home = () => {
                 const data = await response.json();
                 setMovies(data);
             } catch (error) {
+                setError('Failed to fetch movies. Please try again later.'); // Handle the error
                 console.error('Error fetching movies:', error);
             } finally {
                 setLoading(false);
@@ -26,23 +24,32 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <p>Loading movies...</p>;
+        return <div className="spinner">Loading movies...</div>;  // Use a CSS spinner here
+    }
+
+    if (error) {
+        return <p className="error-message">{error}</p>; // Display the error message
     }
 
     return (
-        <div className="home">
-            <h1>Movie List</h1>
-            <div className="movie-grid">
-                {movies.length > 0 ? (
-                    movies.map((movie) => (
-                        <MovieCard key={movie.id} movie={movie} />
-                    ))
-                ) : (
-                    <p>No movies available</p>
-                )}
+        <div className="body">
+            <div className="nav">
+                <h1>Movie List</h1>
+            </div>
+            <div className="home">
+                <div className="movie-grid">
+                    {movies.length > 0 ? (
+                        movies.map((movie) => (
+                            <MovieCard key={movie.id} movie={movie} />
+                        ))
+                    ) : (
+                        <p>No movies available</p>
+                    )}
+                </div>
             </div>
         </div>
     );
+    
 }
 
 export default Home;
