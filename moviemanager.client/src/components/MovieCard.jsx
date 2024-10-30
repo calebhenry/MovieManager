@@ -1,13 +1,14 @@
 import React from 'react';
 import './MovieCard.css';
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, onClick }) {
     return (
-        <div className="movie-card">
+        <div className="movie-card" onClick={onClick}>
             {movie.posterUrl && <img src={movie.posterUrl} alt={`${movie.name} poster`} className="movie-poster" />}
             <div className="movie-details">
                 <h2 className="movie-title">{movie.name}</h2>
                 <p className="movie-description">{movie.description}</p>
+                <p className="movie-id">{movie.id}</p>
                 <div className="ticket-section">
                     <h3>Tickets</h3>
                     {movie.tickets && movie.tickets.length > 0 ? (

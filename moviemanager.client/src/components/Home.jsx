@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import '../components/Home.css';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
@@ -23,6 +24,10 @@ const Home = () => {
         fetchMovies();
     }, []);
 
+    const handleMovieClick = (id) => {
+        navigate(`/movie/${id}`); // Navigate to the movie details page with the movie ID
+    };
+
     if (loading) {
         return <div className="spinner">Loading movies...</div>;  // Use a CSS spinner here
     }
@@ -40,7 +45,7 @@ const Home = () => {
                 <div className="movie-grid">
                     {movies.length > 0 ? (
                         movies.map((movie) => (
-                            <MovieCard key={movie.id} movie={movie} />
+                            <MovieCard key={movie.id} movie={movie} onClick={() => handleMovieClick(movie.id)} />
                         ))
                     ) : (
                         <p>No movies available</p>
