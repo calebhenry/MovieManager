@@ -7,13 +7,11 @@ namespace MovieManager.Server.Repositories
     {
         private List<Movie> movies;
         private List<Cart> carts;
-        //private List<Ticket> tickets;
 
         public MovieRepository()
         {
             movies = new List<Movie>();
             carts = new List<Cart>();
-            //tickets = new List<Ticket>();
             Movie movie1 = new Movie()
             {
                 Id = 1,
