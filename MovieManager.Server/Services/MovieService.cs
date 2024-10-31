@@ -41,9 +41,9 @@ namespace MovieManager.Server.Services
                 {
                     foreach (var ticket in cart.Tickets)
                     {
-                        if (ticket.Key.Id == ticketId)
+                        if (ticket.TicketId == ticketId)
                         {
-                            cart.Tickets.Remove(ticket.Key);
+                            cart.Tickets.Remove(ticket);
                             return cart;
                         }
                     }
@@ -68,16 +68,25 @@ namespace MovieManager.Server.Services
             }
             Ticket ticket = tickets.First();
             // assuming we decrement numAvailable only after they checkout
-            var ticketsInCarts = (from i in movieRepository.GetCarts() where i.Tickets.ContainsKey(ticket) select i.Tickets[ticket]).Sum();
+            var ticketsInCarts = movieRepository.GetCarts().SelectMany(c => c.Tickets).Where(t => t.TicketId == ticket.Id).Sum(item => item.Quantity);
             if (ticket.NumAvailible < quantity + ticketsInCarts)
             {
                 return false;
             }
-            if (!cart.Tickets.ContainsKey(ticket))
+            if (!cart.Tickets.Exists(t => t.TicketId == ticket.Id))
             {
-                cart.Tickets[ticket] = 0;
+                var cartItem = new CartItem
+                {
+                    Id = cart.Tickets.Count,
+                    CartId = cart.Id,
+                    TicketId = ticket.Id,
+                    Quantity = 0,
+                    Cart = cart,
+                    Ticket = ticket
+                };
+                cart.Tickets.Add(cartItem);
             }
-            cart.Tickets[ticket] += quantity;
+            cart.Tickets.First(t => t.TicketId == ticket.Id).Quantity += quantity;
             return true;
         }
 

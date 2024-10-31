@@ -61,7 +61,7 @@ namespace MovieManager.Server.Controllers
                 // todo return error code instead
                 cart = new Cart();
                 cart.Id = ticketId;
-                cart.Tickets = new Dictionary<Ticket, int>();
+                cart.Tickets = new List<CartItem>();
                 movieService.AddCart(cart);
                 return cart;
             }
