@@ -8,28 +8,19 @@ const Movie = ({ addToCart }) => {
   const [error, setError] = useState(null); // Add error state
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        console.log(`Fetching movie details for ID: ${movieId}`); // Debugging log to check the movieId
-        const response = await fetch(`/movie/${movieId}`); // Fetch movie by movieId from URL
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch movie details');
+    const fetchMovies = async () => {
+        try {
+            const response = await fetch('movie/getmovies'); 
+            const data = await response.json();
+            setMovies(data);
+        } catch (error) {
+            setError('Failed to fetch movies. Please try again later.'); // Handle the error
+        } finally {
+            setLoading(false);
         }
-
-        const data = await response.json();
-        console.log('Movie data fetched:', data); // Debugging log to check the data being fetched
-        setMovie(data); // Set the movie details in state
-      } catch (error) {
-        console.error('Error fetching movie details:', error); // Improved error logging
-        setError('Failed to fetch movie details. Please try again later.');
-      } finally {
-        setLoading(false); // Set loading to false after API call finishes
-      }
-    };
-
-    fetchMovieDetails();
-  }, [movieId]); // Depend on movieId from URL
+    }
+    fetchMovies();
+  }, []); // Depend on movieId from URL
 
   // Conditional rendering based on states
   if (loading) return <p>Loading...</p>; // Show loading message while fetching

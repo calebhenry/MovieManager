@@ -1,10 +1,11 @@
 import React from 'react';
 import './MovieCard.css';
 
-function MovieCard({ movie, onClick }) {
+function MovieCard({ movie }) {
+
     return (
-        <div className="movie-card" onClick={onClick}>
-            {movie.posterUrl && <img src={movie.posterUrl} alt={`${movie.name} poster`} className="movie-poster" />}
+        <div className="movie-card" >
+            {/* {movie.posterUrl && <img src={movie.posterUrl} alt={`${movie.name} poster`} className="movie-poster" />} */}
             <div className="movie-details">
                 <h2 className="movie-title">{movie.name}</h2>
                 <p className="movie-description">{movie.description}</p>
