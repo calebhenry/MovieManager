@@ -56,5 +56,17 @@ namespace MovieManager.Server.Controllers
                 return cart;
             }
         }
+
+        [HttpPost("processpayment", Name = "ProcessPayment")]
+        public HttpStatusCode ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            try
+            {
+                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                return HttpStatusCode.OK;
+            } catch (ArgumentException ex) {
+                return HttpStatusCode.BadRequest;
+            }
+        }
     }
 }

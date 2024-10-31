@@ -45,5 +45,16 @@ namespace UnitTests
             _movieService.RemoveMovie(movie);
             _mockRepository.Verify(repo => repo.RemoveMovie(movie), Times.Once);
         }
+
+        [Test]
+        public void ProcessPayment_CallsRepositoryProcessPayment()
+        {
+            var movie1 = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var movie2 = new Movie { Id = 2, Name = "Movie 2", Description = "Description 2" }
+            var ticket1 = new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailable = 20 }
+            var ticket2 = new Tikcet { Id = 2, MovieId = 2, Showtime = DateTime.UtcNow.AddHours(-2), Price = 2.0, NumAvailible = 25 }
+
+            //have to finish the rest of the test after Dylan's PR gets merged due to changes in the cart class
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace MovieManager.Server.Repositories
         List<Ticket> GetTickets();
         void RemoveMovie(Movie movie);
         void RemoveTicket(Ticket ticket);
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
     }
 }

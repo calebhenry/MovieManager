@@ -10,5 +10,6 @@ namespace MovieManager.Server.Services
         void RemoveMovie(Movie movie);
         Cart? RemoveTicket(int ticketId, int cartId);
         void RemoveTicket(Ticket ticket);
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
     }
 }
