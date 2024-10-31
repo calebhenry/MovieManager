@@ -4,9 +4,12 @@ namespace MovieManager.Server.Services
 {
     public interface IMovieService
     {
-        public List<Movie> GetMovies();
-        public void AddMovie(Movie movie);
-        public void RemoveMovie(Movie movie);
+        void AddCart(Cart cart);
+        void AddMovie(Movie movie);
+        List<Movie> GetMovies();
+        void RemoveMovie(Movie movie);
+        Cart? RemoveTicket(int ticketId, int cartId);
+        void RemoveTicket(Ticket ticket);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
     }
 }
