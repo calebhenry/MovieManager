@@ -41,9 +41,9 @@ namespace MovieManager.Server.Services
                 {
                     foreach (var ticket in cart.Tickets)
                     {
-                        if (ticket.Id == ticketId)
+                        if (ticket.Key.Id == ticketId)
                         {
-                            cart.Tickets.Remove(ticket);
+                            cart.Tickets.Remove(ticket.Key);
                             return cart;
                         }
                     }
@@ -53,6 +53,34 @@ namespace MovieManager.Server.Services
             return null;
         }
 
+        public bool AddTicketToCart(int cartId, int ticketId, int quantity)
+        {
+            var carts = (from i in movieRepository.GetCarts() where i.Id == cartId select i).ToList();
+            if (carts.Count == 0)
+            {
+                return false;
+            }
+            Cart cart = carts.First();
+            var tickets = (from i in movieRepository.GetTickets() where i.Id == ticketId select i).ToList();
+            if (tickets.Count == 0)
+            {
+                return false;
+            }
+            Ticket ticket = tickets.First();
+            // assuming we decrement numAvailable only after they checkout
+            var ticketsInCarts = (from i in movieRepository.GetCarts() where i.Tickets.ContainsKey(ticket) select i.Tickets[ticket]).Sum();
+            if (ticket.NumAvailible < quantity + ticketsInCarts)
+            {
+                return false;
+            }
+            if (!cart.Tickets.ContainsKey(ticket))
+            {
+                cart.Tickets[ticket] = 0;
+            }
+            cart.Tickets[ticket] += quantity;
+            return true;
+        }
+
         public void RemoveMovie(Movie movie)
         {
             movieRepository.RemoveMovie(movie);
@@ -60,7 +88,7 @@ namespace MovieManager.Server.Services
 
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
-            MovieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
         }
     }
 }

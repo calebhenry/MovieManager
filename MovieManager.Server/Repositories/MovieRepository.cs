@@ -77,14 +77,20 @@ namespace MovieManager.Server.Repositories
             tickets.Add(ticket2[1]);
             tickets.Add(ticket1[0]);
             tickets.Add(ticket1[1]);
+            Dictionary<Ticket, int> tickets1 = new Dictionary<Ticket, int>();
+            Dictionary<Ticket, int> tickets2 = new Dictionary<Ticket, int>();
+            tickets1[ticket1[0]] = 3;
+            tickets1[ticket1[1]] = 2;
+            tickets2[ticket2[0]] = 1;
+            tickets2[ticket2[1]] = 5;
             movies.Add(movie1);
             movies.Add(movie2);
             Cart cart1 = new Cart();
             cart1.Id = 0;
-            cart1.Tickets = new List<Ticket>() { ticket1[0], ticket2[0] };
+            cart1.Tickets = tickets1;
             Cart cart2 = new Cart();
-            cart2.Id = 0;
-            cart2.Tickets = new List<Ticket>() { ticket1[1], ticket2[1] };
+            cart2.Id = 1;
+            cart2.Tickets = tickets2;
             carts.Add(cart1);
             carts.Add(cart2);
         }
