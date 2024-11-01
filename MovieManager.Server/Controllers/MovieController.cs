@@ -38,6 +38,16 @@ namespace MovieManager.Server.Controllers
             return HttpStatusCode.OK;
         }
 
+        [HttpPost("addtickettocart", Name = "AddTicketToCart")]
+        public HttpStatusCode AddTicketToCart(int cartId, int ticketId, int quantity)
+        {
+            if (movieService.AddTicketToCart(cartId, ticketId, quantity))
+            {
+                return HttpStatusCode.OK;
+            }
+            return HttpStatusCode.NotFound;
+        }
+
         [HttpPut("removeticketfromcart")]
         public Cart RemoveTicketFromCart(int ticketId, int cartId)
         { 
@@ -51,9 +61,21 @@ namespace MovieManager.Server.Controllers
                 // todo return error code instead
                 cart = new Cart();
                 cart.Id = ticketId;
-                cart.Tickets = new List<Ticket>();
+                cart.Tickets = new List<CartItem>();
                 movieService.AddCart(cart);
                 return cart;
+            }
+        }
+
+        [HttpPost("processpayment", Name = "ProcessPayment")]
+        public HttpStatusCode ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            try
+            {
+                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                return HttpStatusCode.OK;
+            } catch (ArgumentException ex) {
+                return HttpStatusCode.BadRequest;
             }
         }
     }
