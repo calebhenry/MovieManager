@@ -8,10 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest --ci --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
     "@babel/preset-env": "^7.26.0",
+    "jest-junit": "^16.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
@@ -38,5 +39,14 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "vite": "^5.4.8"
+  },
+  "jest-junit": {
+    "outputDirectory": "reports",
+    "outputName": "jest-junit.xml",
+    "ancestorSeparator": " › ",
+    "uniqueOutputName": "false",
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
   }
 }
