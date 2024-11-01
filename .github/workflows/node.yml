@@ -21,10 +21,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.402
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
@@ -32,8 +28,6 @@ jobs:
         cache: 'npm'
         cache-dependency-path: moviemanager.client/package-lock.json
     - run: npm ci
-      working-directory: ./moviemanager.client
-    - run: npm run build --if-present
       working-directory: ./moviemanager.client
     - run: npm test
       working-directory: ./moviemanager.client
