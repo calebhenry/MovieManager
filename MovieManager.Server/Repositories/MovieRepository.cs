@@ -7,13 +7,11 @@ namespace MovieManager.Server.Repositories
     {
         private List<Movie> movies;
         private List<Cart> carts;
-        private List<Ticket> tickets;
 
         public MovieRepository()
         {
             movies = new List<Movie>();
             carts = new List<Cart>();
-            tickets = new List<Ticket>();
             Movie movie1 = new Movie()
             {
                 Id = 1,
@@ -73,18 +71,54 @@ namespace MovieManager.Server.Repositories
             };
 
             movie2.Tickets = ticket2;
-            tickets.Add(ticket2[0]);
-            tickets.Add(ticket2[1]);
-            tickets.Add(ticket1[0]);
-            tickets.Add(ticket1[1]);
             movies.Add(movie1);
             movies.Add(movie2);
+
             Cart cart1 = new Cart();
+
             cart1.Id = 0;
-            cart1.Tickets = new List<Ticket>() { ticket1[0], ticket2[0] };
+            List<CartItem> cartItems1 = new List<CartItem>();
+            for (int i = 0; i < ticket1.Count; i++)
+            {
+                var ticket = ticket1[i];
+                cartItems1.Add(
+                    new CartItem()
+                    {
+                        Id = i,
+                        CartId = 0,
+                        TicketId = ticket.Id,
+                        Quantity = 5,
+                        Cart = cart1,
+                        Ticket = ticket
+
+                    }
+                );
+            }
+
+            cart1.Tickets = cartItems1;
+
             Cart cart2 = new Cart();
-            cart2.Id = 0;
-            cart2.Tickets = new List<Ticket>() { ticket1[1], ticket2[1] };
+            cart2.Id = 1;
+
+            List<CartItem> cartItems2 = new List<CartItem>();
+            for (int i = 0; i < ticket2.Count; i++)
+            {
+                var ticket = ticket2[i];
+                cartItems2.Add(
+                    new CartItem()
+                    {
+                        Id = i,
+                        CartId = 0,
+                        TicketId = ticket.Id,
+                        Quantity = 4,
+                        Cart = cart1,
+                        Ticket = ticket
+
+                    }
+                );
+            }
+
+            cart2.Tickets = cartItems2;
             carts.Add(cart1);
             carts.Add(cart2);
         }
@@ -106,7 +140,7 @@ namespace MovieManager.Server.Repositories
 
         public List<Ticket> GetTickets()
         {
-            return tickets;
+            return movies.SelectMany(m => m.Tickets).ToList();
         }
 
         public void AddCart(Cart cart)
@@ -116,12 +150,12 @@ namespace MovieManager.Server.Repositories
 
         public void AddTicket(Ticket ticket)
         {
-            tickets.Add(ticket);
+            movies.First(m => m.Id == ticket.MovieId).Tickets.Add(ticket);
         }
 
         public void RemoveTicket(Ticket ticket)
         {
-            tickets.Remove(ticket);
+            movies.First(m => m.Id == ticket.MovieId).Tickets.Remove(ticket);
         }
 
         public List<Cart> GetCarts()
