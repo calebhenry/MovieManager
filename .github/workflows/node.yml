@@ -27,8 +27,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+      working-directory: ./moviemanager.client
     - run: npm run build --if-present
+      working-directory: ./moviemanager.client
     - run: npm test
+      working-directory: ./moviemanager.client
     - uses: actions/upload-artifact@v4  # upload test results
       if: success() || failure()        # run this step even if previous step failed
       with:
