@@ -61,6 +61,7 @@ namespace MovieManager.Server.Controllers
         {
             return movieService.GetTickets(movieId).ToArray();
         }
+        [HttpGet("getcart", Name = "GetCart")]
         public Cart GetCart(int cartId)
         {
             return movieService.GetCart(cartId);
