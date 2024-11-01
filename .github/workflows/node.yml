@@ -34,7 +34,7 @@ jobs:
     - uses: actions/upload-artifact@v4  # upload test results
       if: success() || failure()        # run this step even if previous step failed
       with:
-        name: jest-test-results
+        name: jest-test-results${{ matrix.node-version }}
         path: moviemanager.client/reports/jest-junit.xml
     - name: Test Report
       uses: dorny/test-reporter@v1
