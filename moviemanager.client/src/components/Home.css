@@ -7,6 +7,10 @@ body, html {
     height: 100%;
 }
 
+#root {
+    width: 100%;
+}
+
 .body {
     border: 1px solid red; 
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import '../components/Home.css';
+import { Link } from 'react-router-dom';
+
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
@@ -30,6 +32,8 @@ const Home = () => {
         <div className="body">
             <div className="nav">
                 <h1>Movie List</h1>
+                <Link to="/payment">Go to Payment</Link> <br></br>
+                <Link to="/cart">Go to Cart</Link>
             </div>
             <div className="home">
                 <div className="movie-grid">
