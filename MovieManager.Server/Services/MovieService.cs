@@ -57,5 +57,22 @@ namespace MovieManager.Server.Services
         {
             movieRepository.RemoveMovie(movie);
         }
+        public IEnumerable<Ticket> GetTickets(int movieId)
+        {
+            var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
+            return movie?.Tickets ?? Enumerable.Empty<Ticket>();
+        }
+        public Cart GetCart(int cartId)
+        {
+            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+
+            if (cart == null)
+            {
+                cart = new Cart { Id = cartId, Tickets = new List<Ticket>() };
+                movieRepository.AddCart(cart);
+            }
+
+            return cart;
+        }
     }
 }

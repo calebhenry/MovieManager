@@ -10,5 +10,7 @@ namespace MovieManager.Server.Services
         void RemoveMovie(Movie movie);
         Cart? RemoveTicket(int ticketId, int cartId);
         void RemoveTicket(Ticket ticket);
+        IEnumerable<Ticket> GetTickets(int movieId);
+        Cart GetCart(int cartId);
     }
 }
