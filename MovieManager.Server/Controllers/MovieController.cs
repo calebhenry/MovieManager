@@ -78,5 +78,15 @@ namespace MovieManager.Server.Controllers
                 return HttpStatusCode.BadRequest;
             }
         }
+        [HttpGet("gettickets", Name = "GetTickets")]
+        public IEnumerable<Ticket> GetTickets(int movieId)
+        {
+            return movieService.GetTickets(movieId).ToArray();
+        }
+        [HttpGet("getcart", Name = "GetCart")]
+        public Cart GetCart(int cartId)
+        {
+            return movieService.GetCart(cartId);
+        }
     }
 }

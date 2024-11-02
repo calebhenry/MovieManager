@@ -99,5 +99,21 @@ namespace MovieManager.Server.Services
         {
             movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
         }
+        public IEnumerable<Ticket> GetTickets(int movieId)
+        {
+            var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
+            return movie?.Tickets ?? Enumerable.Empty<Ticket>();
+        }
+        public Cart GetCart(int cartId)
+        {
+            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+
+            if (cart == null)
+            {
+                cart = new Cart { Id = cartId, Tickets = new List<CartItem>() };
+                movieRepository.AddCart(cart);
+            }
+            return cart;
+        }
     }
 }
