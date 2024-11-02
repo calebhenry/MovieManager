@@ -71,7 +71,6 @@ namespace MovieManager.Server.Services
                 cart = new Cart { Id = cartId, Tickets = new List<Ticket>() };
                 movieRepository.AddCart(cart);
             }
-
             return cart;
         }
     }
