@@ -70,7 +70,7 @@ const Cart = () => {
                         <strong>Total:</strong> ${total.toFixed(2)}
                     </div>
                     <button className="proceed-button" onClick={handleProceedToPayment}>
-                        Proceed to Payment
+                        Checkout
                     </button>
                 </>
             )}

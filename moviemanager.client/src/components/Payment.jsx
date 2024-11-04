@@ -42,7 +42,7 @@ const Payment = () => {
 
     return (
         <div className="payment-container">
-            <h1>Payment Page</h1>
+            <h1>Proceed to Payment</h1>
             <form onSubmit={handlePayment} className="payment-form">
                 {error && <p className="error-message">{error}</p>}
 
@@ -55,7 +55,7 @@ const Payment = () => {
                     required
                 />
 
-                <label>Expiry Date</label>
+                <label>Expiration Date (MM/YY)</label>
                 <input
                     type="text"
                     value={expiryDate}
