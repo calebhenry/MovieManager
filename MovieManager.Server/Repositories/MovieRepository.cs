@@ -155,8 +155,8 @@ namespace MovieManager.Server.Repositories
 
         public Showtime GetShowtime(int movieId, DateTime showtime)
         {
-            Showtime showtime = showtimes.First(s => s.MovieId == movieId && s.Showtime == showtime);
-            return showtime;
+            Showtime time = showtimes.First(s => s.MovieId == movieId && s.Time == showtime);
+            return time;
         }
         public void AddCart(Cart cart)
         {
@@ -263,7 +263,7 @@ namespace MovieManager.Server.Repositories
                 foreach (var ticket in tickets)
                 {
                     
-                    Showtime showtime = GetShowtime(ticket.Showtime, ticket.MovieId); 
+                    Showtime showtime = GetShowtime(ticket.MovieId, ticket.Showtime); 
 
                     if (showtime != null)
                     {
