@@ -18,6 +18,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetMovies();
         }
+        public Movie GetMovieById(int id)
+        {
+            return movieRepository.GetMovieById(id);
+        }
 
         public void AddMovie(Movie movie)
         {
