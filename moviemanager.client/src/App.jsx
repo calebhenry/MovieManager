@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Home from './components/Home';
 import Login from './components/Login';
-import Signup from './components/Signup';
+import SignUp from './components/SignUp';
 import UserSettings from './components/UserSettings';
 import './App.css';
 
@@ -24,7 +24,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="/login" element={<Login globalState={globalState} />} />
-                    <Route path="/signup" element={<Signup globalState={globalState} />} />
+                    <Route path="/signup" element={<SignUp globalState={globalState} />} />
                     <Route path="/home" element={user == null ? <Navigate to="/login" /> : <Home globalState={globalState} />} />
                     <Route path="/settings" element={user == null ? <Navigate to="/login" /> : <UserSettings globalState={globalState} />} />
                 </Routes>
