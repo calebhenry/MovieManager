@@ -11,11 +11,13 @@ namespace MovieManager.Server.Repositories
         List<Cart> GetCarts();
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
+        Showtime GetShowtime(int movieId, DateTime showtime);
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);
         void RemoveMovie(Movie movie);
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
+        void ProcessTickets (List<Ticket> tickets);
     }
 }

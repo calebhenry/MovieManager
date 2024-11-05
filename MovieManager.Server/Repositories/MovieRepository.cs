@@ -9,6 +9,7 @@ namespace MovieManager.Server.Repositories
         private List<Cart> carts;
         private List<Ticket> tickets;
         private List<User> users;
+        private List<Showtime> showtimes;
 
         public MovieRepository()
         {
@@ -137,7 +138,6 @@ namespace MovieManager.Server.Repositories
         {
             return movies;
         }
-
         public void AddMovie(Movie movie)
         {
             movies.Add(movie);
@@ -153,6 +153,11 @@ namespace MovieManager.Server.Repositories
             return movies.SelectMany(m => m.Tickets).ToList();
         }
 
+        public Showtime GetShowtime(int movieId, DateTime showtime)
+        {
+            Showtime showtime = showtimes.First(s => s.MovieId == movieId && s.Showtime == showtime);
+            return showtime;
+        }
         public void AddCart(Cart cart)
         {
             carts.Add(cart);
@@ -219,6 +224,7 @@ namespace MovieManager.Server.Repositories
             users.Remove(user);
         }
 
+        // Process Payment method verifies whether or not input from user is valid
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
             if(string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
@@ -248,10 +254,44 @@ namespace MovieManager.Server.Repositories
             {
                 throw new ArgumentException("Card is expired. Payment could not be processed.");
             }
+        } 
+        // Update quantity of tickets avaialable associated with showtime after payment is processed
+            public void ProcessTickets(List<Ticket> tickets)
+            {
+                bool allTicketsProcessed = true;
 
-            //update ticket quantities- has to be done after Dylan's PR since he's changing the cart class
+                foreach (var ticket in tickets)
+                {
+                    
+                    Showtime showtime = GetShowtime(ticket.Showtime, ticket.MovieId); 
 
-            //empty cart- has to be done after Dylan's PR since he's changing the cart class
-        }
+                    if (showtime != null)
+                    {
+                        if (ticket.NumAvailible > 0)
+                        {
+                            showtime.NumAvailible--; 
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No tickets available for {movie.Title} at {ticket.Showtime}. Ticket could not be processed.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Showtime not found for {movie.Title} at {ticket.Showtime}. Ticket could not be processed.");
+                        allTicketsProcessed = false;
+                    }
+                }
+                    if (allTicketsProcessed)
+                    {
+                        tickets.Clear(); // Empty cart
+                        Console.WriteLine("All tickets successfully purchased. Cart has been emptied.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Some tickets could not be processed. Cart was not emptied.");
+                    }
+            } 
     }
 }
+
