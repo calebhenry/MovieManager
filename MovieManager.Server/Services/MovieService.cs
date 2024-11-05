@@ -103,7 +103,7 @@ namespace MovieManager.Server.Services
 
         public User AddUser(User user)
         {
-            user.Id = movieRepository.GetUsers().Count;
+            user.Id = movieRepository.GetUsers()?.Count ?? 0;
             movieRepository.AddUser(user);
             return user;
         }
