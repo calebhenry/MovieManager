@@ -76,18 +76,54 @@ namespace MovieManager.Server.Repositories
             };
 
             movie2.Tickets = ticket2;
-            tickets.Add(ticket2[0]);
-            tickets.Add(ticket2[1]);
-            tickets.Add(ticket1[0]);
-            tickets.Add(ticket1[1]);
             movies.Add(movie1);
             movies.Add(movie2);
+
             Cart cart1 = new Cart();
+
             cart1.Id = 0;
-            cart1.Tickets = new List<Ticket>() { ticket1[0], ticket2[0] };
+            List<CartItem> cartItems1 = new List<CartItem>();
+            for (int i = 0; i < ticket1.Count; i++)
+            {
+                var ticket = ticket1[i];
+                cartItems1.Add(
+                    new CartItem()
+                    {
+                        Id = i,
+                        CartId = 0,
+                        TicketId = ticket.Id,
+                        Quantity = 5,
+                        Cart = cart1,
+                        Ticket = ticket
+
+                    }
+                );
+            }
+
+            cart1.Tickets = cartItems1;
+
             Cart cart2 = new Cart();
-            cart2.Id = 0;
-            cart2.Tickets = new List<Ticket>() { ticket1[1], ticket2[1] };
+            cart2.Id = 1;
+
+            List<CartItem> cartItems2 = new List<CartItem>();
+            for (int i = 0; i < ticket2.Count; i++)
+            {
+                var ticket = ticket2[i];
+                cartItems2.Add(
+                    new CartItem()
+                    {
+                        Id = i,
+                        CartId = 0,
+                        TicketId = ticket.Id,
+                        Quantity = 4,
+                        Cart = cart1,
+                        Ticket = ticket
+
+                    }
+                );
+            }
+
+            cart2.Tickets = cartItems2;
             carts.Add(cart1);
             carts.Add(cart2);
 
@@ -114,7 +150,7 @@ namespace MovieManager.Server.Repositories
 
         public List<Ticket> GetTickets()
         {
-            return tickets;
+            return movies.SelectMany(m => m.Tickets).ToList();
         }
 
         public void AddCart(Cart cart)
@@ -124,12 +160,12 @@ namespace MovieManager.Server.Repositories
 
         public void AddTicket(Ticket ticket)
         {
-            tickets.Add(ticket);
+            movies.First(m => m.Id == ticket.MovieId).Tickets.Add(ticket);
         }
 
         public void RemoveTicket(Ticket ticket)
         {
-            tickets.Remove(ticket);
+            movies.First(m => m.Id == ticket.MovieId).Tickets.Remove(ticket);
         }
 
         public List<Cart> GetCarts()
@@ -181,6 +217,41 @@ namespace MovieManager.Server.Repositories
         public void RemoveUser(User user)
         {
             users.Remove(user);
+        }
+
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            if(string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
+            {
+                throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
+            }
+
+            if(cardNumber.Length != 16)
+            {
+                throw new ArgumentException("Card number is invalid. Payment could not be processed.");
+            }
+
+            if(cvc.Length != 3)
+            {
+                throw new ArgumentException("CVC is invalid. Payment could not be processed.");
+            }
+
+            if(exp.Length != 6)
+            {
+                throw new ArgumentException("Expiration date is invalid. Payment could not be processed.");
+            }
+
+            int month = int.Parse(exp[0..2]);
+            int year = int.Parse(exp[2..6]);
+
+            if(year < DateTime.Now.Year || (year == DateTime.Now.Year && month < DateTime.Now.Month))
+            {
+                throw new ArgumentException("Card is expired. Payment could not be processed.");
+            }
+
+            //update ticket quantities- has to be done after Dylan's PR since he's changing the cart class
+
+            //empty cart- has to be done after Dylan's PR since he's changing the cart class
         }
     }
 }
