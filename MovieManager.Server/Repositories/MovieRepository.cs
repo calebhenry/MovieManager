@@ -175,7 +175,7 @@ namespace MovieManager.Server.Repositories
 
         public List<User> GetUsers()
         {
-            return users;
+            return users ?? new List<User>();
         }
 
         public void AddUser(User user)
