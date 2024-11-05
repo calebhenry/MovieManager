@@ -51,6 +51,55 @@ namespace UnitTests
         }
 
         [Test]
+        public void GetUser_ReturnsSingleUser()
+        {
+            var users = new List<User>
+            {
+                new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL },
+                new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE }
+            };
+            _mockRepository.Setup(repo => repo.GetUser("Username 1", "Password 1")).Returns(users[0]);
+            var result = _movieService.GetUser("Username 1", "Password 1");
+            Assert.AreEqual(users[0], result);
+        }
+
+        [Test]
+        public void AddUser_CallsRepositoryAddUser()
+        {
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            _movieService.AddUser(user);
+            _mockRepository.Verify(repo => repo.AddUser(user), Times.Once);
+        }
+
+        [Test]
+        public void UpdateUser_CallsRepositoryUpdateUser()
+        {
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var updatedUser = new UpdatedUser { Id = 1, Name = "Name 3", Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
+            var expectedUser = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 3", Gender = Gender.MALE, Age = 40, Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
+            _mockRepository.Setup(repo => repo.UpdateUser(updatedUser)).Returns(expectedUser);
+            var result = _movieService.UpdateUser(updatedUser);
+
+            Assert.AreEqual(updatedUser.Name, result.Name);
+            Assert.AreEqual(updatedUser.Email, result.Email);
+            Assert.AreEqual(updatedUser.PhoneNumber, result.PhoneNumber);
+            Assert.AreEqual(updatedUser.Preference, result.Preference);
+            Assert.AreEqual(user.Username, result.Username);
+            Assert.AreEqual(user.Password, result.Password);
+            Assert.AreEqual(user.Age, result.Age);
+
+            _mockRepository.Verify(repo => repo.UpdateUser(updatedUser), Times.Once);
+        }
+
+        [Test]
+        public void RemoveUser_CallsRepositoryRemoveUser()
+        {
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            _movieService.RemoveUser(user);
+            _mockRepository.Verify(repo => repo.RemoveUser(user), Times.Once);
+        }
+
+        [Test]
         public void ProcessPayment_CallsRepositoryProcessPayment()
         {
             int cartId = 1;

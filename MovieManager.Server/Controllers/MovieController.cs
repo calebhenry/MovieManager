@@ -67,6 +67,32 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        [HttpGet("getuser", Name = "GetUser")]
+        public User? GetUser(string username, string password)
+        {
+            return movieService.GetUser(username, password);
+        }
+
+        [HttpPost("adduser", Name = "AddUser")]
+        public HttpStatusCode AddUser(User user)
+        {
+            movieService.AddUser(user);
+            return HttpStatusCode.OK;
+        }
+
+        [HttpPut("updateuser", Name = "UpdateUser")]
+        public User UpdateUser(UpdatedUser updatedUser)
+        { 
+            return movieService.UpdateUser(updatedUser);
+        }
+
+        [HttpPost("removeuser", Name = "RemoveUser")]
+        public HttpStatusCode RemoveUser(User user)
+        {
+            movieService.RemoveUser(user);
+            return HttpStatusCode.OK;
+        }
+
         [HttpPost("processpayment", Name = "ProcessPayment")]
         public HttpStatusCode ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
