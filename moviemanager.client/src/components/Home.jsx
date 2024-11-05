@@ -4,10 +4,15 @@ import '../components/Home.css';
 import { Link } from 'react-router-dom';
 
 
-const Home = () => {
+
+const Home = ({ globalState }) => {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const [error, setError] = useState(null); // For error state handling
+
+    const { user } = globalState;
+
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -29,6 +34,7 @@ const Home = () => {
     }
 
     return (
+
         <div className="body">
             <div className="nav">
                 <h1>Movie List</h1>
@@ -45,6 +51,20 @@ const Home = () => {
                         <p>No movies available</p>
                     )}
                 </div>
+
+        <div className="home">
+            <h1>Movie List</h1>
+            <Link to="/login">Login</Link>
+            <Link to="/settings">Settings</Link>
+            <h2>Welcome {user.name}!</h2>
+            <div className="movie-grid">
+                {movies.length > 0 ? (
+                    movies.map((movie) => (
+                        <MovieCard key={movie.id} movie={movie} />
+                    ))
+                ) : (
+                    <p>No movies available</p>
+                )}
             </div>
         </div>
     );
