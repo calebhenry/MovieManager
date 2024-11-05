@@ -14,7 +14,7 @@ const Payment = () => {
     const navigate = useNavigate();
 
     const validateCardNumber = (number) => /^\d{16}$/.test(number);
-    const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{2}$/.test(date);
+    const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{4}$/.test(date);
     const validateCVV = (cvv) => /^\d{3}$/.test(cvv);
     const validateCardholderName = (name) => typeof name === 'string' && name.trim() !== '';
 
@@ -31,7 +31,7 @@ const Payment = () => {
             return;
         }
         if (!validateExpiryDate(expiryDate)) {
-            setError('Invalid expiry date. Use MM/YY format.');
+            setError('Invalid expiry date. Use MM/YYYY format.');
             return;
         }
         if (!validateCVV(cvv)) {
@@ -75,12 +75,12 @@ const Payment = () => {
                     required
                 />
 
-                <label>Expiration Date (MM/YY)</label>
+                <label>Expiration Date (MM/YYYY)</label>
                 <input
                     type="text"
                     value={expiryDate}
                     onChange={(e) => setExpiryDate(e.target.value)}
-                    placeholder="MM/YY"
+                    placeholder="MM/YYYY"
                     required
                 />
 
