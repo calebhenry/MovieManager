@@ -19,9 +19,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpGet("getmovies", Name = "GetMovies")]
-        public IEnumerable<Movie> GetMovies()
+        public ActionResult<IEnumerable<Movie>> GetMovies()
         {
-            return movieService.GetMovies().ToArray();
+            return Ok(movieService.GetMovies().ToArray());
         }
 
         [HttpPost("addmovie", Name = "AddMovie")]
@@ -49,28 +49,24 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPut("removeticketfromcart")]
-        public Cart RemoveTicketFromCart(int ticketId, int cartId)
+        public ActionResult<Cart> RemoveTicketFromCart(int ticketId, int cartId)
         { 
             var cart = movieService.RemoveTicket(ticketId, cartId);
             if (cart != null)
             {
-                return cart;
+                return Ok(cart);
             }
             else
             {
-                // todo return error code instead
-                cart = new Cart();
-                cart.Id = ticketId;
-                cart.Tickets = new List<CartItem>();
-                movieService.AddCart(cart);
-                return cart;
+                return NotFound();
             }
         }
 
         [HttpGet("getuser", Name = "GetUser")]
-        public User? GetUser(string username, string password)
+        public ActionResult<User> GetUser(string username, string password)
         {
-            return movieService.GetUser(username, password);
+            var user = movieService.GetUser(username, password);
+            return user == null ? NotFound() : Ok(user);
         }
 
         [HttpPost("adduser", Name = "AddUser")]
@@ -81,9 +77,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPut("updateuser", Name = "UpdateUser")]
-        public User UpdateUser(UpdatedUser updatedUser)
+        public ActionResult<User> UpdateUser(UpdatedUser updatedUser)
         { 
-            return movieService.UpdateUser(updatedUser);
+            return Ok(movieService.UpdateUser(updatedUser));
         }
 
         [HttpPost("removeuser", Name = "RemoveUser")]
@@ -104,15 +100,17 @@ namespace MovieManager.Server.Controllers
                 return HttpStatusCode.BadRequest;
             }
         }
+
         [HttpGet("gettickets", Name = "GetTickets")]
-        public IEnumerable<Ticket> GetTickets(int movieId)
+        public ActionResult<IEnumerable<Ticket>> GetTickets(int movieId)
         {
-            return movieService.GetTickets(movieId).ToArray();
+            return Ok(movieService.GetTickets(movieId).ToArray());
         }
         [HttpGet("getcart", Name = "GetCart")]
-        public Cart GetCart(int cartId)
+        public ActionResult<Cart> GetCart(int cartId)
         {
-            return movieService.GetCart(cartId);
+            var cart = movieService.GetCart(cartId);
+            return cart == null ? NotFound() : Ok(cart);
         }
     }
 }
