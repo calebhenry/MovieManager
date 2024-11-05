@@ -7,7 +7,7 @@ namespace MovieManager.Server.Services
         void AddCart(Cart cart);
         void AddMovie(Movie movie);
         bool AddTicketToCart(int cartId, int ticketId, int quantity);
-        void AddUser(User user);
+        User AddUser(User user);
         List<Movie> GetMovies();
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);

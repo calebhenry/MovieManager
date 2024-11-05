@@ -96,8 +96,9 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveMovie(movie);
         }
 
-        public void AddUser(User user)
+        public User AddUser(User user)
         {
+            user.Id = movieRepository.GetUsers().Count;
             movieRepository.AddUser(user);
         }
 
@@ -108,6 +109,7 @@ namespace MovieManager.Server.Services
 
         public User UpdateUser(UpdatedUser updatedUser)
         {
+            Console.WriteLine("Updating user");
             return movieRepository.UpdateUser(updatedUser);
         }
 

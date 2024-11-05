@@ -1,14 +1,127 @@
-<<<<<<< HEAD
 @MovieManager.Server_HostAddress = http://localhost:5018
 
-GET {{MovieManager.Server_HostAddress}}/movie
+### Get all movies
+GET {{MovieManager.Server_HostAddress}}/movie/getmovies
 Accept: application/json
 
-=======
-@MovieManager.Server_HostAddress = http://localhost:5018
+### Add a new movie
+POST {{MovieManager.Server_HostAddress}}/movie/addmovie
+Content-Type: application/json
 
-GET {{MovieManager.Server_HostAddress}}/movie/
+{
+  "id": 1,
+  "name": "Sample Movie",
+  "description": "This is a sample movie description.",
+  "tickets": []
+}
+
+### Remove a movie
+POST {{MovieManager.Server_HostAddress}}/movie/removemovie
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Sample Movie",
+  "description": "This is a sample movie description.",
+  "tickets": []
+}
+
+### Add a ticket to cart
+POST {{MovieManager.Server_HostAddress}}/movie/addtickettocart
+Content-Type: application/json
+
+{
+  "cartId": 1,
+  "ticketId": 1,
+  "quantity": 2
+}
+
+### Remove a ticket from cart
+PUT {{MovieManager.Server_HostAddress}}/movie/removeticketfromcart
+Content-Type: application/json
+
+{
+  "ticketId": 1,
+  "cartId": 1
+}
+
+### Get user
+GET {{MovieManager.Server_HostAddress}}/movie/getuser
 Accept: application/json
 
->>>>>>> added removedTicketFromCart
-###
+{
+  "username": "sampleuser",
+  "password": "samplepassword"
+}
+
+### Add a new user
+POST {{MovieManager.Server_HostAddress}}/movie/adduser
+Content-Type: application/json
+
+{
+  "id": 1,
+  "username": "sampleuser",
+  "password": "samplepassword",
+  "name": "Sample User",
+  "gender": "MALE",
+  "age": 30,
+  "email": "sampleuser@example.com",
+  "phoneNumber": "1234567890",
+  "preference": "EMAIL"
+}
+
+### Update user
+PUT {{MovieManager.Server_HostAddress}}/movie/updateuser
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Updated User",
+  "email": "updateduser@example.com",
+  "phoneNumber": "0987654321",
+  "preference": "PHONE"
+}
+
+### Remove a user
+POST {{MovieManager.Server_HostAddress}}/movie/removeuser
+Content-Type: application/json
+
+{
+  "id": 1,
+  "username": "sampleuser",
+  "password": "samplepassword",
+  "name": "Sample User",
+  "gender": "MALE",
+  "age": 30,
+  "email": "sampleuser@example.com",
+  "phoneNumber": "1234567890",
+  "preference": "EMAIL"
+}
+
+### Process payment
+POST {{MovieManager.Server_HostAddress}}/movie/processpayment
+Content-Type: application/json
+
+{
+  "cartId": 1,
+  "cardNumber": "4111111111111111",
+  "exp": "12/23",
+  "cardholderName": "Sample User",
+  "cvc": "123"
+}
+
+### Get tickets for a movie
+GET {{MovieManager.Server_HostAddress}}/movie/gettickets
+Accept: application/json
+
+{
+  "movieId": 1
+}
+
+### Get cart
+GET {{MovieManager.Server_HostAddress}}/movie/getcart
+Accept: application/json
+
+{
+  "cartId": 1
+}
