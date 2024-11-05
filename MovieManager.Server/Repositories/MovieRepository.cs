@@ -254,6 +254,8 @@ namespace MovieManager.Server.Repositories
             {
                 throw new ArgumentException("Card is expired. Payment could not be processed.");
             }
+
+            ProcessTickets(tickets);
         } 
         // Update quantity of tickets avaialable associated with showtime after payment is processed
             public void ProcessTickets(List<Ticket> tickets)
