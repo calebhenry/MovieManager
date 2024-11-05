@@ -9,18 +9,39 @@
     <PackageJsonScriptsBuild Condition="$(PackageJsonScriptsBuild) == ''">vite build</PackageJsonScriptsBuild>
     <PackageJsonScriptsLint Condition="$(PackageJsonScriptsLint) == ''">eslint .</PackageJsonScriptsLint>
     <PackageJsonScriptsPreview Condition="$(PackageJsonScriptsPreview) == ''">vite preview</PackageJsonScriptsPreview>
+    <PackageJsonScriptsTest Condition="$(PackageJsonScriptsTest) == ''">jest --ci --reporters=default --reporters=jest-junit</PackageJsonScriptsTest>
+    <PackageJsonDependenciesBabelPresetEnv Condition="$(PackageJsonDependenciesBabelPresetEnv) == ''">^7.26.0</PackageJsonDependenciesBabelPresetEnv>
+    <PackageJsonDependenciesJestJunit Condition="$(PackageJsonDependenciesJestJunit) == ''">^16.0.0</PackageJsonDependenciesJestJunit>
     <PackageJsonDependenciesReact Condition="$(PackageJsonDependenciesReact) == ''">^18.3.1</PackageJsonDependenciesReact>
     <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^18.3.1</PackageJsonDependenciesReactDom>
     <PackageJsonDependenciesReactRouterDom Condition="$(PackageJsonDependenciesReactRouterDom) == ''">^6.27.0</PackageJsonDependenciesReactRouterDom>
+    <PackageJsonDevdependenciesBabelPresetReact Condition="$(PackageJsonDevdependenciesBabelPresetReact) == ''">^7.25.9</PackageJsonDevdependenciesBabelPresetReact>
     <PackageJsonDevdependenciesEslintJs Condition="$(PackageJsonDevdependenciesEslintJs) == ''">^9.11.1</PackageJsonDevdependenciesEslintJs>
+    <PackageJsonDevdependenciesTestingLibraryDom Condition="$(PackageJsonDevdependenciesTestingLibraryDom) == ''">^10.4.0</PackageJsonDevdependenciesTestingLibraryDom>
+    <PackageJsonDevdependenciesTestingLibraryJestDom Condition="$(PackageJsonDevdependenciesTestingLibraryJestDom) == ''">^6.6.3</PackageJsonDevdependenciesTestingLibraryJestDom>
+    <PackageJsonDevdependenciesTestingLibraryReact Condition="$(PackageJsonDevdependenciesTestingLibraryReact) == ''">^16.0.1</PackageJsonDevdependenciesTestingLibraryReact>
+    <PackageJsonDevdependenciesTypesJest Condition="$(PackageJsonDevdependenciesTypesJest) == ''">^29.5.14</PackageJsonDevdependenciesTypesJest>
     <PackageJsonDevdependenciesTypesReact Condition="$(PackageJsonDevdependenciesTypesReact) == ''">^18.3.10</PackageJsonDevdependenciesTypesReact>
     <PackageJsonDevdependenciesTypesReactDom Condition="$(PackageJsonDevdependenciesTypesReactDom) == ''">^18.3.0</PackageJsonDevdependenciesTypesReactDom>
     <PackageJsonDevdependenciesVitejsPluginReact Condition="$(PackageJsonDevdependenciesVitejsPluginReact) == ''">^4.3.2</PackageJsonDevdependenciesVitejsPluginReact>
+    <PackageJsonDevdependenciesBabelJest Condition="$(PackageJsonDevdependenciesBabelJest) == ''">^29.7.0</PackageJsonDevdependenciesBabelJest>
     <PackageJsonDevdependenciesEslint Condition="$(PackageJsonDevdependenciesEslint) == ''">^9.11.1</PackageJsonDevdependenciesEslint>
     <PackageJsonDevdependenciesEslintPluginReact Condition="$(PackageJsonDevdependenciesEslintPluginReact) == ''">^7.37.0</PackageJsonDevdependenciesEslintPluginReact>
     <PackageJsonDevdependenciesEslintPluginReactHooks Condition="$(PackageJsonDevdependenciesEslintPluginReactHooks) == ''">^5.1.0-rc.0</PackageJsonDevdependenciesEslintPluginReactHooks>
     <PackageJsonDevdependenciesEslintPluginReactRefresh Condition="$(PackageJsonDevdependenciesEslintPluginReactRefresh) == ''">^0.4.12</PackageJsonDevdependenciesEslintPluginReactRefresh>
     <PackageJsonDevdependenciesGlobals Condition="$(PackageJsonDevdependenciesGlobals) == ''">^15.9.0</PackageJsonDevdependenciesGlobals>
+    <PackageJsonDevdependenciesIdentityObjProxy Condition="$(PackageJsonDevdependenciesIdentityObjProxy) == ''">^3.0.0</PackageJsonDevdependenciesIdentityObjProxy>
+    <PackageJsonDevdependenciesJest Condition="$(PackageJsonDevdependenciesJest) == ''">^29.7.0</PackageJsonDevdependenciesJest>
+    <PackageJsonDevdependenciesJestEnvironmentJsdom Condition="$(PackageJsonDevdependenciesJestEnvironmentJsdom) == ''">^29.7.0</PackageJsonDevdependenciesJestEnvironmentJsdom>
+    <PackageJsonDevdependenciesTsJest Condition="$(PackageJsonDevdependenciesTsJest) == ''">^29.2.5</PackageJsonDevdependenciesTsJest>
+    <PackageJsonDevdependenciesTsNode Condition="$(PackageJsonDevdependenciesTsNode) == ''">^10.9.2</PackageJsonDevdependenciesTsNode>
     <PackageJsonDevdependenciesVite Condition="$(PackageJsonDevdependenciesVite) == ''">^5.4.8</PackageJsonDevdependenciesVite>
+    <PackageJsonJestJunitOutputdirectory Condition="$(PackageJsonJestJunitOutputdirectory) == ''">reports</PackageJsonJestJunitOutputdirectory>
+    <PackageJsonJestJunitOutputname Condition="$(PackageJsonJestJunitOutputname) == ''">jest-junit.xml</PackageJsonJestJunitOutputname>
+    <PackageJsonJestJunitAncestorseparator Condition="$(PackageJsonJestJunitAncestorseparator) == ''"> › </PackageJsonJestJunitAncestorseparator>
+    <PackageJsonJestJunitUniqueoutputname Condition="$(PackageJsonJestJunitUniqueoutputname) == ''">false</PackageJsonJestJunitUniqueoutputname>
+    <PackageJsonJestJunitSuitenametemplate Condition="$(PackageJsonJestJunitSuitenametemplate) == ''">{filepath}</PackageJsonJestJunitSuitenametemplate>
+    <PackageJsonJestJunitClassnametemplate Condition="$(PackageJsonJestJunitClassnametemplate) == ''">{classname}</PackageJsonJestJunitClassnametemplate>
+    <PackageJsonJestJunitTitletemplate Condition="$(PackageJsonJestJunitTitletemplate) == ''">{title}</PackageJsonJestJunitTitletemplate>
   </PropertyGroup>
 </Project>

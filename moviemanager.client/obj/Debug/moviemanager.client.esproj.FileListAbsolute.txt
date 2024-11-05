@@ -1,1 +1,2 @@
-C:\Users\maxbear123\Documents\windows-programming\MovieManager\moviemanager.client\obj\Debug\moviemanager.client.esproj.CoreCompileInputs.cache
+C:/Users/maxbear123/Documents/windows-programming/MovieManager/moviemanager.client/obj/Debug/moviemanager.client.esproj.CoreCompileInputs.cache
+/Users/kaylytran/Desktop/MovieManager/moviemanager.client/obj/Debug/moviemanager.client.esproj.CoreCompileInputs.cache
