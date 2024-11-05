@@ -11,6 +11,7 @@ namespace MovieManager.Server.Repositories
         List<Cart> GetCarts();
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
+        List<User> GetUsers();
         Showtime GetShowtime(int movieId, DateTime showtime);
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);

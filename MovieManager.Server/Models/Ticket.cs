@@ -12,6 +12,6 @@ namespace MovieManager.Server.Models
 
         // Here for the EF core link
         [JsonIgnore]
-        public Movie Movie { get; set; }
+        public Movie Movie { get; set; } = null!;
     }
 }
