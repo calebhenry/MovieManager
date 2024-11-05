@@ -9,12 +9,14 @@ const Payment = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCvv] = useState('');
+    const [cardholderName, setCardholderName] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const validateCardNumber = (number) => /^\d{16}$/.test(number);
     const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{2}$/.test(date);
     const validateCVV = (cvv) => /^\d{3}$/.test(cvv);
+    const validateCardholderName = (name) => typeof name === 'string' && name.trim() !== '';
 
     const handlePayment = (e) => {
         e.preventDefault();
@@ -22,6 +24,10 @@ const Payment = () => {
         // Validate inputs
         if (!validateCardNumber(cardNumber)) {
             setError('Invalid card number. Must be 16 digits.');
+            return;
+        }
+        if (!validateCardholderName(cardholderName)) {
+            setError('Invalid name. Please fill out field.');
             return;
         }
         if (!validateExpiryDate(expiryDate)) {
@@ -57,6 +63,15 @@ const Payment = () => {
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
                     placeholder="1234 5678 9012 3456"
+                    required
+                />
+
+                <label>Cardholder Name</label>
+                <input
+                    type="text"
+                    value={cardholderName}
+                    onChange={(e) => setCardholderName(e.target.value)}
+                    placeholder="John Doe"
                     required
                 />
 
