@@ -1,4 +1,4 @@
-using MovieManager.Server.Models;
+﻿using MovieManager.Server.Models;
 using MovieManager.Server.Repositories;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +7,7 @@ namespace MovieManager.Server.Services
     public class MovieService : IMovieService
     {
         private IMovieRepository movieRepository;
+        private User? currentUser;
 
         public MovieService(IMovieRepository repository)
         {
@@ -95,9 +96,45 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveMovie(movie);
         }
 
+        public void AddUser(User user)
+        {
+            movieRepository.AddUser(user);
+        }
+
+        public User? GetUser(string username, string password)
+        {
+            return movieRepository.GetUser(username, password);
+        }
+
+        public User UpdateUser(UpdatedUser updatedUser)
+        {
+            return movieRepository.UpdateUser(updatedUser);
+        }
+
+        public void RemoveUser(User user)
+        {
+            movieRepository.RemoveUser(user);
+        }
+
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
             movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+        }
+        public IEnumerable<Ticket> GetTickets(int movieId)
+        {
+            var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
+            return movie?.Tickets ?? Enumerable.Empty<Ticket>();
+        }
+        public Cart GetCart(int cartId)
+        {
+            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+
+            if (cart == null)
+            {
+                cart = new Cart { Id = cartId, Tickets = new List<CartItem>() };
+                movieRepository.AddCart(cart);
+            }
+            return cart;
         }
     }
 }

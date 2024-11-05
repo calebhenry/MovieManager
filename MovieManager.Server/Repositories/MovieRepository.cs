@@ -1,4 +1,4 @@
-using MovieManager.Server.Models;
+﻿using MovieManager.Server.Models;
 using System;
 
 namespace MovieManager.Server.Repositories
@@ -7,11 +7,16 @@ namespace MovieManager.Server.Repositories
     {
         private List<Movie> movies;
         private List<Cart> carts;
+        private List<Ticket> tickets;
+        private List<User> users;
 
         public MovieRepository()
         {
             movies = new List<Movie>();
             carts = new List<Cart>();
+            tickets = new List<Ticket>();
+            users = new List<User>();
+
             Movie movie1 = new Movie()
             {
                 Id = 1,
@@ -121,6 +126,11 @@ namespace MovieManager.Server.Repositories
             cart2.Tickets = cartItems2;
             carts.Add(cart1);
             carts.Add(cart2);
+
+            var user1 = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user2 = new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE };
+            users.Add(user1);
+            users.Add(user2);
         }
 
         public List<Movie> GetMovies()
@@ -161,6 +171,52 @@ namespace MovieManager.Server.Repositories
         public List<Cart> GetCarts()
         {
             return carts;
+        }
+
+        public void AddUser(User user)
+        {
+            users.Add(user);
+        }
+
+        public User? GetUser(string username, string password)
+        {
+            User? user = users.FirstOrDefault(user => user.Username == username);
+
+            if(user != null && user.Password != password) 
+            {
+                user = null;
+            }
+
+            return user;
+        }
+
+        public User UpdateUser(UpdatedUser updatedUser)
+        {
+            User user = users.First(user => user.Id == updatedUser.Id);
+
+            if(!string.IsNullOrEmpty(updatedUser.Name)) 
+            {
+                user.Name = updatedUser.Name;
+            }
+            if(!string.IsNullOrEmpty(updatedUser.Email)) 
+            {
+                user.Email = updatedUser.Email;
+            }
+            if(!string.IsNullOrEmpty(updatedUser.PhoneNumber)) 
+            {
+                user.PhoneNumber = updatedUser.PhoneNumber;
+            }
+            if(updatedUser.Preference != null) 
+            {
+                user.Preference = updatedUser.Preference ?? user.Preference;
+            }
+
+            return user;
+        }
+
+        public void RemoveUser(User user)
+        {
+            users.Remove(user);
         }
 
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
