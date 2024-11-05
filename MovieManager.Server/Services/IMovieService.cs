@@ -17,6 +17,6 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
         IEnumerable<Ticket> GetTickets(int movieId);
-        Cart GetCart(int cartId);
+        Cart? GetCart(int cartId);
     }
 }
