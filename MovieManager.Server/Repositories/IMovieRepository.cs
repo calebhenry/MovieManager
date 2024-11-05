@@ -7,10 +7,15 @@ namespace MovieManager.Server.Repositories
         void AddCart(Cart cart);
         void AddMovie(Movie movie);
         void AddTicket(Ticket ticket);
+        void AddUser(User user);
         List<Cart> GetCarts();
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
+        User? GetUser(string username, string password);
+        User UpdateUser(UpdatedUser updatedUser);
         void RemoveMovie(Movie movie);
         void RemoveTicket(Ticket ticket);
+        void RemoveUser(User user);
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
     }
 }
