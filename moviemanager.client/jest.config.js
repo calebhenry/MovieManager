@@ -9,4 +9,5 @@ export default {
         '\\.(css|less)$': 'identity-obj-proxy', // Add this line to mock CSS imports
         '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/test/__mocks__/fileMock.js',
     },
-}
+    setupFilesAfterEnv: ['<rootDir>/setupTests.js'], // Add this line to specify the setup file
+};

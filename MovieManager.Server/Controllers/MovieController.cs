@@ -25,27 +25,34 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("addmovie", Name = "AddMovie")]
-        public HttpStatusCode AddMovie(Movie movie)
+        public ActionResult AddMovie(Movie movie)
         {
-            movieService.AddMovie(movie);
-            return HttpStatusCode.OK;
+            try
+            {
+                movieService.AddMovie(movie);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("removemovie", Name = "RemoveMovie")]
-        public HttpStatusCode RemoveMovie(Movie movie)
+        public ActionResult RemoveMovie(Movie movie)
         {
             movieService.RemoveMovie(movie);
-            return HttpStatusCode.OK;
+            return Ok();
         }
 
         [HttpPost("addtickettocart", Name = "AddTicketToCart")]
-        public HttpStatusCode AddTicketToCart(int cartId, int ticketId, int quantity)
+        public ActionResult AddTicketToCart(int cartId, int ticketId, int quantity)
         {
             if (movieService.AddTicketToCart(cartId, ticketId, quantity))
             {
-                return HttpStatusCode.OK;
+                return Ok();
             }
-            return HttpStatusCode.NotFound;
+            return NotFound();
         }
 
         [HttpPut("removeticketfromcart")]
@@ -70,10 +77,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("adduser", Name = "AddUser")]
-        public HttpStatusCode AddUser(User user)
+        public ActionResult<User> AddUser(User user)
         {
-            movieService.AddUser(user);
-            return HttpStatusCode.OK;
+            return Ok(movieService.AddUser(user));
         }
 
         [HttpPut("updateuser", Name = "UpdateUser")]
@@ -83,21 +89,21 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("removeuser", Name = "RemoveUser")]
-        public HttpStatusCode RemoveUser(User user)
+        public ActionResult RemoveUser(User user)
         {
             movieService.RemoveUser(user);
-            return HttpStatusCode.OK;
+            return Ok();
         }
 
         [HttpPost("processpayment", Name = "ProcessPayment")]
-        public HttpStatusCode ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
             try
             {
                 movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
-                return HttpStatusCode.OK;
+                return Ok();
             } catch (ArgumentException ex) {
-                return HttpStatusCode.BadRequest;
+                return BadRequest(ex);
             }
         }
 
