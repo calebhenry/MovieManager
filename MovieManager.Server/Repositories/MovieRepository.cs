@@ -173,6 +173,11 @@ namespace MovieManager.Server.Repositories
             return carts;
         }
 
+        public List<User> GetUsers()
+        {
+            return users;
+        }
+
         public void AddUser(User user)
         {
             users.Add(user);

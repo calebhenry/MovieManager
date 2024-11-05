@@ -21,6 +21,11 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
+            foreach(var ticket in movie.Tickets)
+            {
+                ticket.MovieId = movie.Id;
+                ticket.Movie = movie;
+            }
             movieRepository.AddMovie(movie);
         }
 
@@ -96,9 +101,11 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveMovie(movie);
         }
 
-        public void AddUser(User user)
+        public User AddUser(User user)
         {
+            user.Id = movieRepository.GetUsers().Count;
             movieRepository.AddUser(user);
+            return user;
         }
 
         public User? GetUser(string username, string password)
@@ -108,6 +115,7 @@ namespace MovieManager.Server.Services
 
         public User UpdateUser(UpdatedUser updatedUser)
         {
+            Console.WriteLine("Updating user");
             return movieRepository.UpdateUser(updatedUser);
         }
 
