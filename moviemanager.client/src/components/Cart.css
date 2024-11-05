@@ -1,0 +1,104 @@
+/* components/Cart.css */
+
+.cart-container {
+  width: 100%;
+  max-width: 1300px;
+  height: 100vh;
+  margin: 0;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.cart-container h1{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color:#0077b6;
+  font-weight: 300;
+}
+.cart-list {
+  list-style-type: none;
+  padding: 10;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.cart-item button {
+  padding: 5px 10px;
+  color: #fff;
+  background-color: #d9534f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-item button:hover {
+  background-color: #c9302c;
+}
+
+.cart-total {
+  margin-top: 15px;
+  font-size: 25px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+}
+.cart-total strong{
+  font-weight: 300;
+}
+.proceed-button {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  background-color: #0077b6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 20%;
+  margin-left: 510px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.proceed-button:hover {
+  background-color: #45a049;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-controls button {
+  padding: 5px;
+  margin: 0 5px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #555;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quantity-controls button:hover {
+  background-color: #333;
+}
+
+.quantity-controls span {
+  min-width: 20px;
+  text-align: center;
+  font-size: 16px;
+}
