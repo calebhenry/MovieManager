@@ -16,28 +16,24 @@ const Login = ({ globalState }) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-        });
+        }); // Get the user from the API
 
-        console.dir(response);
-
-        if (response.ok) {
-            const user = await response.json();
-            if (user) {
-                // Redirect to home page on successful login
-                setUser(user);
-                navigate('/home');
+        try {
+            if (response.ok) {
+                const user = await response.json();
+                if (user) {
+                    // Redirect to home page on successful login
+                    setUser(user);
+                    navigate('/home');
+                } else {
+                    setError('Invalid username or password.'); // If the user is null, the username or password is incorrect
+                }
             } else {
-                setError('Invalid username or password.');
+                setError('Failed to login. Please try again.');
             }
-        } else {
-            setError('Failed to login. Please try again.');
-        }
-
-        /*try {
-            
         } catch (error) {
             setError('An error occurred. Please try again.');
-        }*/
+        }
     };
 
     const handleSignUp = () => {
@@ -51,8 +47,9 @@ const Login = ({ globalState }) => {
                 <form onSubmit={handleLogin} className="login-form">
                     {error && <p className="error-message">{error}</p>}
 
-                    <label>Username</label>
+                    <label htmlFor="username">Username</label>
                     <input
+                        id="username"
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -60,8 +57,9 @@ const Login = ({ globalState }) => {
                         required
                     />
 
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -69,7 +67,7 @@ const Login = ({ globalState }) => {
                         required
                     />
 
-                    <button type="submit">Login</button> 
+                    <button type="submit">Login</button>
                     <button type="button" onClick={handleSignUp}>Sign Up</button>
                 </form>
             </div>

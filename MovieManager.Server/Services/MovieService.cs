@@ -21,6 +21,11 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
+            foreach(var ticket in movie.Tickets)
+            {
+                ticket.MovieId = movie.Id;
+                ticket.Movie = movie;
+            }
             movieRepository.AddMovie(movie);
         }
 
@@ -100,6 +105,7 @@ namespace MovieManager.Server.Services
         {
             user.Id = movieRepository.GetUsers().Count;
             movieRepository.AddUser(user);
+            return user;
         }
 
         public User? GetUser(string username, string password)

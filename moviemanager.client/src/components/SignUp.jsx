@@ -42,9 +42,7 @@ const SignUp = ({ globalState }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(user),
-            });
-
-            console.dir(response);
+            }); // Get the new user from the API
 
             if (response.ok) {
                 const user = await response.json();
@@ -68,8 +66,9 @@ const SignUp = ({ globalState }) => {
                 <form onSubmit={handleSignUp} className="signup-form">
                     {error && <p className="error-message">{error}</p>}
 
-                    <label>Username</label>
+                    <label htmlFor="username">Username</label>
                     <input
+                        id="username"
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -77,8 +76,9 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -86,8 +86,9 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Confirm Password</label>
+                    <label htmlFor="confirmPassword">Confirm Password</label>
                     <input
+                        id="confirmPassword"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -95,8 +96,9 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Name</label>
+                    <label htmlFor="name">Name</label>
                     <input
+                        id="name"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -104,15 +106,16 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Gender</label>
-                    <select value={gender} onChange={(e) => setGender(parseInt(e.target.value))} required>
+                    <label htmlFor="gender">Gender</label>
+                    <select id="gender" value={gender} onChange={(e) => setGender(parseInt(e.target.value))} required>
                         <option value={0}>Male</option>
                         <option value={1}>Female</option>
                         <option value={2}>Other</option>
                     </select>
 
-                    <label>Age</label>
+                    <label htmlFor="age">Age</label>
                     <input
+                        id="age"
                         type="number"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
@@ -120,8 +123,9 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -129,8 +133,9 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Phone Number</label>
+                    <label htmlFor="phoneNumber">Phone Number</label>
                     <input
+                        id="phoneNumber"
                         type="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
@@ -138,8 +143,8 @@ const SignUp = ({ globalState }) => {
                         required
                     />
 
-                    <label>Contact Preference</label>
-                    <select value={preference} onChange={(e) => setPreference(parseInt(e.target.value))} required>
+                    <label htmlFor="preference">Contact Preference</label>
+                    <select id="preference" value={preference} onChange={(e) => setPreference(parseInt(e.target.value))} required>
                         <option value={0}>Email</option>
                         <option value={1}>Phone</option>
                     </select>

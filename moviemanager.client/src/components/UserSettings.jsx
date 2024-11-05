@@ -29,10 +29,10 @@ const UserSettings = ({ globalState }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(updatedUser),
-            });
+            }); // Update the user in the API
 
             if (response.ok) {
-                // Redirect to home page on successful update
+                // Update the user and redirect to home page on successful update
                 user.name = updatedUser.name;
                 user.email = updatedUser.email;
                 user.phoneNumber = updatedUser.phoneNumber;
@@ -54,32 +54,35 @@ const UserSettings = ({ globalState }) => {
                 <form onSubmit={handleUpdate} className="preferences-form">
                     {error && <p className="error-message">{error}</p>}
 
-                    <label>Name</label>
+                    <label htmlFor="name">Name</label>
                     <input
+                        id="name"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Enter your name"
                     />
 
-                    <label>Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
                     />
 
-                    <label>Phone Number</label>
+                    <label htmlFor="phoneNumber">Phone Number</label>
                     <input
+                        id="phoneNumber"
                         type="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="Enter your phone number"
                     />
 
-                    <label>Contact Preference</label>
-                    <select value={preference} onChange={(e) => setPreference(e.target.value)}>
+                    <label htmlFor="preference">Contact Preference</label>
+                    <select id="preference" value={preference} onChange={(e) => setPreference(e.target.value)}>
                         <option value="EMAIL">Email</option>
                         <option value="PHONE">Phone</option>
                     </select>

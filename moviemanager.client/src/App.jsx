@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from "react-dom";
 import {
     BrowserRouter as Router,
     Route, 
@@ -17,7 +16,7 @@ function App() {
 
     const globalState = {
         user, setUser
-    };
+    }; // Holds the global state
 
     return (
         <div className="App">
