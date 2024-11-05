@@ -273,23 +273,18 @@ namespace MovieManager.Server.Repositories
                         }
                         else
                         {
-                            Console.WriteLine($"No tickets available for {movie.Title} at {ticket.Showtime}. Ticket could not be processed.");
+                            throw new ArgumentException("No available tickets left for selected movie showtime.");
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"Showtime not found for {movie.Title} at {ticket.Showtime}. Ticket could not be processed.");
                         allTicketsProcessed = false;
+                        throw new ArgumentException("No available tickets left for selected movie showtime.");
                     }
                 }
                     if (allTicketsProcessed)
                     {
                         tickets.Clear(); // Empty cart
-                        Console.WriteLine("All tickets successfully purchased. Cart has been emptied.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Some tickets could not be processed. Cart was not emptied.");
                     }
             } 
     }
