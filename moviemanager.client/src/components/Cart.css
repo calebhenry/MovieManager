@@ -10,7 +10,11 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
+.cart-container h1{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color:#0077b6;
+  font-weight: 300;
+}
 .cart-list {
   list-style-type: none;
   padding: 10;
@@ -39,19 +43,24 @@
 
 .cart-total {
   margin-top: 15px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 25px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
 }
-
+.cart-total strong{
+  font-weight: 300;
+}
 .proceed-button {
   margin-top: 20px;
   padding: 10px;
   width: 100%;
-  background-color: #4CAF50;
+  background-color: #0077b6;
   color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 16px;
+  width: 20%;
+  margin-left: 510px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

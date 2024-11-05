@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Payment.css';
+import { Link } from 'react-router-dom';
 
 const Payment = () => {
     const [cardNumber, setCardNumber] = useState('');
@@ -17,7 +18,7 @@ const Payment = () => {
 
     const handlePayment = (e) => {
         e.preventDefault();
-
+        
         // Validate inputs
         if (!validateCardNumber(cardNumber)) {
             setError('Invalid card number. Must be 16 digits.');
@@ -43,6 +44,10 @@ const Payment = () => {
     return (
         <div className="payment-container">
             <h1>Proceed to Payment</h1>
+            <div className="payment-nav">
+                <Link to="/">Keep Browsing Movies</Link> <br></br>
+                <Link to="/cart">Go to Cart</Link>
+            </div>
             <form onSubmit={handlePayment} className="payment-form">
                 {error && <p className="error-message">{error}</p>}
 

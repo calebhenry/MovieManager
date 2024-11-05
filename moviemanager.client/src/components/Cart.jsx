@@ -55,13 +55,13 @@ const Cart = () => {
                         {cartItems.map((item) => (
                             <li key={item.id} className="cart-item">
                                 <span>{item.name}</span>
-                                <span>${item.price.toFixed(2)}</span>
+                                <span><p1>Price per Ticket: </p1>${item.price.toFixed(2)}</span>
                                 <div className="quantity-controls">
                                     <button onClick={() => handleDecreaseQuantity(item.id)}>-</button>
                                     <span>{item.quantity}</span>
                                     <button onClick={() => handleIncreaseQuantity(item.id)}>+</button>
                                 </div>
-                                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                <span><p1>Total for Movie: </p1>${(item.price * item.quantity).toFixed(2)}</span>
                                 <button onClick={() => handleRemove(item.id)}>Remove</button>
                             </li>
                         ))}
