@@ -7,6 +7,7 @@ namespace MovieManager.Server.Services
     public class MovieService : IMovieService
     {
         private IMovieRepository movieRepository;
+    
         private User? currentUser;
 
         public MovieService(IMovieRepository repository)
@@ -124,10 +125,16 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveUser(user);
         }
 
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc, List<Ticket> tickets)
         {
-            movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc, tickets);
         }
+
+        public bool ProcessTickets(int cartId, List<Ticket> tickets)
+    {
+        // Call ProcessTickets in the repository, assuming it’s defined there
+        return movieRepository.ProcessTickets(cartId, tickets);
+    }
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);

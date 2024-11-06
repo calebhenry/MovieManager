@@ -10,6 +10,7 @@ namespace MovieManager.Server.Repositories
         private List<Ticket> tickets;
         private List<User> users;
         private List<Showtime> showtimes;
+    
 
         public MovieRepository()
         {
@@ -236,7 +237,7 @@ namespace MovieManager.Server.Repositories
         }
 
         // Process Payment method verifies whether or not input from user is valid
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc, List<Ticket> tickets)
         {
             if(string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
             {
@@ -265,12 +266,11 @@ namespace MovieManager.Server.Repositories
             {
                 throw new ArgumentException("Card is expired. Payment could not be processed.");
             }
-
-       //    ProcessTickets(cartId, tickets, movieRepo);
+           ProcessTickets(cartId, tickets);
         } 
            
             // Update quantity of tickets avaialable associated with showtime after payment is processed
-            public bool ProcessTickets(int cartId, List<Ticket> tickets, MovieRepository movieRepo)
+            public bool ProcessTickets(int cartId, List<Ticket> tickets)
             {
             // Retrieve the cart based on the cartId
             Cart cart = GetCartById(cartId);
@@ -299,7 +299,7 @@ namespace MovieManager.Server.Repositories
             showtime.NumAvailable--;
         }   
         // TO-DO finish removing cart items from cart
-       // cart.RemoveCart();
+        // cart.RemoveCart();
         return true;
     } 
     }

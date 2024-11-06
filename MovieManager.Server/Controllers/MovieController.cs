@@ -96,11 +96,11 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("processpayment", Name = "ProcessPayment")]
-        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc, List<Ticket> tickets)
         {
             try
             {
-                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc, tickets);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex);
