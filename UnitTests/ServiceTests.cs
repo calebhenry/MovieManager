@@ -108,8 +108,9 @@ namespace UnitTests
             string cardholderName = "John Doe";
             string cvc = "123";
 
-            _movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            var result = _movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
             _mockRepository.Verify(repo => repo.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc), Times.Once);
+            Assert.IsNull(result);
         }
 
         [Test]
