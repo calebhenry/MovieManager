@@ -7,7 +7,7 @@ namespace MovieManager.Server.Services
         void AddCart(Cart cart);
         void AddMovie(Movie movie);
         bool AddTicketToCart(int cartId, int ticketId, int quantity);
-        void AddUser(User user);
+        User AddUser(User user);
         List<Movie> GetMovies();
         Movie GetMovieById(int id);
         User? GetUser(string username, string password);
@@ -18,6 +18,6 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
         IEnumerable<Ticket> GetTickets(int movieId);
-        Cart GetCart(int cartId);
+        Cart? GetCart(int cartId);
     }
 }

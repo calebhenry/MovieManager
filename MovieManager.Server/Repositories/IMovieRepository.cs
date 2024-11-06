@@ -12,6 +12,7 @@ namespace MovieManager.Server.Repositories
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
         Movie GetMovieById(int id);
+        List<User> GetUsers();
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);
         void RemoveMovie(Movie movie);

@@ -12,7 +12,7 @@ const Payment = () => {
     const navigate = useNavigate();
 
     const validateCardNumber = (number) => /^\d{16}$/.test(number);
-    const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{2}$/.test(date);
+    const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{4}$/.test(date);
     const validateCVV = (cvv) => /^\d{3}$/.test(cvv);
 
     const handlePayment = (e) => {
@@ -24,7 +24,7 @@ const Payment = () => {
             return;
         }
         if (!validateExpiryDate(expiryDate)) {
-            setError('Invalid expiry date. Use MM/YY format.');
+            setError('Invalid expiry date. Use MM/YYYY format.');
             return;
         }
         if (!validateCVV(cvv)) {
@@ -40,8 +40,13 @@ const Payment = () => {
         navigate('/'); // Redirect to home page on successful payment
     };
 
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="payment-container">
+            <button onClick={handleGoHome}>Go to Home</button>
             <h1>Payment Page</h1>
             <form onSubmit={handlePayment} className="payment-form">
                 {error && <p className="error-message">{error}</p>}
@@ -60,7 +65,7 @@ const Payment = () => {
                     type="text"
                     value={expiryDate}
                     onChange={(e) => setExpiryDate(e.target.value)}
-                    placeholder="MM/YY"
+                    placeholder="MM/YYYY"
                     required
                 />
 

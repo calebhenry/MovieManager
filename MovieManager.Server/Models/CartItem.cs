@@ -11,7 +11,7 @@ namespace MovieManager.Server.Models
 
         // EF core link
         [JsonIgnore]
-        public Cart Cart { get; set; }
-        public Ticket Ticket { get; set; }
+        public Cart Cart { get; set; } = null!;
+        public Ticket Ticket { get; set; } = null!;
     }
 }

@@ -44,8 +44,13 @@ const Cart = () => {
         navigate('/payment');
     };
 
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="cart-container">
+            <button onClick={handleGoHome}>Go to Home</button>
             <h1>Your Cart</h1>
             {cartItems.length === 0 ? (
                 <p>Your cart is empty.</p>
@@ -79,3 +84,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

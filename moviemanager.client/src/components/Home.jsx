@@ -30,7 +30,7 @@ const Home = () => {
     return (
         <div className="body">
             <div className="nav">
-                <h1>Welcome to Movie Broswer!</h1>
+                <br></br><br></br><h1>Welcome to Movie Broswer!</h1>
                 <Link to="/payment">Go to Payment</Link> <br></br>
                 <Link to="/cart">Go to Cart</Link>
             </div>

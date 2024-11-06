@@ -25,6 +25,11 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
+            foreach(var ticket in movie.Tickets)
+            {
+                ticket.MovieId = movie.Id;
+                ticket.Movie = movie;
+            }
             movieRepository.AddMovie(movie);
         }
 
@@ -100,9 +105,11 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveMovie(movie);
         }
 
-        public void AddUser(User user)
+        public User AddUser(User user)
         {
+            user.Id = movieRepository.GetUsers()?.Count ?? 0;
             movieRepository.AddUser(user);
+            return user;
         }
 
         public User? GetUser(string username, string password)
@@ -112,6 +119,7 @@ namespace MovieManager.Server.Services
 
         public User UpdateUser(UpdatedUser updatedUser)
         {
+            Console.WriteLine("Updating user");
             return movieRepository.UpdateUser(updatedUser);
         }
 
@@ -129,16 +137,9 @@ namespace MovieManager.Server.Services
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
-        public Cart GetCart(int cartId)
+        public Cart? GetCart(int cartId)
         {
-            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
-
-            if (cart == null)
-            {
-                cart = new Cart { Id = cartId, Tickets = new List<CartItem>() };
-                movieRepository.AddCart(cart);
-            }
-            return cart;
+            return movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
         }
     }
 }
