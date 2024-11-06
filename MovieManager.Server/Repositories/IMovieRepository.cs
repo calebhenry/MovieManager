@@ -19,6 +19,6 @@ namespace MovieManager.Server.Repositories
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
-        void ProcessTickets (List<Ticket> tickets);
+        public bool ProcessTickets (int cartId, List<Ticket> tickets, MovieRepository movieRepo);
     }
 }

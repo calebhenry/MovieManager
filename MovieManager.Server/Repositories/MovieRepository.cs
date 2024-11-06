@@ -262,38 +262,41 @@ namespace MovieManager.Server.Repositories
 
             ProcessTickets(tickets);
         } 
-        // Update quantity of tickets avaialable associated with showtime after payment is processed
-            public void ProcessTickets(List<Ticket> tickets)
+           
+            // Update quantity of tickets avaialable associated with showtime after payment is processed
+            public bool ProcessTickets(int cartId, List<Ticket> tickets, MovieRepository movieRepo)
             {
-                bool allTicketsProcessed = true;
-
-                foreach (var ticket in tickets)
+            // Retrieve the cart based on the cartId
+            Cart cart = GetCartById(cartId);
+            if (cart == null)
+            {
+                throw new ArgumentException("Invalid cart ID.");
+            }
+            // Loop through each CartItem in the cart
+            foreach (var cartItem in cart.Tickets)
+            {
+                // Find the ticket in the list of tickets from the movie repository based on the CartItem ticket id
+                Ticket ticket = tickets.First(t => t.Id == cartItem.TicketId);
+        
+                if (ticket == null)
                 {
-                    
-                    Showtime showtime = GetShowtime(ticket.MovieId, ticket.Showtime); 
-
-                    if (showtime != null)
-                    {
-                        if (ticket.NumAvailible > 0)
-                        {
-                            showtime.NumAvailible--; 
-                        }
-                        else
-                        {
-                            throw new ArgumentException("No available tickets left for selected movie showtime.");
-                        }
-                    }
-                    else
-                    {
-                        allTicketsProcessed = false;
-                        throw new ArgumentException("No available tickets left for selected movie showtime.");
-                    }
+                    return false;
                 }
-                    if (allTicketsProcessed)
-                    {
-                        tickets.Clear(); // Empty cart
-                    }
-            } 
+
+                // Find the showtime associated with this ticket
+                Showtime showtime = GetShowtime(ticket.MovieId, ticket.Showtime);
+                if (showtime == null || showtime.NumAvailable <= 0)
+                {
+                    // If no available tickets left for this showtime, return false
+                    return false;
+                }
+        
+            // Decrement the number of available tickets
+            showtime.NumAvailable--;
+        }
+        cart.CartItems.Clear();
+        return true;
+    } 
     }
 }
 
