@@ -26,6 +26,7 @@ describe('Payment Component', () => {
         );
 
         expect(screen.getByText('Payment Page')).toBeInTheDocument();
+        expect(screen.getByLabelText('Cardholder Name')).toBeInTheDocument();
         expect(screen.getByLabelText('Card Number')).toBeInTheDocument();
         expect(screen.getByLabelText('Expiration Date')).toBeInTheDocument();
         expect(screen.getByLabelText('CVV')).toBeInTheDocument();
@@ -47,6 +48,7 @@ describe('Payment Component', () => {
             </Router>
         );
 
+        fireEvent.change(screen.getByLabelText('Cardholder Name'), { target: { value: 'John Doe' } });
         fireEvent.change(screen.getByLabelText('Card Number'), { target: { value: '1234 5678 9012 3456' } });
         fireEvent.change(screen.getByLabelText('Expiration Date'), { target: { value: '12/2025' } });
         fireEvent.change(screen.getByLabelText('CVV'), { target: { value: '123' } });
@@ -75,6 +77,7 @@ describe('Payment Component', () => {
             </Router>
         );
 
+        fireEvent.change(screen.getByLabelText('Cardholder Name'), { target: { value: 'John Doe' } });
         fireEvent.change(screen.getByLabelText('Card Number'), { target: { value: '1234 5678 9012 3456' } });
         fireEvent.change(screen.getByLabelText('Expiration Date'), { target: { value: '12/2025' } });
         fireEvent.change(screen.getByLabelText('CVV'), { target: { value: '123' } });
@@ -100,4 +103,3 @@ describe('Payment Component', () => {
         expect(window.location.pathname).toBe('/home');
     });
 });
-

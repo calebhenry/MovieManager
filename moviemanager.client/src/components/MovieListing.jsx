@@ -79,7 +79,7 @@ const MovieListing = ({ globalState }) => {
             }
         } else {
             const errorData = await response.json();
-            alert(`Failed to add the ticket to the cart: ${errorData.message || 'Unknown error'}`);
+            alert(`Failed to add the ticket to the cart: ${errorData.message || 'No tickets remaining'}`);
         }
     };
 
