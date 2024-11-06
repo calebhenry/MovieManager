@@ -14,8 +14,8 @@ const Cart = ({ globalState }) => {
     }, [cart])
 
     // Remove item from cart
-    const handleRemove = async (ticketId, movieId) => {
-        const response = await fetch(`movie/removeticketfromcart?cartId=${cart.id}&ticketId=${ticketId}&movieId=${movieId}`, {
+    const handleRemove = async (ticketId) => {
+        const response = await fetch(`movie/removeticketfromcart?cartId=${cart.id}&ticketId=${ticketId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,19 +62,11 @@ const Cart = ({ globalState }) => {
             quantity = 0;
         }
 
-        const response = await fetch('/movie/addtickettocart', {
+        const response = await fetch(`/movie/addtickettocart?cartId=${cart.id}&ticketId=${ticket.id}&quantity=${quantity}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                cartId: cart.id,
-                ticketId: ticketId,
-                quantity: quantity,
-                movieId: movieId
-            }),
         });
-
 
         if (response.ok) {
             try {

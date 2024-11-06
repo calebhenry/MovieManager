@@ -57,19 +57,11 @@ const MovieListing = ({ globalState }) => {
             quantity = 0;
         }
 
-        const response = await fetch('/movie/addtickettocart', {
+        const response = await fetch(`/movie/addtickettocart?cartId=${cart.id}&ticketId=${ticket.id}&quantity=${quantity}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                cartId: cart.id,
-                ticketId: ticket.id,
-                quantity: quantity,
-                movieId: id
-            }),
         });
-
 
         if (response.ok) {
             try {
