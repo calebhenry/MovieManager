@@ -23,6 +23,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetMovies().ToArray());
         }
+        
 
         [HttpGet("getmovie/{id}", Name = "GetMovie")]
         public ActionResult<Movie> GetMovie(int id)
