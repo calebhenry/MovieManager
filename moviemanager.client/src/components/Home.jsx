@@ -51,7 +51,7 @@ const Home = ({ globalState }) => {
                         <p>No movies available</p>
                     )}
                 </div>
-
+                    </div>
         <div className="home">
             <h1>Movie List</h1>
             <Link to="/login">Login</Link>
@@ -66,6 +66,7 @@ const Home = ({ globalState }) => {
                     <p>No movies available</p>
                 )}
             </div>
+        </div>
         </div>
     );
     
