@@ -94,7 +94,7 @@ namespace MovieManager.Server.Services
             // get the total number of that ticket in all carts
             var ticketsInCarts = movieRepository.GetCarts().SelectMany(c => c.Tickets)
                 .Where(t => t.TicketId == ticket.Id).Sum(item => item.Quantity);
-            if (ticket.NumAvailible < quantity + Math.Max(ticketsInCarts - quantity, 0))
+            if (ticket.NumAvailible < quantity + ticketsInCarts)
             {
                 return false; // not enough tickets available to add that quantity 
             }

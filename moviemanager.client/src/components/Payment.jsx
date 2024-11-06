@@ -7,6 +7,7 @@ import './Payment.css';
 const Payment = ({ globalState }) => {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
+    const [cardName, setCardName] = useState('');
     const [cvv, setCvv] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -15,22 +16,12 @@ const Payment = ({ globalState }) => {
     const handlePayment = async (e) => {
         e.preventDefault();
 
-        // Prepare payment data
-        const paymentData = {
-            cartId: cart.id,
-            cardNumber,
-            exp: expiryDate,
-            cardholderName: user.name,
-            cvc: cvv
-        };
-
         try {
-            const response = await fetch('/movie/processpayment', {
+            const response = await fetch(`/movie/processpayment?cartId=${cart.id}&cardNumber=${cardNumber}&exp=${expiryDate}&cardholderName=${cardName}&cvc=${cvv}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(paymentData)
+                }
             });
 
             if (response.ok) {
@@ -56,6 +47,16 @@ const Payment = ({ globalState }) => {
                 <h1>Payment Page</h1>
                 <form onSubmit={handlePayment} className="payment-form">
                     {error && <p className="error-message">{error}</p>}
+
+                    <label htmlFor="cardName">Cardholder Name</label>
+                    <input
+                        id="cardName"
+                        type="text"
+                        value={cardName}
+                        onChange={(e) => setCardName(e.target.value)}
+                        placeholder="John Doe"
+                        required
+                    />
 
                     <label htmlFor="cardNumber">Card Number</label>
                     <input
