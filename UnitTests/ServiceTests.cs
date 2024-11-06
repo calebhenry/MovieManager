@@ -129,7 +129,7 @@ namespace UnitTests
 
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
 
-            var result = _movieService.RemoveTicket(1, 1, 1);
+            var result = _movieService.RemoveTicketFromCart(1, 1);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Tickets.Count);
@@ -144,7 +144,7 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { ticket });
 
-            var result = _movieService.AddTicketToCart(1, 1, 2, 1);
+            var result = _movieService.AddTicketToCart(1, 1, 2);
 
             Assert.IsTrue(result);
             Assert.AreEqual(1, cart.Tickets.Count);
@@ -156,7 +156,7 @@ namespace UnitTests
         {
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart>());
 
-            var result = _movieService.AddTicketToCart(1, 1, 2, 1);
+            var result = _movieService.AddTicketToCart(1, 1, 2);
 
             Assert.IsFalse(result);
         }
@@ -169,7 +169,7 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket>());
 
-            var result = _movieService.AddTicketToCart(1, 1, 2, 1);
+            var result = _movieService.AddTicketToCart(1, 1, 2);
 
             Assert.IsFalse(result);
         }
@@ -183,7 +183,7 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { ticket });
 
-            var result = _movieService.AddTicketToCart(1, 1, 2, 1);
+            var result = _movieService.AddTicketToCart(1, 1, 2);
 
             Assert.IsFalse(result);
         }
