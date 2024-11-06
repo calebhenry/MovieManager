@@ -147,7 +147,9 @@ namespace MovieManager.Server.Repositories
         {
             movies.Remove(movie);
         }
-
+        public void RemoveCart(Cart cart){
+            carts.Remove(cart);
+        }
         public List<Ticket> GetTickets()
         {
             return movies.SelectMany(m => m.Tickets).ToList();
@@ -157,6 +159,10 @@ namespace MovieManager.Server.Repositories
         {
             Showtime time = showtimes.First(s => s.MovieId == movieId && s.Time == showtime);
             return time;
+        }
+        public Cart GetCartById(int cartId){
+            var cart = carts.First(c => c.Id == cartId);
+            return cart;
         }
         public void AddCart(Cart cart)
         {
@@ -260,7 +266,7 @@ namespace MovieManager.Server.Repositories
                 throw new ArgumentException("Card is expired. Payment could not be processed.");
             }
 
-            ProcessTickets(tickets);
+       //    ProcessTickets(cartId, tickets, movieRepo);
         } 
            
             // Update quantity of tickets avaialable associated with showtime after payment is processed
@@ -282,7 +288,6 @@ namespace MovieManager.Server.Repositories
                 {
                     return false;
                 }
-
                 // Find the showtime associated with this ticket
                 Showtime showtime = GetShowtime(ticket.MovieId, ticket.Showtime);
                 if (showtime == null || showtime.NumAvailable <= 0)
@@ -290,11 +295,11 @@ namespace MovieManager.Server.Repositories
                     // If no available tickets left for this showtime, return false
                     return false;
                 }
-        
             // Decrement the number of available tickets
             showtime.NumAvailable--;
-        }
-        cart.CartItems.Clear();
+        }   
+        // TO-DO finish removing cart items from cart
+       // cart.RemoveCart();
         return true;
     } 
     }

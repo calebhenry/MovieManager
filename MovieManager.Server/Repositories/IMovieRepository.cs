@@ -16,6 +16,7 @@ namespace MovieManager.Server.Repositories
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);
         void RemoveMovie(Movie movie);
+        void RemoveCart(Cart cart);
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
