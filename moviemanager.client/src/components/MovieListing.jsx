@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './MovieListing.css';
-import { useParams, useNavigate } from 'react-router-dom';
-import './MovieListing.css';
 
 const MovieListing = () => {
     const { id } = useParams();
