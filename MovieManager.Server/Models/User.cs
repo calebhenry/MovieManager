@@ -13,6 +13,7 @@ namespace MovieManager.Server.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public Preference Preference { get; set; }
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 
     public class UpdatedUser

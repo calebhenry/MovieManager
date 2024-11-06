@@ -6,9 +6,13 @@ import {
     Navigate
 } from "react-router-dom";
 import Home from './components/Home';
+import MovieListing from './components/MovieListing';
+import Payment from './components/Payment';
+import Cart from './components/Cart';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import UserSettings from './components/UserSettings';
+
 import './App.css';
 
 function App() {
@@ -22,6 +26,11 @@ function App() {
         <div className="App">
             <Router>
                 <Routes>
+
+                    <Route path="/" element={<Home />} />
+                    <Route path="/movies/:id" element={<MovieListing />} />
+                    <Route path="/payment" element={<Payment />} />
+                    <Route path="/cart" element={<Cart />} />
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="/login" element={<Login globalState={globalState} />} />
                     <Route path="/signup" element={<SignUp globalState={globalState} />} />
