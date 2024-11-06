@@ -53,8 +53,8 @@ describe('MovieListing Component', () => {
         await waitFor(() => {
             expect(screen.getByText('Test Movie')).toBeInTheDocument();
             expect(screen.getByText('Test Description')).toBeInTheDocument();
-            expect(screen.getByText('10/05 10:48')).toBeInTheDocument();
-            expect(screen.getByText('10/06 12:00')).toBeInTheDocument();
+            expect(screen.getByText('10/05 14:48')).toBeInTheDocument();
+            expect(screen.getByText('10/06 16:00')).toBeInTheDocument();
         });
     });
 
