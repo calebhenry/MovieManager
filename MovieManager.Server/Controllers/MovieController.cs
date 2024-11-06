@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieManager.Server.Models;
+using MovieManager.Server.Repositories;
 using MovieManager.Server.Services;
 using System.Diagnostics.Eventing.Reader;
 using System.Net;
@@ -109,12 +110,14 @@ namespace MovieManager.Server.Controllers
         [HttpPost("processpayment", Name = "ProcessPayment")]
         public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
-            try
+            var paymentVerification = movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            if(paymentVerification == null)
             {
-                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
                 return Ok();
-            } catch (ArgumentException ex) {
-                return BadRequest(ex);
+            }
+            else
+            {
+                return BadRequest(paymentVerification);
             }
         }
 

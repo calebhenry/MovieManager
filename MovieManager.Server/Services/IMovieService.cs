@@ -16,7 +16,7 @@ namespace MovieManager.Server.Services
         Cart? RemoveTicket(int ticketId, int cartId);
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
+        public string? ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
         IEnumerable<Ticket> GetTickets(int movieId);
         Cart? GetCart(int cartId);
     }

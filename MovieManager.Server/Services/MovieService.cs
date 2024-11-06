@@ -1,6 +1,8 @@
 ﻿using MovieManager.Server.Models;
 using MovieManager.Server.Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Net.WebSockets;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MovieManager.Server.Services
 {
@@ -128,9 +130,36 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveUser(user);
         }
 
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public string? ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
-            movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            var carts = movieRepository.GetCarts();
+            bool cartExists = carts.Any(cart => cart.Id == cartId);
+            if (!cartExists)
+            {
+                return ("Error: Cart Not Found");
+            }
+            else if (cardNumber.Length != 16)
+            {
+                return ("Error: Card Number Invalid");
+            }
+            else if (DateTime.TryParse(exp, out DateTime parsedDate) && parsedDate < DateTime.Now.Date) 
+            {
+                return ("Error: Card Expired");
+            }
+            else if (cardholderName == null)
+            {
+                return ("Error: No Card Holder Name");
+            }
+            else if (cvc.Length != 3 || cvc.Length != 4)
+            {
+                return ("Error: Invalid CVC Number");
+            }
+            else
+            {
+                var cart = carts.FirstOrDefault(c => c.Id == cartId);
+                carts.Remove(cart);
+                return (null);
+            }
         }
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
