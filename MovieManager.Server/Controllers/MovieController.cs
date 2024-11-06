@@ -24,6 +24,17 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.GetMovies().ToArray());
         }
 
+        [HttpGet("getmovie/{id}", Name = "GetMovie")]
+        public ActionResult<Movie> GetMovie(int id)
+        {
+            var movie = movieService.GetMovieById(id);
+            if (movie != null)
+            {
+                return Ok(movie);
+            }
+            return NotFound();
+        }
+        
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {

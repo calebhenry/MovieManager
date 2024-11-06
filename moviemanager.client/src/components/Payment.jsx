@@ -3,31 +3,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Payment.css';
-import { Link } from 'react-router-dom';
 
 const Payment = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCvv] = useState('');
-    const [cardholderName, setCardholderName] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const validateCardNumber = (number) => /^\d{16}$/.test(number);
     const validateExpiryDate = (date) => /^(0[1-9]|1[0-2])\/\d{4}$/.test(date);
     const validateCVV = (cvv) => /^\d{3}$/.test(cvv);
-    const validateCardholderName = (name) => typeof name === 'string' && name.trim() !== '';
 
     const handlePayment = (e) => {
         e.preventDefault();
-        
+
         // Validate inputs
         if (!validateCardNumber(cardNumber)) {
             setError('Invalid card number. Must be 16 digits.');
-            return;
-        }
-        if (!validateCardholderName(cardholderName)) {
-            setError('Invalid name. Please fill out field.');
             return;
         }
         if (!validateExpiryDate(expiryDate)) {
@@ -47,13 +40,14 @@ const Payment = () => {
         navigate('/'); // Redirect to home page on successful payment
     };
 
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="payment-container">
-            <h1>Proceed to Payment</h1>
-            <div className="payment-nav">
-                <Link to="/">Keep Browsing Movies</Link> <br></br>
-                <Link to="/cart">Go to Cart</Link>
-            </div>
+            <button onClick={handleGoHome}>Go to Home</button>
+            <h1>Payment Page</h1>
             <form onSubmit={handlePayment} className="payment-form">
                 {error && <p className="error-message">{error}</p>}
 
@@ -66,16 +60,7 @@ const Payment = () => {
                     required
                 />
 
-                <label>Cardholder Name</label>
-                <input
-                    type="text"
-                    value={cardholderName}
-                    onChange={(e) => setCardholderName(e.target.value)}
-                    placeholder="John Doe"
-                    required
-                />
-
-                <label>Expiration Date (MM/YYYY)</label>
+                <label>Expiry Date</label>
                 <input
                     type="text"
                     value={expiryDate}
