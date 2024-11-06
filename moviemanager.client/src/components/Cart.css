@@ -1,14 +1,26 @@
 /* components/Cart.css */
 
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
 .cart-container {
-  width: 100%;
-  max-width: 1300px;
-  height: 100vh;
-  margin: 0;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 1300px;
+    height: 50vh;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
 }
 
 .cart-container h1{
@@ -28,6 +40,7 @@
   align-items: center;
   padding: 20px 0;
   border-bottom: 1px solid #ddd;
+  width: 700px;
 }
 
 .cart-item button {
@@ -50,14 +63,11 @@
 .proceed-button {
   margin-top: 20px;
   padding: 10px;
-  width: 100%;
   background-color: #0077b6;
   color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  width: 20%;
-  margin-left: 510px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

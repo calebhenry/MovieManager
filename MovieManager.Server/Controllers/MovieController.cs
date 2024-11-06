@@ -21,18 +21,7 @@ namespace MovieManager.Server.Controllers
         [HttpGet("getmovies", Name = "GetMovies")]
         public ActionResult<IEnumerable<Movie>> GetMovies()
         {
-            return Ok(movieService.GetMovies().ToArray());
-        }
-
-        [HttpGet("getmovie/{id}", Name = "GetMovie")]
-        public ActionResult<Movie> GetMovie(int id)
-        {
-            var movie = movieService.GetMovieById(id);
-            if (movie != null)
-            {
-                return Ok(movie);
-            }
-            return NotFound();
+            return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
         
         [HttpPost("addmovie", Name = "AddMovie")]
@@ -45,15 +34,29 @@ namespace MovieManager.Server.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message); // Return bad request if the messages fail
             }
         }
 
-        [HttpPost("removemovie", Name = "RemoveMovie")]
+        [HttpDelete("removemovie", Name = "RemoveMovie")]
         public ActionResult RemoveMovie(Movie movie)
         {
-            movieService.RemoveMovie(movie);
-            return Ok();
+            bool result = movieService.RemoveMovie(movie);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+
+        [HttpGet("getmovie/{id}", Name = "GetMovie")]
+        public ActionResult<Movie> GetMovie(int id)
+        {
+            var movie = movieService.GetMovieById(id);
+            if (movie != null)
+            {
+                return Ok(movie);
+            }
+            return NotFound();
         }
 
         [HttpPost("addtickettocart", Name = "AddTicketToCart")]
@@ -67,9 +70,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPut("removeticketfromcart")]
-        public ActionResult<Cart> RemoveTicketFromCart(int ticketId, int cartId)
+        public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId)
         { 
-            var cart = movieService.RemoveTicket(ticketId, cartId);
+            var cart = movieService.RemoveTicketFromCart(ticketId, cartId);
             if (cart != null)
             {
                 return Ok(cart);
@@ -114,7 +117,7 @@ namespace MovieManager.Server.Controllers
                 movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
                 return Ok();
             } catch (ArgumentException ex) {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -124,10 +127,10 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
         [HttpGet("getcart", Name = "GetCart")]
-        public ActionResult<Cart> GetCart(int cartId)
+        public ActionResult<Cart> GetCart(int? cartId)
         {
             var cart = movieService.GetCart(cartId);
-            return cart == null ? NotFound() : Ok(cart);
+            return Ok(cart);
         }
     }
 }

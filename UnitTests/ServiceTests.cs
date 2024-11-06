@@ -100,19 +100,6 @@ namespace UnitTests
         }
 
         [Test]
-        public void ProcessPayment_CallsRepositoryProcessPayment()
-        {
-            int cartId = 1;
-            string cardNumber = "1234567890123456";
-            string exp = "12/23";
-            string cardholderName = "John Doe";
-            string cvc = "123";
-
-            _movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
-            _mockRepository.Verify(repo => repo.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc), Times.Once);
-        }
-
-        [Test]
         public void AddCart_CallsRepositoryAddCart()
         {
             var cart = new Cart { Id = 1, Tickets = new List<CartItem>() };
@@ -142,7 +129,7 @@ namespace UnitTests
 
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
 
-            var result = _movieService.RemoveTicket(1, 1);
+            var result = _movieService.RemoveTicketFromCart(1, 1);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Tickets.Count);
@@ -200,5 +187,78 @@ namespace UnitTests
 
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void GetMovieById_ReturnsCorrectMovie()
+        {
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            _mockRepository.Setup(repo => repo.GetMovieById(1)).Returns(movie);
+            var result = _movieService.GetMovieById(1);
+            Assert.AreEqual(movie, result);
+        }
+
+        [Test]
+        public void ProcessPayment_ValidDetails_ProcessesPayment()
+        {
+            var cart = new Cart
+            {
+                Id = 1,
+                Tickets = new List<CartItem>
+        {
+            new CartItem { Id = 1, TicketId = 1, Quantity = 2, Ticket = new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailible = 20 } }
+        }
+            };
+            _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
+            _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { cart.Tickets.First().Ticket });
+
+            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2025", "John Doe", "123"));
+            Assert.AreEqual(0, cart.Tickets.Count);
+        }
+
+        [Test]
+        public void ProcessPayment_InvalidCardNumber_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123", "12/2025", "John Doe", "123"));
+            Assert.AreEqual("Card number is invalid. Payment could not be processed.", ex.Message);
+        }
+
+        [Test]
+        public void ProcessPayment_ExpiredCard_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Card is expired. Payment could not be processed.", ex.Message);
+        }
+
+        [Test]
+        public void GetTickets_ReturnsCorrectTickets()
+        {
+            var tickets = new List<Ticket>
+    {
+        new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailible = 20 }
+    };
+            _mockRepository.Setup(repo => repo.GetMovies()).Returns(new List<Movie> { new Movie { Id = 1, Tickets = tickets } });
+            var result = _movieService.GetTickets(1);
+            Assert.AreEqual(tickets, result);
+        }
+
+        [Test]
+        public void GetCart_ReturnsCorrectCart()
+        {
+            var cart = new Cart { Id = 1, Tickets = new List<CartItem>() };
+            _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
+            var result = _movieService.GetCart(1);
+            Assert.AreEqual(cart, result);
+        }
+
+        [Test]
+        public void GetCart_CreatesNewCartIfNotFound()
+        {
+            _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart>());
+            var result = _movieService.GetCart(1);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Id);
+            _mockRepository.Verify(repo => repo.AddCart(It.IsAny<Cart>()), Times.Once);
+        }
+
     }
 }

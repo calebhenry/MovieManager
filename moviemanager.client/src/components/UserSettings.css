@@ -42,7 +42,8 @@
 .preferences-form button {
   padding: 10px;
   font-size: 16px;
-  background-color: #4CAF50;
+  margin: 10px;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 5px;
@@ -51,7 +52,7 @@
 }
 
 .preferences-form button:hover {
-  background-color: #45a049;
+  background-color: darkslategray;
 }
 
 .error-message {

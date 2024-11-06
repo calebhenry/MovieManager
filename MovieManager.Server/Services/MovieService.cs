@@ -43,7 +43,13 @@ namespace MovieManager.Server.Services
             movieRepository.AddCart(cart);
         }
 
-        public Cart? RemoveTicket(int ticketId, int cartId)
+        /// <summary>
+        /// Attempts to remove a ticket from a cart.
+        /// </summary>
+        /// <param name="ticketId">The ID of the ticket to remove.</param>
+        /// <param name="cartId">The ID of the cart to remove the ticket from.</param>
+        /// <returns>The cart with the specified ID if it exists. Null otherwise.</returns>
+        public Cart? RemoveTicketFromCart(int ticketId, int cartId)
         {
             foreach (var cart in movieRepository.GetCarts())
             {
@@ -63,29 +69,38 @@ namespace MovieManager.Server.Services
             return null;
         }
 
+        /// <summary>
+        /// Attempts to add the specified number of the specifid ticket
+        /// to the specified cart.
+        /// </summary>
+        /// <param name="cartId">The ID of the cart to attempt to add ticket(s) to.</param>
+        /// <param name="ticketId">The ID of the ticket to attempt to add to cart.</param>
+        /// <param name="quantity">The quantity of the ticket to add to the cart.</param>
+        /// <returns>Whether the tickets were sucessfully added to cart.</returns>
         public bool AddTicketToCart(int cartId, int ticketId, int quantity)
         {
-            var carts = (from i in movieRepository.GetCarts() where i.Id == cartId select i).ToList();
-            if (carts.Count == 0)
+            var carts = (from i in movieRepository.GetCarts() where i.Id == cartId select i).ToArray();
+            if (carts.Length == 0)
             {
-                return false;
+                return false; // no carts with that cartId
             }
             Cart cart = carts.First();
             var tickets = (from i in movieRepository.GetTickets() where i.Id == ticketId select i).ToList();
             if (tickets.Count == 0)
             {
-                return false;
+                return false; // no tickets with that ticketId
             }
             Ticket ticket = tickets.First();
-            // assuming we decrement numAvailable only after they checkout
-            var ticketsInCarts = movieRepository.GetCarts().SelectMany(c => c.Tickets).Where(t => t.TicketId == ticket.Id).Sum(item => item.Quantity);
+            // get the total number of that ticket in all carts
+            var ticketsInCarts = movieRepository.GetCarts().SelectMany(c => c.Tickets)
+                .Where(t => t.TicketId == ticket.Id).Sum(item => item.Quantity);
             if (ticket.NumAvailible < quantity + ticketsInCarts)
             {
-                return false;
+                return false; // not enough tickets available to add that quantity 
             }
             if (!cart.Tickets.Exists(t => t.TicketId == ticket.Id))
-            {
-                var cartItem = new CartItem
+            { // cart does not already have that ticket
+                var newCartItem = new CartItem
                 {
                     Id = cart.Tickets.Count,
                     CartId = cart.Id,
@@ -93,16 +108,22 @@ namespace MovieManager.Server.Services
                     Quantity = 0,
                     Cart = cart,
                     Ticket = ticket
-                };
-                cart.Tickets.Add(cartItem);
+                }; // add that ticket to the cart
+                cart.Tickets.Add(newCartItem);
+            } // update ticket quanity in cart
+            var cartItem = cart.Tickets.First(t => t.TicketId == ticket.Id);
+            cartItem.Quantity += quantity;
+            if (cartItem.Quantity < 0)
+            {
+                cartItem.Quantity = 0;
+                return false;
             }
-            cart.Tickets.First(t => t.TicketId == ticket.Id).Quantity += quantity;
             return true;
         }
 
-        public void RemoveMovie(Movie movie)
+        public bool RemoveMovie(Movie movie)
         {
-            movieRepository.RemoveMovie(movie);
+            return movieRepository.RemoveMovie(movie);
         }
 
         public User AddUser(User user)
@@ -130,16 +151,60 @@ namespace MovieManager.Server.Services
 
         public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
         {
-            movieRepository.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+            if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
+            {
+                throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
+            }
+
+            if (cardNumber.Length != 16)
+            {
+                throw new ArgumentException("Card number is invalid. Payment could not be processed.");
+            }
+
+            if (cvc.Length != 3)
+            {
+                throw new ArgumentException("CVC is invalid. Payment could not be processed.");
+            }
+
+            if (exp.Length != 7)
+            {
+                throw new ArgumentException("Expiration date is invalid. Payment could not be processed.");
+            }
+
+            int month = int.Parse(exp[0..2]);
+            int year = int.Parse(exp[3..7]);
+
+            if (year < DateTime.Now.Year || (year == DateTime.Now.Year && month < DateTime.Now.Month))
+            {
+                throw new ArgumentException("Card is expired. Payment could not be processed.");
+            }
+
+            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+            foreach (var item in cart?.Tickets ?? new())
+            {
+                var ticket = movieRepository.GetTickets().FirstOrDefault(t => t.MovieId == item.Ticket.MovieId && t.Id == item.TicketId);
+                ticket.NumAvailible -= item.Quantity;
+            }
+            cart?.Tickets.Clear();
         }
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
-        public Cart? GetCart(int cartId)
+        public Cart GetCart(int? cartId)
         {
-            return movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+            var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
+            if (cart == null)
+            {
+                cart = new Cart
+                {
+                    Id = movieRepository.GetCarts().Count,
+                    Tickets = new List<CartItem>()
+                };
+                movieRepository.AddCart(cart);
+            }
+            return cart;
         }
     }
 }

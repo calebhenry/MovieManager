@@ -12,12 +12,12 @@ namespace MovieManager.Server.Services
         Movie GetMovieById(int id);
         User? GetUser(string username, string password);
         User UpdateUser(UpdatedUser updatedUser);
-        void RemoveMovie(Movie movie);
-        Cart? RemoveTicket(int ticketId, int cartId);
+        bool RemoveMovie(Movie movie);
+        Cart? RemoveTicketFromCart(int ticketId, int cartId);
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
+        void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
         IEnumerable<Ticket> GetTickets(int movieId);
-        Cart? GetCart(int cartId);
+        Cart GetCart(int? cartId);
     }
 }
