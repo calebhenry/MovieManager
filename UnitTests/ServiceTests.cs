@@ -201,7 +201,7 @@ namespace UnitTests
         public void GetMovieById_ReturnsMovieIfFound()
         {
             int movieId = 1;
-            var expectedMovie = new Movie { Id = movieId, Title = "Inception" };
+            var expectedMovie = new Movie { Id = movieId, Name = "Inception" };
 
             _mockRepository.Setup(repo => repo.GetMovies()).Returns(new List<Movie> { expectedMovie });
 
@@ -209,7 +209,7 @@ namespace UnitTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedMovie.Id, result.Id);
-            Assert.AreEqual(expectedMovie.Title, result.Title);
+            Assert.AreEqual(expectedMovie.Name, result.Name);
         }
 
         [Test]
