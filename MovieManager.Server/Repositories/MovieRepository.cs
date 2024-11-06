@@ -139,6 +139,13 @@ namespace MovieManager.Server.Repositories
         {
             return movies;
         }
+
+        public Movie GetMovieById(int id)
+        {
+            return movies.SingleOrDefault(m => m.Id == id);
+        }
+
+
         public void AddMovie(Movie movie)
         {
             movies.Add(movie);
