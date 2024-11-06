@@ -9,4 +9,13 @@ namespace MovieManager.Server.Models
             }
         }
     }
+
+    public class PaymentRequest
+    {
+        public int CartId { get; set; }
+        public string CardNumber { get; set; }
+        public string Exp { get; set; }
+        public string CardholderName { get; set; }
+        public string Cvc { get; set; }
+    }
 }

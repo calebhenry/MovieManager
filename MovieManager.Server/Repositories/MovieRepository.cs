@@ -69,7 +69,7 @@ namespace MovieManager.Server.Repositories
                 {
                     Id = 2,
                     MovieId = 2,
-                    Showtime = DateTime.UtcNow.AddHours(-2),
+                    Showtime = DateTime.UtcNow.AddHours(-3),
                     Price = 2.0,
                     NumAvailible = 25,
                 }
@@ -148,9 +148,19 @@ namespace MovieManager.Server.Repositories
             movies.Add(movie);
         }
 
-        public void RemoveMovie(Movie movie)
+        public bool RemoveMovie(Movie movie)
         {
-            movies.Remove(movie);
+            var movieRem = movies.FirstOrDefault(m => m.Id == movie.Id);
+            if (movieRem == null)
+            {
+                return false;
+            } 
+            else
+            {
+                movies.Remove(movieRem);
+                return true;
+            }
+            
         }
 
         public List<Ticket> GetTickets()
@@ -227,41 +237,6 @@ namespace MovieManager.Server.Repositories
         public void RemoveUser(User user)
         {
             users.Remove(user);
-        }
-
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
-        {
-            if(string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
-            {
-                throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
-            }
-
-            if(cardNumber.Length != 16)
-            {
-                throw new ArgumentException("Card number is invalid. Payment could not be processed.");
-            }
-
-            if(cvc.Length != 3)
-            {
-                throw new ArgumentException("CVC is invalid. Payment could not be processed.");
-            }
-
-            if(exp.Length != 6)
-            {
-                throw new ArgumentException("Expiration date is invalid. Payment could not be processed.");
-            }
-
-            int month = int.Parse(exp[0..2]);
-            int year = int.Parse(exp[2..6]);
-
-            if(year < DateTime.Now.Year || (year == DateTime.Now.Year && month < DateTime.Now.Month))
-            {
-                throw new ArgumentException("Card is expired. Payment could not be processed.");
-            }
-
-            //update ticket quantities- has to be done after Dylan's PR since he's changing the cart class
-
-            //empty cart- has to be done after Dylan's PR since he's changing the cart class
         }
     }
 }

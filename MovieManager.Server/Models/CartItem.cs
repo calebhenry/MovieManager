@@ -14,4 +14,12 @@ namespace MovieManager.Server.Models
         public Cart Cart { get; set; } = null!;
         public Ticket Ticket { get; set; } = null!;
     }
+
+    public class TicketUpdate
+    {
+        public int CartId { get; set; }
+        public int MovieId { get; set; }
+        public int TicketId { get; set; }
+        public int Quantity { get; set; }
+    }
 }

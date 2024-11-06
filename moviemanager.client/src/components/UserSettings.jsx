@@ -47,6 +47,11 @@ const UserSettings = ({ globalState }) => {
         }
     };
 
+    const logout = () => {
+        setUser(null);
+        navigate("/");
+    }
+
     return (
         <div className="screen">
             <div className="preferences-container">
@@ -88,6 +93,7 @@ const UserSettings = ({ globalState }) => {
                     </select>
 
                     <button type="submit">Update Preferences</button>
+                    <button onClick={logout}>Logout</button>
                 </form>
             </div>
         </div>
