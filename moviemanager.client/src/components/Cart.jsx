@@ -48,6 +48,10 @@ const Cart = () => {
         navigate('/');
     };
 
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="cart-container">
             <button onClick={handleGoHome}>Go to Home</button>
@@ -84,4 +88,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
