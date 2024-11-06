@@ -2,8 +2,8 @@
     display: flex;
     border: 1px solid #ddd;
     border-radius: 8px;
+    width: 400px;
     padding: 20px;
-    max-width: 600px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px auto;
     background-color: #fff;
@@ -17,8 +17,12 @@
 }
 
 .movie-details {
-    display: flex;
-    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
 
 .movie-title {
