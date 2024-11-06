@@ -188,6 +188,31 @@ namespace UnitTests
         }
 
         [Test]
+        public void GetMovieById_ReturnsNullIfMovieNotFound()
+        {
+            int movieId = 1;
+            _mockRepository.Setup(repo => repo.GetMovies()).Returns(new List<Movie>());
+            
+            var result = _movieService.GetMovieById(movieId);
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetMovieById_ReturnsMovieIfFound()
+        {
+            int movieId = 1;
+            var expectedMovie = new Movie { Id = movieId, Title = "Inception" };
+
+            _mockRepository.Setup(repo => repo.GetMovies()).Returns(new List<Movie> { expectedMovie });
+
+            var result = _movieService.GetMovieById(movieId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedMovie.Id, result.Id);
+            Assert.AreEqual(expectedMovie.Title, result.Title);
+        }
+
+        [Test]
         public void AddTicketToCart_ReturnsFalseIfNotEnoughTicketsAvailable()
         {
             var cart = new Cart { Id = 1, Tickets = new List<CartItem>() };
