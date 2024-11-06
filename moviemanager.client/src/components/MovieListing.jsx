@@ -32,7 +32,9 @@ const MovieListing = ({ globalState }) => {
     }, [id]);
 
     if (loading) return <p>Loading movie details...</p>;
-    if (error) return <p>{error}</p>;
+    const Error = () => {
+        if (error) return <p>{error}</p>;
+    }
 
     const handleAddToCart = async (ticket, add) => {
         if (cart == null) {
@@ -45,31 +47,27 @@ const MovieListing = ({ globalState }) => {
             }
         }
 
-        var quantity = GetQuantity(ticket.id);
+        const currQuantity = GetQuantity(ticket.id);
 
-        if (add) {
-            quantity++;
-        } else {
-            quantity--;
+        var quantity = 1;
+        if (!add) {
+            quantity = -1;
         }
 
-        if (quantity < 0) {
+        if (currQuantity + quantity < 0) {
+            setError('Cannot have less than 0 tickets.');
             quantity = 0;
         }
+        else
+        {
+            setError(null);
+        }
 
-        const response = await fetch('/movie/addtickettocart', {
+        const response = await fetch(`/movie/addtickettocart?cartId=${cart.id}&ticketId=${ticket.id}&quantity=${quantity}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                cartId: cart.id,
-                ticketId: ticket.id,
-                quantity: quantity,
-                movieId: id
-            }),
         });
-
 
         if (response.ok) {
             try {
@@ -91,7 +89,7 @@ const MovieListing = ({ globalState }) => {
 
     const GetQuantity = (ticketId) => {
         if (cart != null) {
-            const num = cart.tickets.find(item => item.ticketId === ticketId && item.ticket.movieId == id)?.quantity;
+            const num = cart.tickets.find(item => item.ticketId === ticketId)?.quantity;
             return num ?? 0;
         } else {
             return 0;
@@ -110,6 +108,7 @@ const MovieListing = ({ globalState }) => {
                 <p className="movie-description">{movie.description}</p>
                 <div className="ticket-section">
                     <h3>Tickets</h3>
+                    <Error />
                     {movie.tickets && movie.tickets.length > 0 ? (
                         <ul className="ticket-list">
                             {movie.tickets.map((ticket, index) => (

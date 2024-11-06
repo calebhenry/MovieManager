@@ -60,9 +60,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("addtickettocart", Name = "AddTicketToCart")]
-        public ActionResult AddTicketToCart(TicketUpdate ticketUpdate)
+        public ActionResult AddTicketToCart(int cartId, int ticketId, int quantity)
         {
-            if (movieService.AddTicketToCart(ticketUpdate.CartId, ticketUpdate.TicketId, ticketUpdate.Quantity, ticketUpdate.MovieId))
+            if (movieService.AddTicketToCart(cartId, ticketId, quantity))
             {
                 return Ok();
             }
@@ -70,9 +70,9 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPut("removeticketfromcart")]
-        public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId, int movieId)
+        public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId)
         { 
-            var cart = movieService.RemoveTicket(ticketId, cartId, movieId);
+            var cart = movieService.RemoveTicketFromCart(ticketId, cartId);
             if (cart != null)
             {
                 return Ok(cart);

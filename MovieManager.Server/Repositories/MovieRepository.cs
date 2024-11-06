@@ -59,7 +59,7 @@ namespace MovieManager.Server.Repositories
             {
                 new Ticket()
                 {
-                    Id = 1,
+                    Id = 3,
                     MovieId = 2,
                     Showtime = DateTime.UtcNow,
                     Price = 2.50,
@@ -67,7 +67,7 @@ namespace MovieManager.Server.Repositories
                 },
                 new Ticket()
                 {
-                    Id = 2,
+                    Id = 4,
                     MovieId = 2,
                     Showtime = DateTime.UtcNow.AddHours(-3),
                     Price = 2.0,

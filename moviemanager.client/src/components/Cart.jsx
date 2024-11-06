@@ -6,6 +6,7 @@ const Cart = ({ globalState }) => {
     const navigate = useNavigate();
     const { cart, setCart, movies } = globalState;
     const [total, setTotal] = useState(0);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (cart != null) {
@@ -14,8 +15,8 @@ const Cart = ({ globalState }) => {
     }, [cart])
 
     // Remove item from cart
-    const handleRemove = async (ticketId, movieId) => {
-        const response = await fetch(`movie/removeticketfromcart?cartId=${cart.id}&ticketId=${ticketId}&movieId=${movieId}`, {
+    const handleRemove = async (ticketId) => {
+        const response = await fetch(`movie/removeticketfromcart?cartId=${cart.id}&ticketId=${ticketId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,7 +38,7 @@ const Cart = ({ globalState }) => {
     };
 
     // Increase ticket quantity
-    const handleIncreaseQuantity = async (ticketId, movieId, add) => {
+    const handleIncreaseQuantity = async (ticketId, add) => {
         if (cart == null) {
             try {
                 const response = await fetch('/movie/getcart');
@@ -45,36 +46,29 @@ const Cart = ({ globalState }) => {
                 setCart(data);
             } catch (error) {
                 setError('Failed to fetch cart. Please try again later.');
-            } finally {
-                setLoading(false);
             }
         }
 
-        var quantity = GetQuantity(ticketId, movieId);
+        const currQuantity = GetQuantity(ticketId);
 
-        if (add) {
-            quantity++;
-        } else {
-            quantity--;
+        var quantity = 1;
+        if (!add) {
+            quantity = -1;
         }
 
-        if (quantity < 0) {
+        if (currQuantity + quantity < 0) {
+            setError('Cannot have less than 0 tickets.');
             quantity = 0;
         }
+        else {
+            setError(null);
+        }
 
-        const response = await fetch('/movie/addtickettocart', {
+        const response = await fetch(`/movie/addtickettocart?cartId=${cart.id}&ticketId=${ticketId}&quantity=${quantity}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                cartId: cart.id,
-                ticketId: ticketId,
-                quantity: quantity,
-                movieId: movieId
-            }),
         });
-
 
         if (response.ok) {
             try {
@@ -90,9 +84,9 @@ const Cart = ({ globalState }) => {
         }
     };
 
-    const GetQuantity = (ticketId, movieId) => {
+    const GetQuantity = (ticketId) => {
         if (cart != null) {
-            const num = cart.tickets.find(item => item.ticketId === ticketId && item.ticket.movieId == movieId)?.quantity;
+            const num = cart.tickets.find(item => item.ticketId === ticketId)?.quantity;
             return num ?? 0;
         } else {
             return 0;
@@ -121,6 +115,10 @@ const Cart = ({ globalState }) => {
         return title;
     }
 
+    const Error = () => {
+        if (error) return <p>{error}</p>;
+    }
+
     return (
         <div className="screen">
             <div className="cart-container">
@@ -130,15 +128,16 @@ const Cart = ({ globalState }) => {
                 ) : (
                     <>
                         <ul className="cart-list">
+                            <Error />
                             {cart.tickets.map((item, index) => (
                                 <li key={index} className="cart-item">
                                     <span>{getMovieName(item.ticket.movieId)}</span>
                                     <span>{formatDateTime(item.ticket.showtime)}</span>
                                     <span>${item.ticket.price.toFixed(2)}</span>
                                     <div className="quantity-controls">
-                                        <button onClick={() => handleIncreaseQuantity(item.ticketId, item.ticket.movieId, false)}>-</button>
+                                        <button onClick={() => handleIncreaseQuantity(item.ticketId, false)}>-</button>
                                         <span>{item.quantity}</span>
-                                        <button onClick={() => handleIncreaseQuantity(item.ticketId, item.ticket.movieId, true)}>+</button>
+                                        <button onClick={() => handleIncreaseQuantity(item.ticketId, true)}>+</button>
                                     </div>
                                     <span>${(item.ticket.price * item.quantity).toFixed(2)}</span>
                                     <button onClick={() => handleRemove(item.ticketId, item.ticket.movieId)}>Remove</button>

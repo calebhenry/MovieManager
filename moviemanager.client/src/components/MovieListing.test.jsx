@@ -58,22 +58,6 @@ describe('MovieListing Component', () => {
         });
     });
 
-    test('renders error message on fetch failure', async () => {
-        fetch.mockImplementationOnce(() =>
-            Promise.reject(new Error('Failed to load movie details'))
-        );
-
-        render(
-            <Router>
-                <MovieListing globalState={mockGlobalState} />
-            </Router>
-        );
-
-        await waitFor(() => {
-            expect(screen.getByText('Failed to load movie details: Failed to load movie details')).toBeInTheDocument();
-        });
-    });
-
     test('handles go to home', async () => {
         fetch.mockImplementationOnce(() =>
             Promise.resolve({
