@@ -94,13 +94,13 @@ namespace MovieManager.Server.Services
             // get the total number of that ticket in all carts
             var ticketsInCarts = movieRepository.GetCarts().SelectMany(c => c.Tickets)
                 .Where(t => t.TicketId == ticket.Id).Sum(item => item.Quantity);
-            if (ticket.NumAvailible < quantity + ticketsInCarts)
+            if (ticket.NumAvailible < quantity + Math.Max(ticketsInCarts - quantity, 0))
             {
                 return false; // not enough tickets available to add that quantity 
             }
             if (!cart.Tickets.Exists(t => t.TicketId == ticket.Id))
             { // cart does not already have that ticket
-                var cartItem = new CartItem
+                var newCartItem = new CartItem
                 {
                     Id = cart.Tickets.Count,
                     CartId = cart.Id,
@@ -109,9 +109,15 @@ namespace MovieManager.Server.Services
                     Cart = cart,
                     Ticket = ticket
                 }; // add that ticket to the cart
-                cart.Tickets.Add(cartItem);
+                cart.Tickets.Add(newCartItem);
             } // update ticket quanity in cart
-            cart.Tickets.First(t => t.TicketId == ticket.Id).Quantity += quantity;
+            var cartItem = cart.Tickets.First(t => t.TicketId == ticket.Id);
+            cartItem.Quantity += quantity;
+            if (cartItem.Quantity < 0)
+            {
+                cartItem.Quantity = 0;
+                return false;
+            }
             return true;
         }
 
