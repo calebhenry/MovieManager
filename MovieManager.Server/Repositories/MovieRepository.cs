@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using MovieManager.Server.Models;
 using System;
 
@@ -22,7 +20,7 @@ namespace MovieManager.Server.Repositories
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 optionsBuilder.EnableSensitiveDataLogging();
-                optionsBuilder.UseSqlServer("movieDb");
+                optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
             }
 
         }
