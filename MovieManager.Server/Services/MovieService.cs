@@ -18,18 +18,13 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetMovies();
         }
-        public Movie GetMovieById(int id)
+        public Movie? GetMovieById(int id)
         {
             return movieRepository.GetMovieById(id);
         }
 
         public void AddMovie(Movie movie)
         {
-            foreach(var ticket in movie.Tickets)
-            {
-                ticket.MovieId = movie.Id;
-                ticket.Movie = movie;
-            }
             movieRepository.AddMovie(movie);
         }
 
@@ -67,6 +62,11 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            movieRepository.AddTicket(ticket);
         }
 
         /// <summary>
