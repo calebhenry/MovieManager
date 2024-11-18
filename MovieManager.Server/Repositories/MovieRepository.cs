@@ -23,12 +23,38 @@ namespace MovieManager.Server.Repositories
                 optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
             }
 
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Movie>()
+                    .HasMany(e => e.Tickets)
+                    .WithOne(e => e.Movie)
+                    .HasForeignKey(e => e.MovieId)
+                    .IsRequired();
+                modelBuilder.Entity<Cart>()
+                    .HasMany(e => e.Tickets)
+                    .WithOne(e => e.Cart)
+                    .HasForeignKey(e => e.CartId)
+                    .IsRequired();
+                modelBuilder.Entity<User>()
+                    .HasMany(e => e.Reviews)
+                    .WithOne(e => e.User)
+                    .HasForeignKey(e => e.UserId)
+                    .IsRequired();
+                modelBuilder.Entity<Movie>()
+                    .HasMany(e => e.Reviews)
+                    .WithOne(e => e.Movie)
+                    .HasForeignKey(e => e.MovieId)
+                    .IsRequired();
+                modelBuilder.Entity<CartItem>()
+                    .HasOne(e => e.Ticket);
+            }
+
         }
 
         public List<Movie> GetMovies()
         {
-
             var db = new MovieContext();
+            var movies = db.Movies.Include(_ => _.Tickets).Include(_ => _.Reviews).ToList();
             return db.Movies.ToList();
         }
 
@@ -42,9 +68,34 @@ namespace MovieManager.Server.Repositories
         {
             movie.Id = 0;
             var db = new MovieContext();
-            movie.Id = 0;
+            movie.Tickets.ForEach(_ => _.Id = 0);
             db.Movies.Add(movie);
             db.SaveChanges();
+            /*
+            var movieDb = (from i in db.Movies where i.Genre == movie.Genre && i.Name == movie.Name &&
+                           i.Description == movie.Description select i).ToList().FirstOrDefault();
+            if (movieDb != null)
+            {
+                for (int j = 0; j < movie.Tickets.Count(); j++)
+                {
+                    var ticket = movie.Tickets[j];
+                    ticket.Id = 0;
+                    ticket.MovieId = movieDb.Id;
+                    ticket.Movie = movieDb;
+                    db.Tickets.Add(ticket);
+                    db.SaveChanges();
+                    var ticketDb = (from i in db.Tickets where i.Price == ticket.Price &&
+                                    i.Movie == movieDb && i.MovieId == movieDb.Id &&
+                                    i.Showtime == ticket.Showtime && i.NumAvailible == ticket.NumAvailible
+                                    select i).ToList().FirstOrDefault();
+                    if (ticketDb != null)
+                    {
+                        db.Update(movieDb);
+                        movieDb.Tickets.Add(ticketDb);
+                        db.SaveChanges();
+                    }
+                }
+            }*/
         }
 
         public bool RemoveMovie(Movie movie)
@@ -86,7 +137,6 @@ namespace MovieManager.Server.Repositories
             }
             db.Update(movie);
             movie.Tickets.Add(ticket);
-            db.Tickets.Add(ticket);
             db.SaveChanges();
             return true;
         }

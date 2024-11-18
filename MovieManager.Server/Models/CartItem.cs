@@ -1,11 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
     public class CartItem
     {
         public int Id { get; set; }
+        [ForeignKey("Cart")]
         public int CartId { get; set; }
+        [ForeignKey("Ticket")]
         public int TicketId { get; set; }
         public int Quantity { get; set; }
 

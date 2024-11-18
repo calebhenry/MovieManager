@@ -25,11 +25,6 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
-            foreach (var ticket in movie.Tickets)
-            {
-                ticket.MovieId = movie.Id;
-                ticket.Movie = movie;
-            }
             movieRepository.AddMovie(movie);
         }
 
@@ -67,6 +62,11 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            movieRepository.AddTicket(ticket);
         }
 
         /// <summary>
