@@ -277,5 +277,12 @@ namespace MovieManager.Server.Services
         {
             movieRepository.AddTicketsToMovie(ticket);
         }
+        public void RemoveTicketFromMovie (int movieId, int NumAvailible){
+            var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
+            foreach (var ticket in movie.Tickets.ToList()){
+                    movie.Tickets.Remove(ticket);
+            }
+             NumAvailible--;
+        }
     }
 }
