@@ -132,5 +132,17 @@ namespace MovieManager.Server.Controllers
             var cart = movieService.GetCart(cartId);
             return Ok(cart);
         }
+
+        [HttpDelete("removeticketfrommovie", Name="RemoveTicketFromMovie")]
+        public ActionResult RemoveTicketFromMovie(int movieId, int NumAvailible)
+        { 
+             try
+            {
+                movieService.RemoveTicketFromMovie(movieId, NumAvailible);
+                return Ok();
+            } catch (ArgumentException ex) {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
