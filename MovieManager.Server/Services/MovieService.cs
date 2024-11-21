@@ -187,11 +187,13 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
+
         public Cart GetCart(int? cartId)
         {
             var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
@@ -205,6 +207,11 @@ namespace MovieManager.Server.Services
                 movieRepository.AddCart(cart);
             }
             return cart;
+        }
+
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return movieRepository.EditTickets(movieId, updatedTicket);
         }
     }
 }
