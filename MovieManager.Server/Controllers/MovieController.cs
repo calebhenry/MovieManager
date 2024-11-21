@@ -126,11 +126,19 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
+
         [HttpGet("getcart", Name = "GetCart")]
         public ActionResult<Cart> GetCart(int? cartId)
         {
             var cart = movieService.GetCart(cartId);
             return Ok(cart);
+        }
+
+        [HttpGet("getreviews", Name = "GetReviews")]
+        public ActionResult<List<Review>> GetReviews(int movieId)
+        {
+            var reviews = movieService.GetReviews(movieId);
+            return Ok(reviews);
         }
     }
 }
