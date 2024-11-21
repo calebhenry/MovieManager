@@ -268,13 +268,13 @@ namespace UnitTests
             var review = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 1", Rating = 5 };
             var updatedReview = new UpdatedReview { Id = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
             var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
-            _mockRepository.Setup(repo => repo.EditReview(updatedReview)).Returns(expectedReview);
+            _mockRepository.Setup(repo => repo.EditReview(user.Id, updatedReview)).Returns(expectedReview);
             var result = _movieService.EditReview(user.Id, updatedReview);
 
             Assert.AreEqual(updatedReview.Comment, result.Comment);
             Assert.AreEqual(updatedReview.Rating, result.Rating);
 
-            _mockRepository.Verify(repo => repo.EditReview(updatedReview), Times.Once);
+            _mockRepository.Verify(repo => repo.EditReview(user.Id, updatedReview), Times.Once);
         }
 
     }
