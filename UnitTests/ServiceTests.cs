@@ -265,11 +265,11 @@ namespace UnitTests
         {
             var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
             var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
-            var review = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 1", Rating = 5 }
+            var review = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 1", Rating = 5 };
             var updatedReview = new UpdatedReview { Id = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
             var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
             _mockRepository.Setup(repo => repo.EditReview(updatedReview)).Returns(expectedReview);
-            var result = _movieService.EditReview(updatedReview);
+            var result = _movieService.EditReview(user.Id, updatedReview);
 
             Assert.AreEqual(updatedReview.Comment, result.Comment);
             Assert.AreEqual(updatedReview.Rating, result.Rating);
