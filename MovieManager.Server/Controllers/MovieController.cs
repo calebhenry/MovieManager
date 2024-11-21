@@ -145,6 +145,7 @@ namespace MovieManager.Server.Controllers
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
             }
+        }
 
         [HttpGet("getreviews", Name = "GetReviews")]
         public ActionResult<List<Review>> GetReviews(int movieId)

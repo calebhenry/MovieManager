@@ -218,7 +218,8 @@ namespace MovieManager.Server.Services
                 throw new ArgumentException("Review cannot be edited because you are not the author.");
             }
             return movieRepository.EditReview(currentUserId, updatedReview);
-
+        }
+        
         public List<Review> GetReviews(int movieId)
         {
             return movieRepository.GetReviews(movieId);
