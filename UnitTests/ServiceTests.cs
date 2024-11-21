@@ -260,5 +260,21 @@ namespace UnitTests
             _mockRepository.Verify(repo => repo.AddCart(It.IsAny<Cart>()), Times.Once);
         }
 
+        public void EditTickets_CallsRepositoryEditTickets()
+        {
+            DateTime now = DateTime.UtcNow;
+            var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 2.50, NumAvailible = 20 };
+            var updatedTicket = new UpdatedTicket { Id = 1, MovieId = 1, Price = 3.50, NumAvailible = 15 };
+            var expectedTicket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 3.50, NumAvailible = 15 };
+            _mockRepository.Setup(repo => repo.EditTickets(1, updatedTicket)).Returns(expectedTicket);
+            var result = _movieService.EditTickets(1, updatedTicket);
+
+            Assert.AreEqual(updatedTicket.Price, result.Price);
+            Assert.AreEqual(updatedTicket.NumAvailible, result.NumAvailible);
+            Assert.AreEqual(ticket.Showtime, result.Showtime);
+
+            _mockRepository.Verify(repo => repo.EditTickets(1, updatedTicket), Times.Once);
+        }
+
     }
 }

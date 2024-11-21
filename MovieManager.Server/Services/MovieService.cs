@@ -211,6 +211,11 @@ namespace MovieManager.Server.Services
             return cart;
         }
 
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return movieRepository.EditTickets(movieId, updatedTicket);
+        }
+        
         public List<Review> GetReviews(int movieId)
         {
             return movieRepository.GetReviews(movieId);

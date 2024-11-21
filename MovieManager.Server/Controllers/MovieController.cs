@@ -128,10 +128,17 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpGet("getcart", Name = "GetCart")]
+
         public ActionResult<Cart> GetCart(int? cartId)
         {
             var cart = movieService.GetCart(cartId);
             return Ok(cart);
+        }
+
+        [HttpPut("edittickets", Name = "EditTickets")]
+        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return Ok(movieService.EditTickets(movieId, updatedTicket));
         }
 
         [HttpGet("getreviews", Name = "GetReviews")]
