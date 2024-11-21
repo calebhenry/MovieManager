@@ -165,5 +165,24 @@ namespace MovieManager.Server.Repositories
             db.SaveChanges();
             // TODO: Remove all user data ?
         }
+
+        public Review? EditReview(int currentUserId, UpdatedReview updatedReview)
+        {
+            var db = new MovieContext();
+            var review = (from i in db.Reviews where i.Id == updatedReview.Id select i).ToList().FirstOrDefault();
+            if (review == null) { 
+                return null; 
+            }
+            if (!string.IsNullOrEmpty(updatedReview.Comment))
+            {
+                review.Comment = updatedReview.Comment;
+            }
+            if (updatedReview.Rating != null)
+            {
+                review.Rating = updatedReview.Rating ?? review.Rating;
+            }
+            db.SaveChanges();
+            return review;
+        }
     }
 }

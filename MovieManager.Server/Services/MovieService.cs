@@ -206,5 +206,14 @@ namespace MovieManager.Server.Services
             }
             return cart;
         }
+
+        public Review EditReview(int currentUserId, UpdatedReview updatedReview)
+        {
+            if (currentUserId != updatedReview.UserId)
+            {
+                throw new ArgumentException("Review cannot be edited because you are not the author.");
+            }
+            return movieRepository.EditReview(currentUserId, updatedReview);
+        }
     }
 }
