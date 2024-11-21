@@ -25,11 +25,6 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
-            foreach (var ticket in movie.Tickets)
-            {
-                ticket.MovieId = movie.Id;
-                ticket.Movie = movie;
-            }
             movieRepository.AddMovie(movie);
         }
 
@@ -60,6 +55,7 @@ namespace MovieManager.Server.Services
                         if (ticket.TicketId == ticketId)
                         {
                             cart.Tickets.Remove(ticket);
+                            movieRepository.UpdateCart(cart);
                             return cart;
                         }
                     }
@@ -67,6 +63,11 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            movieRepository.AddTicket(ticket);
         }
 
         /// <summary>
@@ -118,6 +119,7 @@ namespace MovieManager.Server.Services
                 cartItem.Quantity = 0;
                 return false;
             }
+            movieRepository.UpdateCart(cart);
             return true;
         }
 
@@ -187,11 +189,13 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
+
         public Cart GetCart(int? cartId)
         {
             var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
@@ -214,6 +218,10 @@ namespace MovieManager.Server.Services
                 throw new ArgumentException("Review cannot be edited because you are not the author.");
             }
             return movieRepository.EditReview(currentUserId, updatedReview);
+
+        public List<Review> GetReviews(int movieId)
+        {
+            return movieRepository.GetReviews(movieId);
         }
     }
 }

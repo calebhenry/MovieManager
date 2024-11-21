@@ -10,6 +10,7 @@ namespace MovieManager.Server.Services
         User AddUser(User user);
         Cart GetCart(int? cartId);
         Movie? GetMovieById(int id);
+        void AddTicket(Ticket ticket);
         List<Movie> GetMovies();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
@@ -20,5 +21,6 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
         Review EditReview(int currentUserId, UpdatedReview updatedReview);
+        List<Review> GetReviews(int movieId);
     }
 }
