@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<IMovieService, MovieService>();
-builder.Services.AddSingleton<IMovieRepository>(new MovieRepository());
+builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
+builder.Services.AddSingleton<MovieContext>();
 
 
 builder.Services.AddControllers();

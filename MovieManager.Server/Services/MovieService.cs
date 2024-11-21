@@ -55,6 +55,7 @@ namespace MovieManager.Server.Services
                         if (ticket.TicketId == ticketId)
                         {
                             cart.Tickets.Remove(ticket);
+                            movieRepository.UpdateCart(cart);
                             return cart;
                         }
                     }
@@ -118,6 +119,7 @@ namespace MovieManager.Server.Services
                 cartItem.Quantity = 0;
                 return false;
             }
+            movieRepository.UpdateCart(cart);
             return true;
         }
 
@@ -187,11 +189,13 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
+
         public Cart GetCart(int? cartId)
         {
             var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
@@ -205,6 +209,11 @@ namespace MovieManager.Server.Services
                 movieRepository.AddCart(cart);
             }
             return cart;
+        }
+
+        public List<Review> GetReviews(int movieId)
+        {
+            return movieRepository.GetReviews(movieId);
         }
     }
 }
