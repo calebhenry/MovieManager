@@ -126,6 +126,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
+
         [HttpGet("getcart", Name = "GetCart")]
 
         public ActionResult<Cart> GetCart(int? cartId)
@@ -138,6 +139,12 @@ namespace MovieManager.Server.Controllers
         public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
             return Ok(movieService.EditTickets(movieId, updatedTicket));
+
+        [HttpGet("getreviews", Name = "GetReviews")]
+        public ActionResult<List<Review>> GetReviews(int movieId)
+        {
+            var reviews = movieService.GetReviews(movieId);
+            return Ok(reviews);
         }
     }
 }

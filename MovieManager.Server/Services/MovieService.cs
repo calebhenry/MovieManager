@@ -25,11 +25,6 @@ namespace MovieManager.Server.Services
 
         public void AddMovie(Movie movie)
         {
-            foreach (var ticket in movie.Tickets)
-            {
-                ticket.MovieId = movie.Id;
-                ticket.Movie = movie;
-            }
             movieRepository.AddMovie(movie);
         }
 
@@ -60,6 +55,7 @@ namespace MovieManager.Server.Services
                         if (ticket.TicketId == ticketId)
                         {
                             cart.Tickets.Remove(ticket);
+                            movieRepository.UpdateCart(cart);
                             return cart;
                         }
                     }
@@ -67,6 +63,11 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            movieRepository.AddTicket(ticket);
         }
 
         /// <summary>
@@ -118,6 +119,7 @@ namespace MovieManager.Server.Services
                 cartItem.Quantity = 0;
                 return false;
             }
+            movieRepository.UpdateCart(cart);
             return true;
         }
 
@@ -212,6 +214,11 @@ namespace MovieManager.Server.Services
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
             return movieRepository.EditTickets(movieId, updatedTicket);
+        }
+        
+        public List<Review> GetReviews(int movieId)
+        {
+            return movieRepository.GetReviews(movieId);
         }
     }
 }

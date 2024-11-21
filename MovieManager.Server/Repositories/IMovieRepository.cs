@@ -9,6 +9,7 @@ namespace MovieManager.Server.Repositories
         bool AddTicket(Ticket ticket);
         void AddUser(User user);
         List<Cart> GetCarts();
+        void UpdateCart(Cart cart);
         Movie? GetMovieById(int id);
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
@@ -19,5 +20,6 @@ namespace MovieManager.Server.Repositories
         void RemoveUser(User user);
         User? UpdateUser(UpdatedUser updatedUser);
         Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        List<Review> GetReviews(int movieId);
     }
 }

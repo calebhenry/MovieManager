@@ -11,7 +11,7 @@ using MovieManager.Server.Repositories;
 
 namespace MovieManager.Server.Migrations
 {
-    [DbContext(typeof(MovieRepository.MovieContext))]
+    [DbContext(typeof(MovieContext))]
     [Migration("20241112231936_InitialCreate")]
     partial class InitialCreate
     {
