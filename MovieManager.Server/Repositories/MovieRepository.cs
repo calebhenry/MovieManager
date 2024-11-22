@@ -193,6 +193,23 @@ namespace MovieManager.Server.Repositories
             return review;
         }
 
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            var db = new MovieContext();
+            var ticket = (from i in db.Tickets where i.Id == updatedTicket.Id select i).ToList().FirstOrDefault();
+            if (ticket == null) { 
+                return null; 
+            }
+            db.Update(ticket);
+            
+            ticket.Price = updatedTicket.Price ?? ticket.Price;
+
+            ticket.NumAvailible = updatedTicket.NumAvailible ?? ticket.NumAvailible;
+
+            db.SaveChanges();
+            return ticket;
+        }
+
         public List<Review> GetReviews(int movieId)
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
