@@ -19,4 +19,12 @@ namespace MovieManager.Server.Models
         [JsonIgnore]
         public User User { get; set; } = null!;
     }
+
+    public class UpdatedReview
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string? Comment { get; set; }
+        public int? Rating { get; set; }
+    }
 }

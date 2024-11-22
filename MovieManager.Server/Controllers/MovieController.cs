@@ -135,6 +135,19 @@ namespace MovieManager.Server.Controllers
             return Ok(cart);
         }
 
+        //currentUserId should come from the logged in user, this is to amke sure the user can only edit their own comments
+        [HttpPut("editreview", Name = "EditReview")]
+        public ActionResult<Review> EditReview(int currentUserId, UpdatedReview updatedReview)
+        {
+            try
+            {
+                movieService.EditReview(currentUserId, updatedReview);
+                return Ok();
+            } catch (ArgumentException ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("edittickets", Name = "EditTickets")]
         public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
