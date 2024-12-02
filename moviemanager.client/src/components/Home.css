@@ -70,6 +70,7 @@ body, html {
 
 .movie-grid .movie-card {
     transition: transform 0.3s;
+    box-sizing: border-box;
 }
 
 .movie-grid .movie-card:hover {
