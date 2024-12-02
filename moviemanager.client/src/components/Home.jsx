@@ -68,16 +68,20 @@ const Home = ({ globalState }) => {
                 </div>
             </div>
             <div className="home">
-                {Object.keys(moviesByGenre).map((genre) => (
-                    <div key={genre} className="genre-section">
-                        <h2>{genre}</h2>
-                        <div className="movie-grid">
-                            {moviesByGenre[genre].map((movie) => (
-                                <MovieCard key={movie.id} movie={movie} />
-                            ))}
+                {movies.length > 0 ? (
+                    Object.keys(moviesByGenre).map((genre) => (
+                        <div key={genre} className="genre-section">
+                            <h2>{genre}</h2>
+                            <div className="movie-grid">
+                                {moviesByGenre[genre].map((movie) => (
+                                    <MovieCard key={movie.id} movie={movie} />
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <p>No movies available</p>
+                )}
             </div>
         </div>
     );
