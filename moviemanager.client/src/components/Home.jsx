@@ -48,6 +48,16 @@ const Home = ({ globalState }) => {
         navigate('/settings');
     };
 
+    const moviesByGenre = movies.reduce((acc, movie) => {
+        const genre = movie.genre;
+        if (!acc[genre]) {
+            acc[genre] = [];
+        }
+        acc[genre].push(movie);
+        return acc;
+    }, {});
+
+
     return (
         <div className="body">
             <div className="nav">
@@ -58,15 +68,16 @@ const Home = ({ globalState }) => {
                 </div>
             </div>
             <div className="home">
-                <div className="movie-grid">
-                    {movies.length > 0 ? (
-                        movies.map((movie) => (
-                            <MovieCard key={movie.id} movie={movie} />
-                        ))
-                    ) : (
-                        <p>No movies available</p>
-                    )}
-                </div>
+                {Object.keys(moviesByGenre).map((genre) => (
+                    <div key={genre} className="genre-section">
+                        <h2>{genre}</h2>
+                        <div className="movie-grid">
+                            {moviesByGenre[genre].map((movie) => (
+                                <MovieCard key={movie.id} movie={movie} />
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
