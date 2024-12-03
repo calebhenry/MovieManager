@@ -9,6 +9,7 @@ body, html {
 
 #root {
     width: 100%;
+    height: 100%;
 }
 
 /* Wrapper for everything inside */
@@ -69,6 +70,7 @@ body, html {
 
 .movie-grid .movie-card {
     transition: transform 0.3s;
+    box-sizing: border-box;
 }
 
 .movie-grid .movie-card:hover {
