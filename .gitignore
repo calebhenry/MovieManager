@@ -236,3 +236,6 @@ _Pvt_Extensions
 
 # Custom Stuff
 .obj/
+
+# JSON files
+*.json
