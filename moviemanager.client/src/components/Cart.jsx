@@ -4,13 +4,27 @@ import './Cart.css';
 
 const Cart = ({ globalState }) => {
     const navigate = useNavigate();
-    const { cart, setCart, movies } = globalState;
+    const { user, cart, setCart, movies } = globalState;
     const [total, setTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [tax, setTax] = useState(0);
+    const [totalAfterTax, setTotalAfterTax] = useState(0);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (cart != null) {
-            setTotal(cart.tickets.reduce((sum, item) => sum + item.ticket.price * item.quantity, 0));
+            const tempTotal = cart.tickets.reduce((sum, item) => sum + item.ticket.price * item.quantity, 0);
+            var tempDiscount = 0;
+            if(user.age >= 65) {
+                tempDiscount = tempTotal*0.1;
+            }
+            const tempTax = (tempTotal-tempDiscount)*0.07;
+            const tempTotalAfterTax = tempTotal-tempDiscount+tempTax;
+
+            setTotal(tempTotal);
+            setDiscount(tempDiscount);
+            setTax(tempTax);
+            setTotalAfterTax(tempTotalAfterTax);
         }
     }, [cart])
 
@@ -144,8 +158,21 @@ const Cart = ({ globalState }) => {
                                 </li>
                             ))}
                         </ul>
-                            <div className="cart-total">
-                                <strong>Total:</strong> ${total.toFixed(2)}
+                        <div className="cart-total">
+                            <div className="cart-total-line">
+                                <strong>Subtotal:</strong> <span>${total.toFixed(2)}</span>
+                            </div>
+                            {user.age >= 65 && (
+                                <div className="cart-total-line">
+                                    <strong>Senior Discount:</strong> <span>-${discount.toFixed(2)}</span>
+                                </div>
+                            )}
+                            <div className="cart-total-line">
+                                <strong>Tax:</strong> <span>${tax.toFixed(2)}</span>
+                            </div>
+                            <div className="cart-total-line">
+                                <strong>Total:</strong> <span>${totalAfterTax.toFixed(2)}</span>
+                            </div>
                         </div>
                     </>
                 )}
