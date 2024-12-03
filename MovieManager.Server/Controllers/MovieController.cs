@@ -160,5 +160,6 @@ namespace MovieManager.Server.Controllers
             var reviews = movieService.GetReviews(movieId);
             return Ok(reviews);
         }
+        
     }
 }

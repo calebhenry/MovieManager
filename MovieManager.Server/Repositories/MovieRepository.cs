@@ -214,6 +214,13 @@ namespace MovieManager.Server.Repositories
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
         }
+        public void RemoveReview(Review review)
+        {
+            var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
+            if (revRemove == null) { return; }
+            _context.Reviews.Remove(revRemove);
+            _context.SaveChanges();
+        }
     }
 
     public class MovieContext : DbContext
