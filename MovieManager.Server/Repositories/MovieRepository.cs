@@ -36,6 +36,23 @@ namespace MovieManager.Server.Repositories
             _context.SaveChanges();
         }
 
+        public bool AddReview(Review review)
+        {
+            review.Id = 0;
+            var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
+            if (movie == null)
+                return false;
+            var user = (from i in _context.Users where i.Id == review.UserId select i).ToList().FirstOrDefault();
+            if (user == null)
+                return false;
+            _context.Update(user);
+            _context.Update(movie);
+            user.Reviews.Add(review);
+            movie.Reviews.Add(review);
+            _context.SaveChanges();
+            return true;
+        }
+
         public bool RemoveMovie(Movie movie)
         {
             var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
@@ -134,7 +151,7 @@ namespace MovieManager.Server.Repositories
 
         public User? GetUser(string username, string password)
         {
-            return (from i in _context.Users where i.Username == username &&
+            return (from i in _context.Users.Include(_ => _.Reviews).ToList() where i.Username == username &&
                     i.Password == password select i).FirstOrDefault();
         }
 

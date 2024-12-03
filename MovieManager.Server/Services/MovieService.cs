@@ -1,4 +1,5 @@
-﻿using MovieManager.Server.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MovieManager.Server.Models;
 using MovieManager.Server.Repositories;
 using System.ComponentModel.DataAnnotations;
 
@@ -63,6 +64,10 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+        public bool AddReview(Review review)
+        {
+            return movieRepository.AddReview(review);
         }
 
         public void AddTicket(Ticket ticket)

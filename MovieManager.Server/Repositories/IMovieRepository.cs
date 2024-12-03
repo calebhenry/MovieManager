@@ -8,6 +8,7 @@ namespace MovieManager.Server.Repositories
         void AddMovie(Movie movie);
         bool AddTicket(Ticket ticket);
         void AddUser(User user);
+        bool AddReview(Review review);
         List<Cart> GetCarts();
         void UpdateCart(Cart cart);
         Movie? GetMovieById(int id);
