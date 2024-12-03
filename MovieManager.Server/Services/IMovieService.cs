@@ -32,5 +32,6 @@ namespace MovieManager.Server.Services
         void AddTicketsToMovie(Ticket ticket);
         
         void RemoveTicketFromMovie (int movieId, int NumAvailible);
+        void RemoveReview(Review review);
     }
 }

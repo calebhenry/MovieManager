@@ -288,5 +288,9 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.RemoveTicketsFromMovie(movieId, numTickets);
         }
+        public void RemoveReview(Review review)
+        {
+            movieRepository.RemoveReview(review);
+        }
     }
 }
