@@ -22,6 +22,7 @@ namespace MovieManager.Server.Services
         User UpdateUser(UpdatedUser updatedUser);
         Review EditReview(int currentUserId, UpdatedReview updatedReview);
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        public Movie EditMovie(int movieId, UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
     }
 }

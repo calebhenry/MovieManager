@@ -210,6 +210,23 @@ namespace MovieManager.Server.Repositories
             return ticket;
         }
 
+        public MovieContext EditMovies(int movieId, UpdatedMovie updatedMovie)
+        {
+            var db = new MovieContext();
+            var movie = (from i in db.Movies where i.Id == updatedMovie.Id select i). ToList(). FirstOrDefault();
+            if (movie == null) {
+                return null;
+            }
+            db.Update(movie);
+
+            movie.Name = updatedMovie.Name ?? movie.Name;
+            movie.Description = updatedMovie.Description ?? movie.Description;
+            movie.Genre = updatedMovie.Genre;
+
+            db.SaveChanges();
+            return ticket;
+        }
+
         public List<Review> GetReviews(int movieId)
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
