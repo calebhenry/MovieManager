@@ -23,5 +23,6 @@ namespace MovieManager.Server.Services
         Review EditReview(int currentUserId, UpdatedReview updatedReview);
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         List<Review> GetReviews(int movieId);
+        void AddTicketsToMovie(int movieId, int numberOfTickets, DateTime showtime, double price);
     }
 }

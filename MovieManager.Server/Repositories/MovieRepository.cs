@@ -214,6 +214,35 @@ namespace MovieManager.Server.Repositories
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
         }
+        public void AddTicketsToMovie(int movieId, int numberOfTickets, DateTime showtime, double price)
+        {
+            if (numberOfTickets <= 0)
+            {
+                return;
+            }
+            var movie = _context.Movies.Where(m => m.Id == movieId).FirstOrDefault();
+            if (movie == null)
+            {
+                return;
+            }
+
+            var existingTicket = movie.Tickets.Where(t => t.Showtime == showtime).FirstOrDefault();
+
+            if (existingTicket != null)
+            {
+                existingTicket.NumAvailible += numberOfTickets;
+            }
+
+            var ticket = new Ticket
+            {
+                MovieId = movieId,
+                Showtime = showtime,
+                Price = price,
+                NumAvailible = numberOfTickets
+            };
+            movie.Tickets.Add(ticket);
+            _context.SaveChanges();
+        }
     }
 
     public class MovieContext : DbContext
