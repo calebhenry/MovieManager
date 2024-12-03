@@ -23,7 +23,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
-        
+
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {
@@ -55,6 +55,16 @@ namespace MovieManager.Server.Controllers
             if (movie != null)
             {
                 return Ok(movie);
+            }
+            return NotFound();
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult AddTicketToCart([FromQuery] Movie movie, [FromBody] Review review)
+        {
+            if (movieService.AddReview(review))
+            {
+                return Ok();
             }
             return NotFound();
         }

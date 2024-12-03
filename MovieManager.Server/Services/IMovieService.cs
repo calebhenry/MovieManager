@@ -11,6 +11,7 @@ namespace MovieManager.Server.Services
         Cart GetCart(int? cartId);
         Movie? GetMovieById(int id);
         void AddTicket(Ticket ticket);
+        bool AddReview(Review review);
         List<Movie> GetMovies();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
