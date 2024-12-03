@@ -17,6 +17,15 @@ namespace MovieManager.Server.Models
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
 
+    public class UpdatedMovie
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Genre Genre { get; set; } = Genre.ACTION;
+        [InverseProperty("Movie")]
+    }
+
     public enum Genre
     {
         ACTION,
@@ -26,12 +35,4 @@ namespace MovieManager.Server.Models
         ROMANCE,
         THRILLER
     }
-
-    public class UpdatedMovie
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Genre Genre { get; set; } = Genre.ACTION;
-        [InverseProperty("Movie")]
 }
