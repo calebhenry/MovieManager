@@ -224,6 +224,11 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.EditTickets(movieId, updatedTicket);
         }
+
+        public Movie EditMovie(int movieId, UpdatedMovie updatedMovie)
+        {
+            return movieRepository.EditMovie(movieId, updatedMovie);
+        }
         
         public List<Review> GetReviews(int movieId)
         {
