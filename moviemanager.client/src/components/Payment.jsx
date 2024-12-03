@@ -25,7 +25,11 @@ const Payment = ({ globalState }) => {
             });
 
             if (response.ok) {
-                alert('Payment processed successfully!');
+                if(user.preference == 1) {
+                    alert(`Payment was processed successfully! Email confirmation was sent to ${user.email}.`);
+                } else {
+                    alert(`Payment was processed successfully! Text confirmation was sent to ${user.phoneNumber}.`)
+                }
                 setCart(null);
                 navigate('/home'); // Redirect to home page on successful payment
             } else {
