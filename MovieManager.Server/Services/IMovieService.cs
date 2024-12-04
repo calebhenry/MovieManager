@@ -15,7 +15,7 @@ namespace MovieManager.Server.Services
         List<Movie> GetMovies();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
-        void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
+        void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc);
         bool RemoveMovie(Movie movie);
         void RemoveTicket(Ticket ticket);
         Cart? RemoveTicketFromCart(int ticketId, int cartId);
