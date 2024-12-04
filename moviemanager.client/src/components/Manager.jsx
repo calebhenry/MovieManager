@@ -54,7 +54,7 @@ const Manager = () => {
 
   const handleEditMovie = async (id, updatedMovie) => {
     try {
-      const response = await fetch(`/api/movies/${id}`, {
+      const response = await fetch(`/movie/editmovie`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -71,7 +71,7 @@ const Manager = () => {
 
   const handleAddTicket = async () => {
     try {
-      const response = await fetch("/movie/updateticket", {
+      const response = await fetch("/movie/addticket", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -106,7 +106,7 @@ const Manager = () => {
   return (
     <div className="screen">
       <h1>Manager Page</h1>
-      <div className="section-man">
+      <div className="section">
         <h2>Add New Movie</h2>
         <input
           type="text"
@@ -134,7 +134,7 @@ const Manager = () => {
         <button onClick={handleAddMovie}>Add Movie</button>
       </div>
 
-      <div className="section-man">
+      <div className="section">
         <h2>Movies</h2>
         {movies.map((movie) => (
           <div key={movie.id} className="movie">
@@ -157,7 +157,7 @@ const Manager = () => {
         ))}
       </div>
 
-      <div className="section-man">
+      <div className="section">
         <h2>Tickets</h2>
         {tickets.map((ticket) => (
           <div key={ticket.id} className="ticket">
@@ -180,7 +180,7 @@ const Manager = () => {
         ))}
       </div>
 
-      <div className="section-man">
+      <div className="section">
         <h2>Add New Ticket</h2>
         <input
           type="number"

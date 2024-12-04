@@ -3,7 +3,12 @@
   font-family: Arial, sans-serif;
 }
 
-.section-man {
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section {
   margin: 20px 0;
   padding: 15px;
   border: 1px solid #ddd;
@@ -11,7 +16,7 @@
   background-color: #f9f9f9;
 }
 
-.section-man h2 {
+.section h2 {
   margin-bottom: 15px;
   color: #333;
 }
@@ -23,6 +28,16 @@ input, select {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 
 .movie, .ticket {
   margin-bottom: 15px;
