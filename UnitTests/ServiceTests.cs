@@ -211,22 +211,46 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { cart.Tickets.First().Ticket });
 
-            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2025", "John Doe", "123"));
+            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2025", "John Doe", "123"));
             Assert.AreEqual(0, cart.Tickets.Count);
         }
 
         [Test]
         public void ProcessPayment_InvalidCardNumber_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123", "12/2025", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "123", "12/2025", "John Doe", "123"));
             Assert.AreEqual("Card number is invalid. Payment could not be processed.", ex.Message);
         }
 
         [Test]
         public void ProcessPayment_ExpiredCard_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2020", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
             Assert.AreEqual("Card is expired. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidStreetAddress_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid street number. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidCity_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columb1a", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid city. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidState_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid state abbreviation. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidZipCode_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "2920", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid zip code. Payment could not be processed.", ex.Message);
         }
 
         [Test]

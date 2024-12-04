@@ -161,27 +161,27 @@ namespace MovieManager.Server.Services
             string[] streetAddressParts = streetAddress.Split(' ');
             if (!int.TryParse(streetAddressParts[0], out _))
             {
-                throw new ArgumentException("Invalid street number.");
+                throw new ArgumentException("Invalid street number. Payment could not be processed.");
             }
 
             if (streetAddressParts.Length < 3)
             {
-                throw new ArgumentException("Invalid street address.");
+                throw new ArgumentException("Invalid street address. Payment could not be processed.");
             }
 
             if (city.Any(char.IsDigit))
             {
-                throw new ArgumentException("Invalid city.");
+                throw new ArgumentException("Invalid city. Payment could not be processed.");
             }
 
             if (state.Length != 2 || state.Any(char.IsDigit))
             {
-                throw new ArgumentException("Invalid state abbreviation.");
+                throw new ArgumentException("Invalid state abbreviation. Payment could not be processed.");
             }
 
             if (zipCode.Length != 5 || !int.TryParse(zipCode, out _))
             {
-                throw new ArgumentException("Invalid zip code.");
+                throw new ArgumentException("Invalid zip code. Payment could not be processed.");
             }
 
             if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))

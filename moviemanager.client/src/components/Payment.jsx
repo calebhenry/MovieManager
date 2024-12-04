@@ -81,7 +81,7 @@ const Payment = ({ globalState }) => {
                         <input
                             id="state"
                             type="text"
-                            maxlength="2"
+                            maxLength="2"
                             value={state}
                             onChange={(e) => setState(e.target.value)}
                             placeholder="SC"
@@ -93,7 +93,7 @@ const Payment = ({ globalState }) => {
                     <input
                         id="zipCode"
                         type="text"
-                        maxlength="5"
+                        maxLength="5"
                         value={zipCode}
                         onChange={(e) => setZipCode(e.target.value)}
                         placeholder="12345"
