@@ -227,22 +227,27 @@ namespace MovieManager.Server.Repositories
             return ticket;
         }
 
-        public MovieContext EditMovies(int movieId, UpdatedMovie updatedMovie)
+        public Movie? EditMovie(UpdatedMovie updatedMovie)
         {
-            var db = new MovieContext();
-            var movie = (from i in db.Movies where i.Id == updatedMovie.Id select i). ToList(). FirstOrDefault();
-            if (movie == null) {
-                return null;
+            using (var db = new MovieContext())
+            {
+                var movie = (from i in db.Movies where i.Id == updatedMovie.Id select i).ToList().FirstOrDefault();
+                if (movie == null)
+                {
+                    Console.WriteLine("Movie not found in database.");
+                    return null;
+                }
+
+                movie.Name = updatedMovie.Name ?? movie.Name;
+                movie.Description = updatedMovie.Description ?? movie.Description;
+                movie.Genre = updatedMovie.Genre;
+
+                db.SaveChanges();
+                Console.WriteLine("Movie updated: " + JsonConvert.SerializeObject(movie));
+                return movie;
             }
-            db.Update(movie);
-
-            movie.Name = updatedMovie.Name ?? movie.Name;
-            movie.Description = updatedMovie.Description ?? movie.Description;
-            movie.Genre = updatedMovie.Genre;
-
-            db.SaveChanges();
-            return ticket;
         }
+
 
         public List<Review> GetReviews(int movieId)
         {
