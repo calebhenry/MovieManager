@@ -156,8 +156,34 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveUser(user);
         }
 
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
+            string[] streetAddressParts = streetAddress.Split(' ');
+            if (!int.TryParse(streetAddressParts[0], out _))
+            {
+                throw new ArgumentException("Invalid street number. Payment could not be processed.");
+            }
+
+            if (streetAddressParts.Length < 3)
+            {
+                throw new ArgumentException("Invalid street address. Payment could not be processed.");
+            }
+
+            if (city.Any(char.IsDigit))
+            {
+                throw new ArgumentException("Invalid city. Payment could not be processed.");
+            }
+
+            if (state.Length != 2 || state.Any(char.IsDigit))
+            {
+                throw new ArgumentException("Invalid state abbreviation. Payment could not be processed.");
+            }
+
+            if (zipCode.Length != 5 || !int.TryParse(zipCode, out _))
+            {
+                throw new ArgumentException("Invalid zip code. Payment could not be processed.");
+            }
+
             if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
             {
                 throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
