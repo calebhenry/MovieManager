@@ -60,7 +60,7 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("addreview", Name = "AddReview")]
-        public ActionResult AddTicketToCart([FromQuery] Movie movie, [FromBody] Review review)
+        public ActionResult AddReview(Review review)
         {
             if (movieService.AddReview(review))
             {
