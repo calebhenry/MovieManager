@@ -1,0 +1,36 @@
+.screen {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.section-man {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.section-man h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+input, select {
+  margin: 5px 0;
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.movie, .ticket {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+button {
+  display: inline-block;
+}

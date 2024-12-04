@@ -48,6 +48,10 @@ const Home = ({ globalState }) => {
         navigate('/settings');
     };
 
+    const handleGoManage = () => {
+        navigate('/manager');
+    };
+
     const moviesByGenre = movies.reduce((acc, movie) => {
         const genre = movie.genre;
         if (!acc[genre]) {
@@ -65,6 +69,7 @@ const Home = ({ globalState }) => {
                 <div className="bar">
                     <button onClick={handleGoSettings}>Settings</button>
                     <button onClick={handleGoCart}>Cart</button>
+                    <button onClick={handleGoManage}>Manage</button>
                 </div>
             </div>
             <div className="home">
