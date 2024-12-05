@@ -10,8 +10,10 @@ namespace MovieManager.Server.Models
         public int MovieId { get; set; }
         [ForeignKey("User")]
         public int UserId { get; set; }
+        public DateTime PostDate { get; set; }
         public string Comment { get; set; }
         public int Rating { get; set; }
+        public int LikeCount { get; set; }
 
         // Here for the EF core link
         [JsonIgnore]
@@ -23,8 +25,9 @@ namespace MovieManager.Server.Models
     public class UpdatedReview
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public DateTime PostDate { get; set; }
         public string? Comment { get; set; }
         public int? Rating { get; set; }
+        public int? LikeCount { get; set; }
     }
 }

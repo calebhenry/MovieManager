@@ -21,7 +21,7 @@ namespace MovieManager.Server.Services
         Cart? RemoveTicketFromCart(int ticketId, int cartId);
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
-        Review EditReview(int currentUserId, UpdatedReview updatedReview);
+        Review EditReview(UpdatedReview updatedReview);
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         List<Review> GetReviews(int movieId);
     }
