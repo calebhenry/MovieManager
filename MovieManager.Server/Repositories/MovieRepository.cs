@@ -184,20 +184,21 @@ namespace MovieManager.Server.Repositories
 
         public void RemoveUser(User user)
         {
-            var usrRemove = (from i in _context.Users where i.Id == user.Id select i).ToList().FirstOrDefault(); 
-            if (usrRemove == null) { return; }
-            _context.Users.Remove(usrRemove);
+            var userRemove = (from i in _context.Users where i.Id == user.Id select i).ToList().FirstOrDefault(); 
+            if (userRemove == null) { return; }
+            _context.Users.Remove(userRemove);
             _context.SaveChanges();
             // TODO: Remove all user data ?
         }
 
-        public Review? EditReview(int currentUserId, UpdatedReview updatedReview)
+        public Review? EditReview(UpdatedReview updatedReview)
         {
             var db = new MovieContext();
             var review = (from i in db.Reviews where i.Id == updatedReview.Id select i).ToList().FirstOrDefault();
             if (review == null) { 
                 return null; 
             }
+            review.PostDate = updatedReview.PostDate;
             if (!string.IsNullOrEmpty(updatedReview.Comment))
             {
                 review.Comment = updatedReview.Comment;
@@ -205,6 +206,10 @@ namespace MovieManager.Server.Repositories
             if (updatedReview.Rating != null)
             {
                 review.Rating = updatedReview.Rating ?? review.Rating;
+            }
+            if (updatedReview.LikeCount != null)
+            {
+                review.LikeCount = updatedReview.LikeCount ?? review.LikeCount;
             }
             db.SaveChanges();
             return review;

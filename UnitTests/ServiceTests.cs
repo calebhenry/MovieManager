@@ -55,8 +55,8 @@ namespace UnitTests
         {
             var users = new List<User>
             {
-                new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL },
-                new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE }
+                new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER },
+                new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE, PermissionLevel = PermissionLevel.USER }
             };
             _mockRepository.Setup(repo => repo.GetUser("Username 1", "Password 1")).Returns(users[0]);
             var result = _movieService.GetUser("Username 1", "Password 1");
@@ -66,7 +66,7 @@ namespace UnitTests
         [Test]
         public void AddUser_CallsRepositoryAddUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             _movieService.AddUser(user);
             _mockRepository.Verify(repo => repo.AddUser(user), Times.Once);
         }
@@ -74,9 +74,9 @@ namespace UnitTests
         [Test]
         public void UpdateUser_CallsRepositoryUpdateUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             var updatedUser = new UpdatedUser { Id = 1, Name = "Name 3", Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
-            var expectedUser = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 3", Gender = Gender.MALE, Age = 40, Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
+            var expectedUser = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 3", Gender = Gender.MALE, Age = 40, Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE, PermissionLevel = PermissionLevel.USER };
             _mockRepository.Setup(repo => repo.UpdateUser(updatedUser)).Returns(expectedUser);
             var result = _movieService.UpdateUser(updatedUser);
 
@@ -87,6 +87,7 @@ namespace UnitTests
             Assert.AreEqual(user.Username, result.Username);
             Assert.AreEqual(user.Password, result.Password);
             Assert.AreEqual(user.Age, result.Age);
+            Assert.AreEqual(user.PermissionLevel, result.PermissionLevel);
 
             _mockRepository.Verify(repo => repo.UpdateUser(updatedUser), Times.Once);
         }
@@ -94,7 +95,7 @@ namespace UnitTests
         [Test]
         public void RemoveUser_CallsRepositoryRemoveUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             _movieService.RemoveUser(user);
             _mockRepository.Verify(repo => repo.RemoveUser(user), Times.Once);
         }
@@ -287,18 +288,21 @@ namespace UnitTests
         [Test]
         public void EditReview_ReturnsEditedReview()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
-            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
-            var review = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 1", Rating = 5 };
-            var updatedReview = new UpdatedReview { Id = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
-            var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
-            _mockRepository.Setup(repo => repo.EditReview(user.Id, updatedReview)).Returns(expectedReview);
-            var result = _movieService.EditReview(user.Id, updatedReview);
+            DateTime now = DateTime.UtcNow;
 
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var review = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 1", Rating = 5, LikeCount = 1 };
+            var updatedReview = new UpdatedReview { Id = 1, PostDate = now, Comment = "Comment 2", Rating = 4, LikeCount = 2 };
+            var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 2", Rating = 4 , LikeCount = 2 };
+            _mockRepository.Setup(repo => repo.EditReview(updatedReview)).Returns(expectedReview);
+            var result = _movieService.EditReview(updatedReview);
+
+            Assert.AreEqual(updatedReview.PostDate, result.PostDate);
             Assert.AreEqual(updatedReview.Comment, result.Comment);
             Assert.AreEqual(updatedReview.Rating, result.Rating);
+            Assert.AreEqual(updatedReview.LikeCount, result.LikeCount);
 
-            _mockRepository.Verify(repo => repo.EditReview(user.Id, updatedReview), Times.Once);
+            _mockRepository.Verify(repo => repo.EditReview(updatedReview), Times.Once);
         }
 
         public void EditTickets_CallsRepositoryEditTickets()
