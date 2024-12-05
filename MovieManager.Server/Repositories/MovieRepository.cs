@@ -1,242 +1,278 @@
-﻿using MovieManager.Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieManager.Server.Models;
 using System;
 
 namespace MovieManager.Server.Repositories
 {
     public class MovieRepository : IMovieRepository
     {
-        private List<Movie> movies;
-        private List<Cart> carts;
-        private List<Ticket> tickets;
-        private List<User> users;
 
-        public MovieRepository()
+        private MovieContext _context;
+
+        public MovieRepository(MovieContext context)
         {
-            movies = new List<Movie>();
-            carts = new List<Cart>();
-            tickets = new List<Ticket>();
-            users = new List<User>();
-
-            Movie movie1 = new Movie()
-            {
-                Id = 1,
-                Name = "Grand Budapest Hotel",
-                Description = "It's about a big hotel.",
-                Tickets = new()
-            };
-
-            List<Ticket> ticket1 = new List<Ticket>()
-            {
-                new Ticket()
-                {
-                    Id = 1,
-                    MovieId = 1,
-                    Showtime = DateTime.UtcNow,
-                    Price = 2.50,
-                    NumAvailible = 20,
-                },
-                new Ticket()
-                {
-                    Id = 2,
-                    MovieId = 1,
-                    Showtime = DateTime.UtcNow.AddHours(-2),
-                    Price = 2.0,
-                    NumAvailible = 25,
-                }
-            };
-
-            movie1.Tickets = ticket1;
-
-            Movie movie2 = new Movie()
-            {
-                Id = 2,
-                Name = "Mini Budapest Hotel",
-                Description = "It's about a very small hotel.",
-                Tickets = new()
-            };
-
-            List<Ticket> ticket2 = new List<Ticket>()
-            {
-                new Ticket()
-                {
-                    Id = 3,
-                    MovieId = 2,
-                    Showtime = DateTime.UtcNow,
-                    Price = 2.50,
-                    NumAvailible = 20,
-                },
-                new Ticket()
-                {
-                    Id = 4,
-                    MovieId = 2,
-                    Showtime = DateTime.UtcNow.AddHours(-3),
-                    Price = 2.0,
-                    NumAvailible = 25,
-                }
-            };
-
-            movie2.Tickets = ticket2;
-            movies.Add(movie1);
-            movies.Add(movie2);
-
-            Cart cart1 = new Cart();
-
-            cart1.Id = 0;
-            List<CartItem> cartItems1 = new List<CartItem>();
-            for (int i = 0; i < ticket1.Count; i++)
-            {
-                var ticket = ticket1[i];
-                cartItems1.Add(
-                    new CartItem()
-                    {
-                        Id = i,
-                        CartId = 0,
-                        TicketId = ticket.Id,
-                        Quantity = 5,
-                        Cart = cart1,
-                        Ticket = ticket
-
-                    }
-                );
-            }
-
-            cart1.Tickets = cartItems1;
-
-            Cart cart2 = new Cart();
-            cart2.Id = 1;
-
-            List<CartItem> cartItems2 = new List<CartItem>();
-            for (int i = 0; i < ticket2.Count; i++)
-            {
-                var ticket = ticket2[i];
-                cartItems2.Add(
-                    new CartItem()
-                    {
-                        Id = i,
-                        CartId = 0,
-                        TicketId = ticket.Id,
-                        Quantity = 4,
-                        Cart = cart1,
-                        Ticket = ticket
-
-                    }
-                );
-            }
-
-            cart2.Tickets = cartItems2;
-            carts.Add(cart1);
-            carts.Add(cart2);
-
-            var user1 = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
-            var user2 = new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE };
-            users.Add(user1);
-            users.Add(user2);
+            _context = context;
         }
 
         public List<Movie> GetMovies()
         {
-            return movies;
+            var movies = _context.Movies.Include(_ => _.Tickets).Include(_ => _.Reviews).ToList();
+            return _context.Movies.ToList();
         }
 
-        public Movie GetMovieById(int id)
+        public Movie? GetMovieById(int id)
         {
-            return movies.SingleOrDefault(m => m.Id == id);
+            return _context.Movies
+             .Include(m => m.Tickets)
+             .Include(m => m.Reviews)
+             .FirstOrDefault(m => m.Id == id);
         }
 
         public void AddMovie(Movie movie)
         {
-            movies.Add(movie);
+            movie.Id = 0;
+            movie.Tickets.ForEach(_ => _.Id = 0);
+            _context.Movies.Add(movie);
+            _context.SaveChanges();
+        }
+
+        public bool AddReview(Review review)
+        {
+            review.Id = 0;
+            var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
+            if (movie == null)
+                return false;
+            var user = (from i in _context.Users where i.Id == review.UserId select i).ToList().FirstOrDefault();
+            if (user == null)
+                return false;
+            _context.Update(user);
+            _context.Update(movie);
+            user.Reviews.Add(review);
+            movie.Reviews.Add(review);
+            _context.SaveChanges();
+            return true;
         }
 
         public bool RemoveMovie(Movie movie)
         {
-            var movieRem = movies.FirstOrDefault(m => m.Id == movie.Id);
+            var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
             if (movieRem == null)
             {
                 return false;
-            } 
-            else
-            {
-                movies.Remove(movieRem);
-                return true;
             }
-            
+            // TODO: remove everything that references that movie, or references a ticket for that movie ?
+            _context.Movies.Remove(movieRem);
+            _context.SaveChanges();
+            return true;
+
         }
 
         public List<Ticket> GetTickets()
         {
-            return movies.SelectMany(m => m.Tickets).ToList();
+            return _context.Tickets.ToList();
         }
 
         public void AddCart(Cart cart)
         {
-            carts.Add(cart);
+            cart.Id = 0;
+            _context.Carts.Add(cart);
+            _context.SaveChanges();
         }
 
-        public void AddTicket(Ticket ticket)
+        public bool AddTicket(Ticket ticket)
         {
-            movies.First(m => m.Id == ticket.MovieId).Tickets.Add(ticket);
+            ticket.Id = 0;
+            var movie = (from i in _context.Movies where i.Id == ticket.MovieId select i).ToList().FirstOrDefault();
+            if (movie == null) {
+                return false;
+            }
+            _context.Update(movie);
+            movie.Tickets.Add(ticket);
+            _context.SaveChanges();
+            return true;
         }
 
         public void RemoveTicket(Ticket ticket)
         {
-            movies.First(m => m.Id == ticket.MovieId).Tickets.Remove(ticket);
+            var tick = (from i in _context.Tickets where i.Id == ticket.Id select i).FirstOrDefault();
+            if (tick == null) { return; }
+            _context.Tickets.Remove(tick);
+            _context.SaveChanges();
+            // TODO: remove all other references ?
         }
 
         public List<Cart> GetCarts()
         {
-            return carts;
+            return _context.Carts.Include(c => c.Tickets).ThenInclude(ci => ci.Ticket).ToList();
         }
 
+        public void UpdateCart(Cart cart)
+        {
+            var existingCart = _context.Carts.Include(c => c.Tickets).FirstOrDefault(c => c.Id == cart.Id);
+
+            if (existingCart != null)
+            {
+                foreach (var existingItem in existingCart.Tickets.ToList())
+                {
+                    if (!cart.Tickets.Any(t => t.Id == existingItem.Id))
+                    {
+                        _context.CartItems.Remove(existingItem);
+                    }
+                }
+
+                _context.Entry(existingCart).CurrentValues.SetValues(cart);
+                foreach (var item in cart.Tickets)
+                {
+                    var existingItem = existingCart.Tickets.FirstOrDefault(t => t.Id == item.Id);
+                    if (existingItem != null)
+                    {
+                        _context.Entry(existingItem).CurrentValues.SetValues(item);
+                    }
+                    else
+                    {
+                        existingCart.Tickets.Add(item);
+                    }
+                }
+
+                _context.SaveChanges();
+            }
+        }
         public List<User> GetUsers()
         {
-            return users ?? new List<User>();
+            return _context.Users.ToList();
         }
 
         public void AddUser(User user)
         {
-            users.Add(user);
+            user.Id = 0;
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
         public User? GetUser(string username, string password)
         {
-            User? user = users.FirstOrDefault(user => user.Username == username);
-
-            if(user != null && user.Password != password) 
-            {
-                user = null;
-            }
-
-            return user;
+            return (from i in _context.Users.Include(_ => _.Reviews).ToList() where i.Username == username &&
+                    i.Password == password select i).FirstOrDefault();
         }
 
-        public User UpdateUser(UpdatedUser updatedUser)
+        public User? UpdateUser(UpdatedUser updatedUser)
         {
-            User user = users.First(user => user.Id == updatedUser.Id);
-
-            if(!string.IsNullOrEmpty(updatedUser.Name)) 
+            var user = (from i in _context.Users where i.Id == updatedUser.Id select i).ToList().FirstOrDefault();
+            if (user == null) { 
+                return null; 
+            }
+            _context.Update(user);
+            if (!string.IsNullOrEmpty(updatedUser.Name))
             {
                 user.Name = updatedUser.Name;
             }
-            if(!string.IsNullOrEmpty(updatedUser.Email)) 
+            if (!string.IsNullOrEmpty(updatedUser.Email))
             {
                 user.Email = updatedUser.Email;
             }
-            if(!string.IsNullOrEmpty(updatedUser.PhoneNumber)) 
+            if (!string.IsNullOrEmpty(updatedUser.PhoneNumber))
             {
                 user.PhoneNumber = updatedUser.PhoneNumber;
             }
-            if(updatedUser.Preference != null) 
+            if (updatedUser.Preference != null)
             {
-                user.Preference = updatedUser.Preference ?? user.Preference;
+                user.Preference = (Preference) updatedUser.Preference;
             }
-
+            _context.SaveChanges();
             return user;
         }
 
         public void RemoveUser(User user)
         {
-            users.Remove(user);
+            var usrRemove = (from i in _context.Users where i.Id == user.Id select i).ToList().FirstOrDefault(); 
+            if (usrRemove == null) { return; }
+            _context.Users.Remove(usrRemove);
+            _context.SaveChanges();
+            // TODO: Remove all user data ?
+        }
+
+        public Review? EditReview(int currentUserId, UpdatedReview updatedReview)
+        {
+            var db = new MovieContext();
+            var review = (from i in db.Reviews where i.Id == updatedReview.Id select i).ToList().FirstOrDefault();
+            if (review == null) { 
+                return null; 
+            }
+            if (!string.IsNullOrEmpty(updatedReview.Comment))
+            {
+                review.Comment = updatedReview.Comment;
+            }
+            if (updatedReview.Rating != null)
+            {
+                review.Rating = updatedReview.Rating ?? review.Rating;
+            }
+            db.SaveChanges();
+            return review;
+        }
+
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            var db = new MovieContext();
+            var ticket = (from i in db.Tickets where i.Id == updatedTicket.Id select i).ToList().FirstOrDefault();
+            if (ticket == null) { 
+                return null; 
+            }
+            db.Update(ticket);
+            
+            ticket.Price = updatedTicket.Price ?? ticket.Price;
+
+            ticket.NumAvailible = updatedTicket.NumAvailible ?? ticket.NumAvailible;
+
+            db.SaveChanges();
+            return ticket;
+        }
+
+        public List<Review> GetReviews(int movieId)
+        {
+            return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
+        }
+    }
+
+    public class MovieContext : DbContext
+    {
+
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Movie>()
+                .HasMany(e => e.Tickets)
+                .WithOne(e => e.Movie)
+                .HasForeignKey(e => e.MovieId)
+                .IsRequired();
+            modelBuilder.Entity<Cart>()
+                .HasMany(e => e.Tickets)
+                .WithOne(e => e.Cart)
+                .HasForeignKey(e => e.CartId)
+                .IsRequired();
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Reviews)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired();
+            modelBuilder.Entity<Movie>()
+                .HasMany(e => e.Reviews)
+                .WithOne(e => e.Movie)
+                .HasForeignKey(e => e.MovieId)
+                .IsRequired();
+            modelBuilder.Entity<CartItem>()
+                .HasOne(e => e.Ticket);
         }
     }
 }

@@ -6,17 +6,22 @@ namespace MovieManager.Server.Repositories
     {
         void AddCart(Cart cart);
         void AddMovie(Movie movie);
-        void AddTicket(Ticket ticket);
+        bool AddTicket(Ticket ticket);
         void AddUser(User user);
+        bool AddReview(Review review);
         List<Cart> GetCarts();
+        void UpdateCart(Cart cart);
+        Movie? GetMovieById(int id);
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
-        Movie GetMovieById(int id);
-        List<User> GetUsers();
         User? GetUser(string username, string password);
-        User UpdateUser(UpdatedUser updatedUser);
+        List<User> GetUsers();
         bool RemoveMovie(Movie movie);
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
+        User? UpdateUser(UpdatedUser updatedUser);
+        Review? EditReview(int currentUserId, UpdatedReview updatedReview);
+        Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        List<Review> GetReviews(int movieId);
     }
 }

@@ -23,7 +23,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
-        
+
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {
@@ -55,6 +55,16 @@ namespace MovieManager.Server.Controllers
             if (movie != null)
             {
                 return Ok(movie);
+            }
+            return NotFound();
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult AddReview(Review review)
+        {
+            if (movieService.AddReview(review))
+            {
+                return Ok();
             }
             return NotFound();
         }
@@ -110,11 +120,11 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("processpayment", Name = "ProcessPayment")]
-        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
             try
             {
-                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                movieService.ProcessPayment(cartId, streetAddress, city, state, zipCode, cardNumber, exp, cardholderName, cvc);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
@@ -126,23 +136,39 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
+
         [HttpGet("getcart", Name = "GetCart")]
+
         public ActionResult<Cart> GetCart(int? cartId)
         {
             var cart = movieService.GetCart(cartId);
             return Ok(cart);
         }
 
-        [HttpDelete("removeticketfrommovie", Name="RemoveTicketFromMovie")]
-        public ActionResult RemoveTicketFromMovie(int movieId, int NumAvailible)
-        { 
-             try
+        //currentUserId should come from the logged in user, this is to amke sure the user can only edit their own comments
+        [HttpPut("editreview", Name = "EditReview")]
+        public ActionResult<Review> EditReview(int currentUserId, UpdatedReview updatedReview)
+        {
+            try
             {
-                movieService.RemoveTicketFromMovie(movieId, NumAvailible);
+                movieService.EditReview(currentUserId, updatedReview);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut("edittickets", Name = "EditTickets")]
+        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return Ok(movieService.EditTickets(movieId, updatedTicket));
+        }
+
+        [HttpGet("getreviews", Name = "GetReviews")]
+        public ActionResult<List<Review>> GetReviews(int movieId)
+        {
+            var reviews = movieService.GetReviews(movieId);
+            return Ok(reviews);
         }
     }
 }

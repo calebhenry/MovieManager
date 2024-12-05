@@ -211,22 +211,46 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { cart.Tickets.First().Ticket });
 
-            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2025", "John Doe", "123"));
+            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2025", "John Doe", "123"));
             Assert.AreEqual(0, cart.Tickets.Count);
         }
 
         [Test]
         public void ProcessPayment_InvalidCardNumber_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123", "12/2025", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "123", "12/2025", "John Doe", "123"));
             Assert.AreEqual("Card number is invalid. Payment could not be processed.", ex.Message);
         }
 
         [Test]
         public void ProcessPayment_ExpiredCard_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2020", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
             Assert.AreEqual("Card is expired. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidStreetAddress_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid street number. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidCity_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columb1a", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid city. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidState_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid state abbreviation. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidZipCode_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "2920", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid zip code. Payment could not be processed.", ex.Message);
         }
 
         [Test]
@@ -258,6 +282,39 @@ namespace UnitTests
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Id);
             _mockRepository.Verify(repo => repo.AddCart(It.IsAny<Cart>()), Times.Once);
+        }
+        
+        [Test]
+        public void EditReview_ReturnsEditedReview()
+        {
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var review = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 1", Rating = 5 };
+            var updatedReview = new UpdatedReview { Id = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
+            var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, Comment = "Comment 2", Rating = 4 };
+            _mockRepository.Setup(repo => repo.EditReview(user.Id, updatedReview)).Returns(expectedReview);
+            var result = _movieService.EditReview(user.Id, updatedReview);
+
+            Assert.AreEqual(updatedReview.Comment, result.Comment);
+            Assert.AreEqual(updatedReview.Rating, result.Rating);
+
+            _mockRepository.Verify(repo => repo.EditReview(user.Id, updatedReview), Times.Once);
+        }
+
+        public void EditTickets_CallsRepositoryEditTickets()
+        {
+            DateTime now = DateTime.UtcNow;
+            var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 2.50, NumAvailible = 20 };
+            var updatedTicket = new UpdatedTicket { Id = 1, MovieId = 1, Price = 3.50, NumAvailible = 15 };
+            var expectedTicket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 3.50, NumAvailible = 15 };
+            _mockRepository.Setup(repo => repo.EditTickets(1, updatedTicket)).Returns(expectedTicket);
+            var result = _movieService.EditTickets(1, updatedTicket);
+
+            Assert.AreEqual(updatedTicket.Price, result.Price);
+            Assert.AreEqual(updatedTicket.NumAvailible, result.NumAvailible);
+            Assert.AreEqual(ticket.Showtime, result.Showtime);
+
+            _mockRepository.Verify(repo => repo.EditTickets(1, updatedTicket), Times.Once);
         }
 
     }

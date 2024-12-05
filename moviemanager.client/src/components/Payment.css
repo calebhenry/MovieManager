@@ -1,15 +1,17 @@
-/* components/Payment.css */
-
 .screen {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 20px;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .payment-container {
+    margin-top: 100px;
+    padding-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -68,4 +70,18 @@
   color: red;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.city-state-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.city-state-wrapper input {
+  flex: 1;
+}
+
+.city-state-wrapper input#city {
+  margin-right: 10px;
 }

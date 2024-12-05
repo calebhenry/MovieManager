@@ -8,17 +8,21 @@ namespace MovieManager.Server.Services
         void AddMovie(Movie movie);
         bool AddTicketToCart(int cartId, int ticketId, int quantity);
         User AddUser(User user);
-        List<Movie> GetMovies();
-        Movie GetMovieById(int id);
-        User? GetUser(string username, string password);
-        User UpdateUser(UpdatedUser updatedUser);
-        bool RemoveMovie(Movie movie);
-        Cart? RemoveTicketFromCart(int ticketId, int cartId);
-        void RemoveTicket(Ticket ticket);
-        void RemoveUser(User user);
-        void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc);
-        IEnumerable<Ticket> GetTickets(int movieId);
         Cart GetCart(int? cartId);
-        void RemoveTicketFromMovie (int movieId, int NumAvailible);
+        Movie? GetMovieById(int id);
+        void AddTicket(Ticket ticket);
+        bool AddReview(Review review);
+        List<Movie> GetMovies();
+        IEnumerable<Ticket> GetTickets(int movieId);
+        User? GetUser(string username, string password);
+        void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc);
+        bool RemoveMovie(Movie movie);
+        void RemoveTicket(Ticket ticket);
+        Cart? RemoveTicketFromCart(int ticketId, int cartId);
+        void RemoveUser(User user);
+        User UpdateUser(UpdatedUser updatedUser);
+        Review EditReview(int currentUserId, UpdatedReview updatedReview);
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        List<Review> GetReviews(int movieId);
     }
 }
