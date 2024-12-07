@@ -11,7 +11,21 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7160;http://localhost:5018"
+    },
+    "CarolinaProfile": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
+        "movieDb": "data source=DESKTOP-F5913G4;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7160;http://localhost:5018"
     }
+
+    
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
