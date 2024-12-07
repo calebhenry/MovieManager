@@ -20,7 +20,7 @@ namespace MovieManager.Server.Repositories
         void RemoveTicket(Ticket ticket);
         void RemoveUser(User user);
         User? UpdateUser(UpdatedUser updatedUser);
-        Review? EditReview(int currentUserId, UpdatedReview updatedReview);
+        Review? EditReview(UpdatedReview updatedReview);
         Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         List<Review> GetReviews(int movieId);
     }
