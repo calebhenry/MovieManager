@@ -7,7 +7,7 @@ on:
     branches: [ "main", "development" ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -33,3 +33,56 @@ jobs:
         name: NUnit Tests
         path: TestResults/*.trx
         reporter: dotnet-trx
+  base_branch_cov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore 
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
+      - name: Upload code coverage for ref branch
+        uses: actions/upload-artifact@v3
+        with:
+          name: lcov.info
+          path: ./coverage/lcov.info
+  checks:
+    runs-on: ubuntu-latest
+    needs: base_branch_cov
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download code coverage report from base branch
+        uses: actions/download-artifact@v3
+        with:
+          name: ref-lcov.info
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore 
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
+      - name: Generate Code Coverage report
+        id: code-coverage
+        uses: barecheck/code-coverage-action@v1
+        with:
+          barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+          lcov-file: "./coverage/lcov.info"
+          base-lcov-file: "./lcov.info"
+          minimum-ratio: 0
+          send-summary-comment: true
+          show-annotations: "warning"
