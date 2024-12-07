@@ -229,25 +229,34 @@ namespace MovieManager.Server.Repositories
 
         public Movie? EditMovie(UpdatedMovie updatedMovie)
         {
-            using (var db = new MovieContext())
-            {
-                var movie = (from i in db.Movies where i.Id == updatedMovie.Id select i).ToList().FirstOrDefault();
-                if (movie == null)
+            if (updatedMovie.Id <= 0) 
                 {
-                    Console.WriteLine("Movie not found in database.");
-                    return null;
+                    Console.WriteLine("Invalid Movie Id: " + updatedMovie.Id);
+                    throw new ArgumentException("Invalid Id for the movie.");
                 }
 
-                movie.Name = updatedMovie.Name ?? movie.Name;
-                movie.Description = updatedMovie.Description ?? movie.Description;
-                movie.Genre = updatedMovie.Genre;
+                using (var db = new MovieContext())
+                {
+                    var movie = db.Movies.FirstOrDefault(i => i.Id == updatedMovie.Id);
+                    
+                    if (movie == null)
+                    {
+                        Console.WriteLine($"Movie with Id {updatedMovie.Id} not found.");
+                    }
 
-                db.SaveChanges();
-                Console.WriteLine("Movie updated: " + JsonConvert.SerializeObject(movie));
-                return movie;
-            }
+                    Console.WriteLine($"Found movie with Id: {movie.Id}");
+
+                    // Update movie fields only if they're not null
+                    movie.Name = updatedMovie.Name ?? movie.Name;
+                    movie.Description = updatedMovie.Description ?? movie.Description;
+                    movie.Genre = updatedMovie.Genre;
+
+                    db.SaveChanges();
+
+                    // Return a response object with a message and the updated movie
+                    return movie;
+                }
         }
-
 
         public List<Review> GetReviews(int movieId)
         {
