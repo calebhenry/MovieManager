@@ -152,9 +152,10 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPut("edittickets", Name = "EditTickets")]
-        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
+        public ActionResult<Movie> EditTickets(UpdatedTicket updatedTicket)
         {
-            return Ok(movieService.EditTickets(movieId, updatedTicket));
+            updatedMovie.Id = id;
+            return Ok(movieService.EditTickets(updatedTicket));
         }
 
         [HttpPut("editmovie", Name = "EditMovie")]

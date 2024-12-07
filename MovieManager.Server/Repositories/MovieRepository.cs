@@ -263,7 +263,6 @@ namespace MovieManager.Server.Repositories
                 }
         }
 
-
         public List<Review> GetReviews(int movieId)
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
