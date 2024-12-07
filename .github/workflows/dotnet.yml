@@ -62,7 +62,7 @@ jobs:
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v3
         with:
-          name: ref-lcov.info
+          name: lcov.info
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
