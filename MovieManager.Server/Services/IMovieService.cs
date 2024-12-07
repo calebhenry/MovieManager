@@ -22,6 +22,7 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
         Review EditReview(int currentUserId, UpdatedReview updatedReview);
+        void RemoveTicketsFromMovie (int movieId, int numTickets);
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         List<Review> GetReviews(int movieId);
     }

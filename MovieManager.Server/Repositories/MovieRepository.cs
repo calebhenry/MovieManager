@@ -231,6 +231,24 @@ namespace MovieManager.Server.Repositories
         {
             return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
         }
+        public void RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            if (numTickets <= 0)
+            {
+                throw new ArgumentException("Number of tickets to remove must be greater than zero.");
+            }
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == movieId);
+            if (movie == null)
+            {
+                throw new ArgumentException("Movie not found.");
+            }
+            if (movie.tickets < numTickets)
+            {
+                throw new ArgumentException("Movie does not have sufficient amount of tickets to remove. ");
+            }
+            movie.tickets -= numTickets;
+            _context.SaveChanges();
+        }
     }
 
     public class MovieContext : DbContext

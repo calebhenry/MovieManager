@@ -170,5 +170,13 @@ namespace MovieManager.Server.Controllers
             var reviews = movieService.GetReviews(movieId);
             return Ok(reviews);
         }
+
+        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
+        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            var success = movieService.RemoveTicketsFromMovie(movieId, numTickets);
+            return Ok(success);
+        }
+
     }
 }
