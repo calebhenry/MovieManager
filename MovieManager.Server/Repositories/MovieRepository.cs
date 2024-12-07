@@ -53,36 +53,19 @@ namespace MovieManager.Server.Repositories
             return true;
         }
 
-        public bool RemoveMovie(int movieId)
+        public bool RemoveMovie(Movie movie)
         {
-            try
+            var db = new MovieContext();
+            var movieRem = (from i in db.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
+            if (movieRem == null)
             {
-                // Find the movie by ID
-                var movie = _context.Movies.FirstOrDefault(m => m.Id == movieId);
-                if (movie == null)
-                {
-                    return false; // Movie not found
-                }
-
-                // Remove related tickets
-                var relatedTickets = _context.Tickets.Where(t => t.MovieId == movieId).ToList();
-                if (relatedTickets.Any())
-                {
-                    _context.Tickets.RemoveRange(relatedTickets);
-                }
-
-                // Remove the movie
-                _context.Movies.Remove(movie);
-                _context.SaveChanges();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                // Log the error (you can replace Console.WriteLine with proper logging)
-                Console.WriteLine($"Error removing movie: {ex.Message}");
                 return false;
             }
+            // TODO: remove everything that references that movie, or references a ticket for that movie ?
+            db.Movies.Remove(movieRem);
+            db.SaveChanges();
+            return true;
+
         }
 
 
