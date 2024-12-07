@@ -46,7 +46,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore 
       - name: Build
-        run: dotnet build
+        run: dotnet build --no-restore
       - name: Test
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./base-lcov.info
       - name: Upload code coverage for ref branch
