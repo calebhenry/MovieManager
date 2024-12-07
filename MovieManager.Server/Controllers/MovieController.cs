@@ -219,5 +219,13 @@ namespace MovieManager.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
+        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            var success = movieService.RemoveTicketsFromMovie(movieId, numTickets);
+            return Ok(success);
+        }
+
     }
 }

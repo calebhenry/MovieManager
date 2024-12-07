@@ -284,5 +284,9 @@ namespace MovieManager.Server.Services
             }
              NumAvailible--;
         }
+        public void RemoveTicketsFromMovie(int movieId, int numAvailable)
+        {
+            return movieRepository.RemoveTicketsFromMovie(movieId, numTickets);
+        }
     }
 }
