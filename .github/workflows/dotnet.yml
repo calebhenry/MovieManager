@@ -46,14 +46,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build
       - name: Test
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./base-lcov.info
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
-          name: lcov.info
-          path: ./coverage/lcov.info
+          name: base-lcov.info
+          path: ./lcov.info
   checks:
     runs-on: ubuntu-latest
     needs: base_branch_cov
@@ -62,7 +62,7 @@ jobs:
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v3
         with:
-          name: lcov.info
+          name: base-lcov.info
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
@@ -81,8 +81,8 @@ jobs:
         uses: barecheck/code-coverage-action@v1
         with:
           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./coverage/lcov.info"
-          base-lcov-file: "./lcov.info"
+          lcov-file: "./lcov.info"
+          base-lcov-file: "./base-lcov.info"
           minimum-ratio: 0
           send-summary-comment: true
           show-annotations: "warning"
