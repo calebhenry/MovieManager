@@ -8,7 +8,7 @@ namespace MovieManager.Server.Repositories
         void AddMovie(Movie movie);
         bool AddTicket(Ticket ticket);
         void AddUser(User user);
-        bool AddReview(Review review);
+        int AddReview(Review review);
         List<Cart> GetCarts();
         void UpdateCart(Cart cart);
         Movie? GetMovieById(int id);
@@ -24,5 +24,7 @@ namespace MovieManager.Server.Repositories
         Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         Movie? EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
+        bool Liked(int userId, int reviewId);
+        bool AddLike(int userId, int reviewId);
     }
 }

@@ -292,7 +292,7 @@ namespace UnitTests
 
             var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
             var review = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 1", Rating = 5, LikeCount = 1 };
-            var updatedReview = new UpdatedReview { Id = 1, PostDate = now, Comment = "Comment 2", Rating = 4, LikeCount = 2 };
+            var updatedReview = new UpdatedReview { Id = 1, PostDate = now, Comment = "Comment 2", Rating = 4, Anonymous = false};
             var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 2", Rating = 4 , LikeCount = 2 };
             _mockRepository.Setup(repo => repo.EditReview(updatedReview)).Returns(expectedReview);
             var result = _movieService.EditReview(updatedReview);
@@ -300,7 +300,7 @@ namespace UnitTests
             Assert.AreEqual(updatedReview.PostDate, result.PostDate);
             Assert.AreEqual(updatedReview.Comment, result.Comment);
             Assert.AreEqual(updatedReview.Rating, result.Rating);
-            Assert.AreEqual(updatedReview.LikeCount, result.LikeCount);
+            Assert.AreEqual(updatedReview.Anonymous, result.Anonymous);
 
             _mockRepository.Verify(repo => repo.EditReview(updatedReview), Times.Once);
         }

@@ -23,6 +23,15 @@ namespace MovieManager.Server.Services
             return movieRepository.GetMovieById(id);
         }
 
+        public bool Liked(int userId, int reviewId)
+        {
+            return movieRepository.Liked(userId, reviewId);
+        }
+        public bool AddLike(int userId, int reviewId)
+        {
+            return movieRepository.AddLike(userId, reviewId);
+        }
+
         public void AddMovie(Movie movie)
         {
             movieRepository.AddMovie(movie);
@@ -64,7 +73,7 @@ namespace MovieManager.Server.Services
             }
             return null;
         }
-        public bool AddReview(Review review)
+        public int AddReview(Review review)
         {
             return movieRepository.AddReview(review);
         }
