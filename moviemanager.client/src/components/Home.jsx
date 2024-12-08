@@ -45,13 +45,13 @@ const Home = ({ globalState }) => {
         navigate('/settings');
     };
 
-    const handleRatingChange = (e) => {
-        setRating(e.target.value);
-    }
-
     const handleGoManage = () => {
         navigate('/manager');
     };
+
+    const handleRatingChange = (e) => {
+        setRating(e.target.value);
+    }
 
     const meetsRating = (movie) => {
         switch (rating) {

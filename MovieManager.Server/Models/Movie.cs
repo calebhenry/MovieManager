@@ -27,7 +27,7 @@ namespace MovieManager.Server.Models
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
 
-    public class UpdatedMovie
+    public class UpdatedMovie 
     {
         public int Id { get; set; }
         public string Name { get; set; }
