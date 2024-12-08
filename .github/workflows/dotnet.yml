@@ -68,6 +68,10 @@ jobs:
         with:
           name: base-lcov.info
           path: ./base-lcov.info
+      - name: Echo current working directory
+        run: echo "Current working directory: $(pwd)"
+      - name: Echo base-lcov.info path
+        run: echo "Base LCOV file path: $(pwd)/base-lcov.info"
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
