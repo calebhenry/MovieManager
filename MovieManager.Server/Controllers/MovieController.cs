@@ -181,7 +181,7 @@ namespace MovieManager.Server.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return BadRequest(ex.Message); // Return bad request if the messages fail
+                return BadRequest(ex.Message);
             }
         }
     }
