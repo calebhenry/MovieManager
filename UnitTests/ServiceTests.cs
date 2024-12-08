@@ -323,7 +323,7 @@ namespace UnitTests
             var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
             var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailible = 20 };
             _movieService.AddTicketsToMovie(ticket);
-            _mockRepository.Verify(repo => repo.AddTicketsToMovie(tciket), Times.Once);
+            _mockRepository.Verify(repo => repo.AddTicketsToMovie(ticket), Times.Once);
         }
 
     }
