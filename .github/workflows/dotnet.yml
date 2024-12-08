@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: base-lcov.info
-          path: ./lcov.info
+          path: ./base-lcov.info
   checks:
     runs-on: ubuntu-latest
     needs: base_branch_cov
