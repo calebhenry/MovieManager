@@ -60,15 +60,23 @@ namespace MovieManager.Server.Repositories
 
         public bool RemoveMovie(Movie movie)
         {
-            var db = new MovieContext();
-            var movieRem = (from i in db.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
+            var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
             if (movieRem == null)
             {
                 return false;
             }
-            // TODO: remove everything that references that movie, or references a ticket for that movie ?
-            db.Movies.Remove(movieRem);
-            db.SaveChanges();
+            var tickets = (from i in _context.Tickets where i.MovieId == movie.Id select i).ToList();
+            foreach (var ticket in tickets)
+            {
+                _context.Tickets.Remove(ticket);
+            }
+            var reviews = (from i in _context.Reviews where i.MovieId == movie.Id select i).ToList();
+            foreach (var review in reviews)
+            {
+                _context.Reviews.Remove(review);
+            }
+            _context.Movies.Remove(movieRem);
+            _context.SaveChanges();
             return true;
 
         }
