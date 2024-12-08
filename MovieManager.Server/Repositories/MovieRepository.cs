@@ -77,8 +77,6 @@ namespace MovieManager.Server.Repositories
             }
             _context.Movies.Remove(movieRem);
             _context.SaveChanges();
-            db.Movies.Remove(movieRem);
-            db.SaveChanges();
             return true;
 
         }
