@@ -43,12 +43,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Install Coverlet
+        run: dotnet tool install --global coverlet.console
       - name: Restore dependencies
         run: dotnet restore 
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./base-lcov.info
+        run: dotnet test --no-build
+      - name: Collect Coverage
+        run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --target "dotnet" --targetargs "test --no-build" --format lcov --output ./base-lcov.info
       - name: Upload code coverage for ref branch
         uses: actions/upload-artifact@v3
         with:
@@ -70,12 +74,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Install Coverlet
+        run: dotnet tool install --global coverlet.console
       - name: Restore dependencies
         run: dotnet restore 
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
+        run: dotnet test --no-build
+      - name: Collect Coverage
+        run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --target "dotnet" --targetargs "test --no-build" --format lcov --output ./lcov.info
       - name: Generate Code Coverage report
         id: code-coverage
         uses: barecheck/code-coverage-action@v1
