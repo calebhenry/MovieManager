@@ -157,6 +157,12 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.EditTickets(movieId, updatedTicket));
         }
 
+        [HttpPut("editmovie", Name = "EditMovie")]
+        public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
+        {
+            return Ok(movieService.EditMovie(updatedMovie));
+        }
+
         [HttpGet("getreviews", Name = "GetReviews")]
         public ActionResult<List<Review>> GetReviews(int movieId)
         {

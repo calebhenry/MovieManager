@@ -55,17 +55,19 @@ namespace MovieManager.Server.Repositories
 
         public bool RemoveMovie(Movie movie)
         {
-            var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
+            var db = new MovieContext();
+            var movieRem = (from i in db.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
             if (movieRem == null)
             {
                 return false;
             }
             // TODO: remove everything that references that movie, or references a ticket for that movie ?
-            _context.Movies.Remove(movieRem);
-            _context.SaveChanges();
+            db.Movies.Remove(movieRem);
+            db.SaveChanges();
             return true;
 
         }
+
 
         public List<Ticket> GetTickets()
         {
@@ -230,6 +232,37 @@ namespace MovieManager.Server.Repositories
 
             db.SaveChanges();
             return ticket;
+        }
+
+        public Movie? EditMovie(UpdatedMovie updatedMovie)
+        {
+            if (updatedMovie.Id <= 0) 
+                {
+                    Console.WriteLine("Invalid Movie Id: " + updatedMovie.Id);
+                    throw new ArgumentException("Invalid Id for the movie.");
+                }
+
+                using (var db = new MovieContext())
+                {
+                    var movie = db.Movies.FirstOrDefault(i => i.Id == updatedMovie.Id);
+                    
+                    if (movie == null)
+                    {
+                        Console.WriteLine($"Movie with Id {updatedMovie.Id} not found.");
+                    }
+
+                    Console.WriteLine($"Found movie with Id: {movie.Id}");
+
+                    // Update movie fields only if they're not null
+                    movie.Name = updatedMovie.Name ?? movie.Name;
+                    movie.Description = updatedMovie.Description ?? movie.Description;
+                    movie.Genre = updatedMovie.Genre;
+
+                    db.SaveChanges();
+
+                    // Return a response object with a message and the updated movie
+                    return movie;
+                }
         }
 
         public List<Review> GetReviews(int movieId)
