@@ -316,12 +316,14 @@ namespace MovieManager.Server.Repositories
             movie.tickets -= numTickets;
             _context.SaveChanges();
         }
-        public void RemoveReview(Review review)
+
+        public bool RemoveReview(Review review)
         {
             var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
-            if (revRemove == null) { return; }
+            if (revRemove == null) { return false; }
             _context.Reviews.Remove(revRemove);
             _context.SaveChanges();
+            return true;
         }
     }
 

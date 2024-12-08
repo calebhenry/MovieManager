@@ -227,5 +227,15 @@ namespace MovieManager.Server.Controllers
             return Ok(success);
         }
 
+        [HttpDelete("removereview", Name = "RemoveReview")]
+        public ActionResult RemoveReview(Review review)
+        {
+            bool result = movieService.RemoveReview(review);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+        
     }
 }

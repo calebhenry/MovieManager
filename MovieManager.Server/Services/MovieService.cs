@@ -290,7 +290,7 @@ namespace MovieManager.Server.Services
         }
         public void RemoveReview(Review review)
         {
-            movieRepository.RemoveReview(review);
+            return movieRepository.RemoveReview(review);
         }
     }
 }
