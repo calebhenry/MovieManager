@@ -292,5 +292,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.RemoveReview(review);
         }
+
+        public bool RemoveLike(int userId, int reviewId)
+        {
+            return movieRepository.RemoveLike(userId, reviewId);
+        }
     }
 }

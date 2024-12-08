@@ -1,0 +1,38 @@
+.review-listing {
+    background-color: #f0f0f0; 
+    border-radius: 20px; 
+    padding: 10px 15px; 
+    margin: 5px; 
+    font-size: 0.9em; 
+    color: #555; 
+    border: 1px solid #ccc; 
+}
+
+
+.left {
+  text-align: left;
+}
+
+.review-listing .column-allways {
+    justify-content: right; 
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.move-it-move-it {
+  position: relative;
+  top: -36px;
+}
+
+.review-listing .column-allways strong {
+  margin-right: 20px;
+}
+
+.review-listing .column-allways strong, p {
+    margin-bottom: 0px;
+}
+
+.review-listing p {
+  margin-left: 10px;
+  margin-right: 10px;
+}

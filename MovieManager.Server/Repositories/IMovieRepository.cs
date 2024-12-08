@@ -27,6 +27,7 @@ namespace MovieManager.Server.Repositories
         void AddTicketsToMovie(Ticket ticket);
         bool Liked(int userId, int reviewId);
         bool AddLike(int userId, int reviewId);
-        void RemoveReview(Review review);
+        bool RemoveReview(Review review);
+        bool RemoveLike(int userId, int reviewId);
     }
 }
