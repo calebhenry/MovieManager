@@ -80,15 +80,15 @@ jobs:
         run: dotnet test --no-build
       - name: Collect Coverage
         run: coverlet ./UnitTests/bin/Debug/net8.0/UnitTests.dll --target "dotnet" --targetargs "test --no-build" --format lcov --output ./lcov.info
-      - run: |
-            echo "Current working directory: $(pwd)"
-            ls
-        shell: bash
       - name: Download code coverage report from base branch
         uses: actions/download-artifact@v3
         with:
           name: base-lcov.info
           path: ./base-lcov.info
+      - run: |
+            echo "Current working directory: $(pwd)"
+            ls
+        shell: bash
       - name: Generate Code Coverage report
         id: code-coverage
         uses: barecheck/code-coverage-action@v1
