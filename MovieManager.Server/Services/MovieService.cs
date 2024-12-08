@@ -269,5 +269,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetReviews(movieId);
         }
+        
+        public void AddTicketsToMovie(Ticket ticket)
+        {
+            movieRepository.AddTicketsToMovie(ticket);
+        }
     }
 }

@@ -188,5 +188,19 @@ namespace MovieManager.Server.Controllers
             // to have a username for the review if not anonymous
             return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
+
+        [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
+        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
+        {
+            try
+            {
+                movieService.AddTicketsToMovie(ticket);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

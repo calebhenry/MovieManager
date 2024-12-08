@@ -300,6 +300,13 @@ namespace MovieManager.Server.Repositories
             _context.SaveChanges();
             return true;
         }
+
+        public void AddTicketsToMovie(Ticket ticket)
+        {
+            ticket.Id = 0;
+            _context.Tickets.Add(ticket);
+            _context.SaveChanges();
+        }
     }
 
     public class MovieContext : DbContext

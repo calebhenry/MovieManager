@@ -322,5 +322,14 @@ namespace UnitTests
             _mockRepository.Verify(repo => repo.EditTickets(1, updatedTicket), Times.Once);
         }
 
+        [Test]
+        public void AddTicketToMovie_CallsRepositoryAddMovie()
+        {
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailible = 20 };
+            _movieService.AddTicketsToMovie(ticket);
+            _mockRepository.Verify(repo => repo.AddTicketsToMovie(ticket), Times.Once);
+        }
+
     }
 }
