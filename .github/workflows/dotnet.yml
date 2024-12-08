@@ -70,7 +70,7 @@ jobs:
           path: ./base-lcov.info
       - run: |
             echo "Current working directory: $(pwd)"
-            echo "Base LCOV file path: $(pwd)/base-lcov.info"
+            ls
         shell: bash
       - uses: actions/checkout@v4
         with:
