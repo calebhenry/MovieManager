@@ -63,9 +63,10 @@ jobs:
     needs: base_branch_cov
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          ref: ${{ github.base_ref }}
+         dotnet-version: 8.0.x
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
