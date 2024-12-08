@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.26.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "jest-junit": "^16.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -26,7 +27,6 @@
     "@types/jest": "^29.5.14",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.2",
     "babel-jest": "^29.7.0",
     "eslint": "^9.11.1",
     "eslint-plugin-react": "^7.37.0",
