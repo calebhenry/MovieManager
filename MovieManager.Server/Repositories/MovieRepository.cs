@@ -36,21 +36,26 @@ namespace MovieManager.Server.Repositories
             _context.SaveChanges();
         }
 
-        public bool AddReview(Review review)
+        public int AddReview(Review review)
         {
             review.Id = 0;
             var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
             if (movie == null)
-                return false;
+                return 0;
             var user = (from i in _context.Users where i.Id == review.UserId select i).ToList().FirstOrDefault();
             if (user == null)
-                return false;
+                return 0;
             _context.Update(user);
             _context.Update(movie);
             user.Reviews.Add(review);
             movie.Reviews.Add(review);
             _context.SaveChanges();
-            return true;
+            var reviewNew = (from i in _context.Reviews
+                          where i.UserId == user.Id &&
+                          i.MovieId == movie.Id
+                          select i).ToList().FirstOrDefault();
+            if (reviewNew == null) return 0;
+            return reviewNew.Id;
         }
 
         public bool RemoveMovie(Movie movie)
@@ -195,11 +200,12 @@ namespace MovieManager.Server.Repositories
 
         public Review? EditReview(UpdatedReview updatedReview)
         {
-            var db = new MovieContext();
-            var review = (from i in db.Reviews where i.Id == updatedReview.Id select i).ToList().FirstOrDefault();
+            var review = (from i in _context.Reviews where i.MovieId == updatedReview.MovieId && 
+                          i.UserId == updatedReview.UserId select i).ToList().FirstOrDefault();
             if (review == null) { 
                 return null; 
             }
+            _context.Update(review);
             review.PostDate = updatedReview.PostDate;
             if (!string.IsNullOrEmpty(updatedReview.Comment))
             {
@@ -209,11 +215,8 @@ namespace MovieManager.Server.Repositories
             {
                 review.Rating = updatedReview.Rating ?? review.Rating;
             }
-            if (updatedReview.LikeCount != null)
-            {
-                review.LikeCount = updatedReview.LikeCount ?? review.LikeCount;
-            }
-            db.SaveChanges();
+            review.Anonymous = updatedReview.Anonymous;
+            _context.SaveChanges();
             return review;
         }
 

@@ -73,7 +73,7 @@ namespace MovieManager.Server.Services
             }
             return null;
         }
-        public bool AddReview(Review review)
+        public int AddReview(Review review)
         {
             return movieRepository.AddReview(review);
         }

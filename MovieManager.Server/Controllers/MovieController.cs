@@ -76,11 +76,12 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("addreview", Name = "AddReview")]
-        public ActionResult AddReview(Review review)
+        public ActionResult<int> AddReview(Review review)
         {
-            if (movieService.AddReview(review))
+            int result = movieService.AddReview(review);
+            if (result != 0)
             {
-                return Ok();
+                return Ok(result);
             }
             return NotFound();
         }

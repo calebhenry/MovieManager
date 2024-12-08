@@ -67,6 +67,8 @@ namespace MovieManager.Server.Models
         public DateTime PostDate { get; set; }
         public string? Comment { get; set; }
         public int? Rating { get; set; }
-        public int? LikeCount { get; set; }
+        public int MovieId { get; set; }
+        public int UserId { get; set; }
+        public bool Anonymous { get; set; }
     }
 }
