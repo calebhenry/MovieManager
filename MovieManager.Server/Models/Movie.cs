@@ -11,6 +11,16 @@ namespace MovieManager.Server.Models
         public string Description { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Genre Genre { get; set; } = Genre.ACTION;
+        public int AgeRating { get; set; } = 13;
+        public double ReviewScore
+        {
+            get
+            {
+                if (Reviews.Count == 0)
+                    return -1;
+                return (double) Reviews.Sum(r => r.Rating) / Reviews.Count;
+            }
+        }
         [InverseProperty("Movie")]
         public List<Ticket> Tickets { get; set; } = new List<Ticket>();
         [InverseProperty("Movie")]
