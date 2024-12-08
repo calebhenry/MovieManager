@@ -41,6 +41,10 @@
     margin-top: 10px;
 }
 
+.ticket-section h3 {
+    text-align: center;
+}
+
 .ticket-list {
     list-style-type: none;
     padding: 0;
