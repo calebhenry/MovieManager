@@ -84,7 +84,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: base-lcov.info
-          path: ./base-lcov.info
+          path: ./
       - run: |
             echo "Current working directory: $(pwd)"
             ls -R
