@@ -87,7 +87,7 @@ jobs:
           path: ./base-lcov.info
       - run: |
             echo "Current working directory: $(pwd)"
-            ls
+            ls -R
         shell: bash
       - name: Generate Code Coverage report
         id: code-coverage
