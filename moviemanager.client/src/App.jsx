@@ -12,6 +12,7 @@ import Cart from './components/Cart';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import UserSettings from './components/UserSettings';
+import Manager from './components/Manager';
 
 import './App.css';
 
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/cart" element={user == null ? <Navigate to="/login" /> : <Cart globalState={globalState} />} />
                     <Route path="/home" element={user == null ? <Navigate to="/login" /> : <Home globalState={globalState} />} />
                     <Route path="/settings" element={user == null ? <Navigate to="/login" /> : <UserSettings globalState={globalState} />} />
+                    <Route path="/manager" element={user == null ? <Navigate to="/login" /> : <Manager globalState={globalState} /> } />
                 </Routes>
             </Router>
         </div>

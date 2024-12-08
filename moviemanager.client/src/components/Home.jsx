@@ -45,6 +45,10 @@ const Home = ({ globalState }) => {
         navigate('/settings');
     };
 
+    const handleGoManage = () => {
+        navigate('/manager');
+    };
+
     const handleRatingChange = (e) => {
         setRating(e.target.value);
     }
@@ -86,7 +90,12 @@ const Home = ({ globalState }) => {
                     <br></br><br></br><h1>Welcome to Movie Browser {user.name}!</h1>
                     <div className="bar">
                         <button onClick={handleGoSettings}>Settings</button>
-                        <button onClick={handleGoCart}>Cart</button>
+                        {/* Default to Cart button if permission is not ADMIN */}
+                        {user.permissionLevel === 1 ? (
+                            <button onClick={handleGoManage}>Manage</button>
+                        ) : (
+                            <button onClick={handleGoCart}>Cart</button>
+                        )}
                     </div>
                 </div>
                 <div className="home">
