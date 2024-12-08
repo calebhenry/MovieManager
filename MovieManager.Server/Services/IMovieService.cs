@@ -12,6 +12,7 @@ namespace MovieManager.Server.Services
         Movie? GetMovieById(int id);
         void AddTicket(Ticket ticket);
         int AddReview(Review review);
+        bool RemoveLike(int userId, int reviewId);
         bool Liked(int userId,  int reviewId);
         bool AddLike(int userId,  int reviewId);
         List<Movie> GetMovies();

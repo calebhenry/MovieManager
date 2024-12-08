@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import MovieReview from "./MovieReview";
 import './MovieListing.css';
+
+                    //{(!showReview && reviews.length > 0) && (<button onClick={() => {showReviewsOnClick();}}>View Reviews</button>)}
 
 const MovieListing = ({ globalState }) => {
     const { id } = useParams();
@@ -14,10 +17,27 @@ const MovieListing = ({ globalState }) => {
     const { cart, setCart } = globalState;
     const [rating, setRating] = useState(3);
     const [comment, setComment] = useState("");
-    const [showName, setShowName] = useState(true);
+    const [anonChecked, setAnonChecked] = useState(false);
     const [reviewId, setReviewId] = useState(0)
     const [addReviewText, setAddReviewText] = useState("Add Review");
+    const [viewReviews, setViewReviews] = useState(false);
     const { user, setUser } = globalState;
+
+    const onChecked = () => {
+        setAnonChecked(!anonChecked);
+    }
+
+    const updateLikeCountLocal = (reviewIdArg, newVal) => {
+        reviews.forEach((i) => {
+            if (i.id == reviewIdArg) {
+                i.likeCount = newVal;
+            }
+        });
+    };
+
+    const showReviewsOnClick = () => {
+        setViewReviews(true);
+    };
 
     const submitReview = async() => {
         if (haveReviewed) {
@@ -28,7 +48,7 @@ const MovieListing = ({ globalState }) => {
                 MovieId: id,
                 UserId: user.id,
                 Rating: rating,
-                Anonymous: showName
+                Anonymous: anonChecked
             };
             const response = await fetch('/movie/editreview', {
                 method: 'PUT',
@@ -37,16 +57,32 @@ const MovieListing = ({ globalState }) => {
                 },
                 body: JSON.stringify(reviewUpdate),
             }); 
+            if (!response.ok) {
+                alert("Failed to edit review.");
+            } else {
+                let newReviews = JSON.parse(JSON.stringify(reviews));
+                newReviews.forEach((i) => {
+                    if (i.id == reviewId) {
+                        i.comment = reviewUpdate.Comment;
+                        i.rating = reviewUpdate.Rating;
+                        i.anonymous = reviewUpdate.Anonymous;
+                        i.postDate = reviewUpdate.PostDate;
+                        i.username = (reviewUpdate.Anonymous ? "Anon" : user.username);
+                    }
+                });
+                setReviews(newReviews);
+            }
         } else {
             const review = {
-                Id: 0,
-                MovieId: id,
-                UserId: user.id,
-                PostDate: new Date().toISOString(),
-                Rating: rating,
-                LikeCount: 0,
-                Comment: comment,
-                Anonymous: showName
+                id: 0,
+                movieId: id,
+                userId: user.id,
+                postDate: new Date().toISOString(),
+                rating: rating,
+                likeCount: 0,
+                comment: comment,
+                anonymous: anonChecked,
+                username: (anonChecked ? "Anon" : user.username)
             };
 
             const response = await fetch('/movie/addreview', {
@@ -57,11 +93,13 @@ const MovieListing = ({ globalState }) => {
                 body: JSON.stringify(review),
             }); 
             if (response.ok) {
-                review.Id = await response.json();
-                setReviewId(review.Id);
+                review.id = await response.json();
+                setReviewId(review.id);
                 setReviews([...reviews, review]);
+                setHaveReviewed(true);
+            } else {
+                alert("Failed to submit review.");
             }
-            setHaveReviewed(true);
         }
     };
 
@@ -111,7 +149,7 @@ const MovieListing = ({ globalState }) => {
                         setHaveReviewed(true);
                         setComment(i.comment);
                         setRating(i.rating);
-                        setShowName(i.anonymous);
+                        setAnonChecked(i.anonymous);
                         setReviewId(i.id);
                         setAddReviewText("Edit Review");
                     }
@@ -200,7 +238,7 @@ const MovieListing = ({ globalState }) => {
             <div className="movie-details-cont">
                 <h1 className="movie-title">{movie.name}</h1>
                 <p className="movie-description">{movie.description}</p>
-                {!showReview && (
+                {(!showReview && !viewReviews) && (
                 <div className="ticket-section">
                     <h3>Tickets</h3>
                     <Error />
@@ -231,11 +269,11 @@ const MovieListing = ({ globalState }) => {
                         <label for="comment">Comment:</label>
                     </div>
                     <div>
-                        <textarea name="comment" rows="5" columns="50" onChange={(e) => {setComment(e.target.value);}}>{comment}</textarea>
+                        <textarea value={comment} name="comment" rows="5" columns="50" onChange={(e) => {setComment(e.target.value);}}></textarea>
                     </div>
                     <div>
                         <label for="useName">Post Anonymously</label>
-                        <input type="checkbox" name="useName" value={showName ? "off" : "on"} onChange={(e)=>{setShowName(e.target.value == "on" ? false : true);}}/>
+                        <input type="checkbox" name="useName" checked={anonChecked} onChange={onChecked}/>
                     </div>
                     </>)}
                 <div className="column-allways">
@@ -243,6 +281,23 @@ const MovieListing = ({ globalState }) => {
                     <button onClick={() => {onAddReview();}}>{addReviewText}</button>
                     {(haveReviewed && showReview) && (<button onClick={() => {deleteReview();}}>Delete Review</button>)}
                 </div>
+                {(reviews.length > 0) && (<>
+                    <h2>Reviews</h2>
+                    {reviews.map((rev) => (
+                        <MovieReview 
+                            username={rev.username} 
+                            key={rev.id}
+                            comment={rev.comment}
+                            rating={rev.rating}
+                            likeCount={rev.likeCount}
+                            postDate={rev.postDate}
+                            formattedPostDate={formatDateTime(rev.postDate)}
+                            globalState={globalState}
+                            reviewId={rev.id}
+                            updateLikeCount={updateLikeCountLocal}
+                            />
+                    ))}
+                </>)}
             </div>
         </div>
     );
