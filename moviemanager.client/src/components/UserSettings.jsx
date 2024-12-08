@@ -23,7 +23,7 @@ const UserSettings = ({ globalState }) => {
         };
 
         try {
-            const response = await fetch('movie/updateuser', {
+            const response = await fetch('movie/updateuser/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
