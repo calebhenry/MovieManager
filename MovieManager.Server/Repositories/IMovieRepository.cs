@@ -22,6 +22,6 @@ namespace MovieManager.Server.Repositories
         Review? EditReview(int currentUserId, UpdatedReview updatedReview);
         Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         List<Review> GetReviews(int movieId);
-        void RemoveReview(Review review);
+        bool RemoveReview(Review review);
     }
 }

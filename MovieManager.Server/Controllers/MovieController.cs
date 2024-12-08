@@ -160,6 +160,16 @@ namespace MovieManager.Server.Controllers
             var reviews = movieService.GetReviews(movieId);
             return Ok(reviews);
         }
+
+        [HttpDelete("removereview", Name = "RemoveReview")]
+        public ActionResult RemoveReview(Review review)
+        {
+            bool result = movieService.RemoveReview(review);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
         
     }
 }

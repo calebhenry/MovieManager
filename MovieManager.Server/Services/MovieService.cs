@@ -229,9 +229,9 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetReviews(movieId);
         }
-        public void RemoveReview(Review review)
+        public bool RemoveReview(Review review)
         {
-            movieRepository.RemoveReview(review);
+            return movieRepository.RemoveReview(review);
         }
     }
 }
