@@ -307,6 +307,15 @@ namespace MovieManager.Server.Repositories
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
         }
+
+        public bool RemoveReview(Review review)
+        {
+            var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
+            if (revRemove == null) { return false; }
+            _context.Reviews.Remove(revRemove);
+            _context.SaveChanges();
+            return true;
+        }
     }
 
     public class MovieContext : DbContext

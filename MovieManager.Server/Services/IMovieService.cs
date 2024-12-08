@@ -28,5 +28,6 @@ namespace MovieManager.Server.Services
         Movie EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
         void AddTicketsToMovie(Ticket ticket);
+        bool RemoveReview(Review review);
     }
 }

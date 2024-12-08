@@ -274,5 +274,10 @@ namespace MovieManager.Server.Services
         {
             movieRepository.AddTicketsToMovie(ticket);
         }
+        
+        public bool RemoveReview(Review review)
+        {
+            return movieRepository.RemoveReview(review);
+        }
     }
 }
