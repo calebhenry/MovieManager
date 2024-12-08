@@ -36,36 +36,43 @@ namespace MovieManager.Server.Repositories
             _context.SaveChanges();
         }
 
-        public bool AddReview(Review review)
+        public int AddReview(Review review)
         {
             review.Id = 0;
             var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
             if (movie == null)
-                return false;
+                return 0;
             var user = (from i in _context.Users where i.Id == review.UserId select i).ToList().FirstOrDefault();
             if (user == null)
-                return false;
+                return 0;
             _context.Update(user);
             _context.Update(movie);
             user.Reviews.Add(review);
             movie.Reviews.Add(review);
             _context.SaveChanges();
-            return true;
+            var reviewNew = (from i in _context.Reviews
+                          where i.UserId == user.Id &&
+                          i.MovieId == movie.Id
+                          select i).ToList().FirstOrDefault();
+            if (reviewNew == null) return 0;
+            return reviewNew.Id;
         }
 
         public bool RemoveMovie(Movie movie)
         {
-            var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
+            var db = new MovieContext();
+            var movieRem = (from i in db.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
             if (movieRem == null)
             {
                 return false;
             }
             // TODO: remove everything that references that movie, or references a ticket for that movie ?
-            _context.Movies.Remove(movieRem);
-            _context.SaveChanges();
+            db.Movies.Remove(movieRem);
+            db.SaveChanges();
             return true;
 
         }
+
 
         public List<Ticket> GetTickets()
         {
@@ -184,20 +191,22 @@ namespace MovieManager.Server.Repositories
 
         public void RemoveUser(User user)
         {
-            var usrRemove = (from i in _context.Users where i.Id == user.Id select i).ToList().FirstOrDefault(); 
-            if (usrRemove == null) { return; }
-            _context.Users.Remove(usrRemove);
+            var userRemove = (from i in _context.Users where i.Id == user.Id select i).ToList().FirstOrDefault(); 
+            if (userRemove == null) { return; }
+            _context.Users.Remove(userRemove);
             _context.SaveChanges();
             // TODO: Remove all user data ?
         }
 
-        public Review? EditReview(int currentUserId, UpdatedReview updatedReview)
+        public Review? EditReview(UpdatedReview updatedReview)
         {
-            var db = new MovieContext();
-            var review = (from i in db.Reviews where i.Id == updatedReview.Id select i).ToList().FirstOrDefault();
+            var review = (from i in _context.Reviews where i.MovieId == updatedReview.MovieId && 
+                          i.UserId == updatedReview.UserId select i).ToList().FirstOrDefault();
             if (review == null) { 
                 return null; 
             }
+            _context.Update(review);
+            review.PostDate = updatedReview.PostDate;
             if (!string.IsNullOrEmpty(updatedReview.Comment))
             {
                 review.Comment = updatedReview.Comment;
@@ -206,7 +215,8 @@ namespace MovieManager.Server.Repositories
             {
                 review.Rating = updatedReview.Rating ?? review.Rating;
             }
-            db.SaveChanges();
+            review.Anonymous = updatedReview.Anonymous;
+            _context.SaveChanges();
             return review;
         }
 
@@ -227,9 +237,60 @@ namespace MovieManager.Server.Repositories
             return ticket;
         }
 
+        public Movie? EditMovie(UpdatedMovie updatedMovie)
+        {
+            if (updatedMovie.Id <= 0) 
+                {
+                    Console.WriteLine("Invalid Movie Id: " + updatedMovie.Id);
+                    throw new ArgumentException("Invalid Id for the movie.");
+                }
+
+                using (var db = new MovieContext())
+                {
+                    var movie = db.Movies.FirstOrDefault(i => i.Id == updatedMovie.Id);
+                    
+                    if (movie == null)
+                    {
+                        Console.WriteLine($"Movie with Id {updatedMovie.Id} not found.");
+                    }
+
+                    Console.WriteLine($"Found movie with Id: {movie.Id}");
+
+                    // Update movie fields only if they're not null
+                    movie.Name = updatedMovie.Name ?? movie.Name;
+                    movie.Description = updatedMovie.Description ?? movie.Description;
+                    movie.Genre = updatedMovie.Genre;
+
+                    db.SaveChanges();
+
+                    // Return a response object with a message and the updated movie
+                    return movie;
+                }
+        }
+
         public List<Review> GetReviews(int movieId)
         {
-            return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
+            return _context.Reviews.Where(r => r.MovieId == movieId).Include(_ => _.User).ToList();
+        }
+
+        public bool Liked(int userId, int reviewId)
+        {
+            return _context.Likes.Where(i => i.UserId == userId && i.ReviewId == reviewId).Any();
+        }
+        public bool AddLike(int userId, int reviewId)
+        {
+            var review = _context.Reviews.Where(i => i.Id == reviewId).ToList().FirstOrDefault();
+            if (review == null) { return false; }
+            var user = _context.Users.Where(i => i.Id == userId).ToList().FirstOrDefault();
+            if (user == null) { return false; }
+            _context.Update(review);
+            Like like = new Like();
+            like.UserId = user.Id;
+            like.ReviewId = review.Id;
+            _context.Likes.Add(like);
+            review.LikeCount++;
+            _context.SaveChanges();
+            return true;
         }
 
         public void AddTicketsToMovie(Ticket ticket)
@@ -249,11 +310,12 @@ namespace MovieManager.Server.Repositories
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
+            optionsBuilder.UseSqlServer(@"data source=maxbear123\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

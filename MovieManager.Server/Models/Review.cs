@@ -10,8 +10,11 @@ namespace MovieManager.Server.Models
         public int MovieId { get; set; }
         [ForeignKey("User")]
         public int UserId { get; set; }
+        public DateTime PostDate { get; set; }
         public string Comment { get; set; }
         public int Rating { get; set; }
+        public int LikeCount { get; set; }
+        public bool Anonymous { get; set; }
 
         // Here for the EF core link
         [JsonIgnore]
@@ -20,11 +23,52 @@ namespace MovieManager.Server.Models
         public User User { get; set; } = null!;
     }
 
+    public class ReviewDTO
+    {
+        public ReviewDTO(Review review, string userName)
+        {
+            Id = review.Id;
+            MovieId = review.MovieId;
+            UserId = review.UserId;
+            PostDate = review.PostDate;
+            Comment = review.Comment;
+            Rating = review.Rating;
+            LikeCount = review.LikeCount;
+            Anonymous = review.Anonymous;
+            Username = review.Anonymous ? "Anon" : userName;
+        }
+        public Review toReview()
+        {
+            Review rtn = new Review();
+            rtn.Id = Id;
+            rtn.MovieId = MovieId;
+            rtn.UserId = UserId;
+            rtn.PostDate = PostDate;
+            rtn.Comment = Comment;
+            rtn.Rating = Rating;
+            rtn.LikeCount = LikeCount;
+            rtn.Anonymous = Anonymous;
+            return rtn;
+        }
+        public int Id { get; set; }
+        public int MovieId { get; set; }
+        public int UserId { get; set; }
+        public DateTime PostDate { get; set; }
+        public string Comment { get; set; }
+        public int Rating { get; set; }
+        public int LikeCount { get; set; }
+        public bool Anonymous { get; set; }
+        public string Username { get; set; }
+    }
+
     public class UpdatedReview
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public DateTime PostDate { get; set; }
         public string? Comment { get; set; }
         public int? Rating { get; set; }
+        public int MovieId { get; set; }
+        public int UserId { get; set; }
+        public bool Anonymous { get; set; }
     }
 }

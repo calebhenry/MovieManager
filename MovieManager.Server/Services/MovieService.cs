@@ -8,7 +8,6 @@ namespace MovieManager.Server.Services
     public class MovieService : IMovieService
     {
         private IMovieRepository movieRepository;
-        private User? currentUser;
 
         public MovieService(IMovieRepository repository)
         {
@@ -22,6 +21,15 @@ namespace MovieManager.Server.Services
         public Movie? GetMovieById(int id)
         {
             return movieRepository.GetMovieById(id);
+        }
+
+        public bool Liked(int userId, int reviewId)
+        {
+            return movieRepository.Liked(userId, reviewId);
+        }
+        public bool AddLike(int userId, int reviewId)
+        {
+            return movieRepository.AddLike(userId, reviewId);
         }
 
         public void AddMovie(Movie movie)
@@ -65,7 +73,7 @@ namespace MovieManager.Server.Services
             }
             return null;
         }
-        public bool AddReview(Review review)
+        public int AddReview(Review review)
         {
             return movieRepository.AddReview(review);
         }
@@ -147,7 +155,6 @@ namespace MovieManager.Server.Services
 
         public User UpdateUser(UpdatedUser updatedUser)
         {
-            Console.WriteLine("Updating user");
             return movieRepository.UpdateUser(updatedUser);
         }
 
@@ -242,18 +249,20 @@ namespace MovieManager.Server.Services
             return cart;
         }
 
-        public Review EditReview(int currentUserId, UpdatedReview updatedReview)
+        public Review EditReview(UpdatedReview updatedReview)
         {
-            if (currentUserId != updatedReview.UserId)
-            {
-                throw new ArgumentException("Review cannot be edited because you are not the author.");
-            }
-            return movieRepository.EditReview(currentUserId, updatedReview);
+            return movieRepository.EditReview(updatedReview);
         }
 
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
             return movieRepository.EditTickets(movieId, updatedTicket);
+        }
+
+        public Movie EditMovie(UpdatedMovie updatedMovie)
+        {
+            Console.WriteLine("Updating movie");
+            return movieRepository.EditMovie(updatedMovie);
         }
         
         public List<Review> GetReviews(int movieId)
