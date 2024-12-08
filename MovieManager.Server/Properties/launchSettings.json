@@ -1,57 +1,37 @@
 {
-  "profiles": {
-    "http": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5018"
-    },
-    "https": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
-        "movieDb": "data source=maxbear123\\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7160;http://localhost:5018"
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
-      }
-    },
-    "CalebProfile": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
-        "movieDb": "data source=Calebs_PC\\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7160;http://localhost:5018"
-    }
-  },
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:38749",
-      "sslPort": 44388
-    }
-  }
+	"profiles": {
+		"CalebProfile": {
+			"commandName": "Project",
+			"launchBrowser": true,
+			"launchUrl": "swagger",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
+				"movieDb": "data source=Calebs_PC\\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
+			},
+			"dotnetRunMessages": true,
+			"applicationUrl": "https://localhost:7160;http://localhost:5018"
+		},
+		"KaylyProfile": {
+			"commandName": "Project",
+			"launchBrowser": true,
+			"launchUrl": "swagger",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
+				"ConnectionStrings:MoviesDb": "Server=localhost,1433;Database=Movies;User ID=sa;Password=123!Password;TrustServerCertificate=True;Encrypt=False;"
+			},
+			"dotnetRunMessages": true,
+			"applicationUrl": "https://localhost:7160;http://localhost:5018"
+		}
+	},
+	"$schema": "http://json.schemastore.org/launchsettings.json",
+	"iisSettings": {
+		"windowsAuthentication": false,
+		"anonymousAuthentication": true,
+		"iisExpress": {
+			"applicationUrl": "http://localhost:38749",
+			"sslPort": 44388
+		}
+	}
 }

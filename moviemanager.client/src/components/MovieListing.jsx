@@ -6,9 +6,84 @@ const MovieListing = ({ globalState }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
+    const [showReview, setShowReview] = useState(false);
+    const [haveReviewed, setHaveReviewed] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [reviews, setReviews] = useState([]);
     const { cart, setCart } = globalState;
+    const [rating, setRating] = useState(3);
+    const [comment, setComment] = useState("");
+    const [showName, setShowName] = useState(true);
+    const [reviewId, setReviewId] = useState(0)
+    const [addReviewText, setAddReviewText] = useState("Add Review");
+    const { user, setUser } = globalState;
+
+    const submitReview = async() => {
+        if (haveReviewed) {
+            const reviewUpdate = {
+                Id: reviewId,
+                PostDate: new Date().toISOString(),
+                Comment: comment,
+                MovieId: id,
+                UserId: user.id,
+                Rating: rating,
+                Anonymous: showName
+            };
+            const response = await fetch('/movie/editreview', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewUpdate),
+            }); 
+        } else {
+            const review = {
+                Id: 0,
+                MovieId: id,
+                UserId: user.id,
+                PostDate: new Date().toISOString(),
+                Rating: rating,
+                LikeCount: 0,
+                Comment: comment,
+                Anonymous: showName
+            };
+
+            const response = await fetch('/movie/addreview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(review),
+            }); 
+            if (response.ok) {
+                review.Id = await response.json();
+                setReviewId(review.Id);
+                setReviews([...reviews, review]);
+            }
+            setHaveReviewed(true);
+        }
+    };
+
+    const onAddReview = async() => {
+        if (showReview) {
+            submitReview();
+            setShowReview(false);
+            setAddReviewText("Edit Review");
+        } else {
+            setShowReview(true);
+            if (!haveReviewed) {
+                setAddReviewText("Post Review");
+            } else {
+                setAddReviewText("Update Review");
+            }
+        }
+    };
+
+    const deleteReview = async() => {
+        // TODO: fill out once endpoint is written
+        setHaveReviewed(false);
+    };
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
@@ -18,16 +93,35 @@ const MovieListing = ({ globalState }) => {
                 if (!response.ok) {
                     throw new Error(`Server error: ${response.statusText}`);
                 }
-
                 const data = await response.json();
                 setMovie(data);
+                const response2 = await fetch(`/movie/getreviews?movieId=${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }); 
+                if (!response2.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+                const reviewsL = await response2.json();
+                setReviews(reviewsL);
+                reviewsL.forEach((i) => {
+                    if (i.userId == user.id) {
+                        setHaveReviewed(true);
+                        setComment(i.comment);
+                        setRating(i.rating);
+                        setShowName(i.anonymous);
+                        setReviewId(i.id);
+                        setAddReviewText("Edit Review");
+                    }
+                });
             } catch (error) {
                 setError('Failed to load movie details: ' + error.message);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchMovieDetails();
     }, [id]);
 
@@ -106,6 +200,7 @@ const MovieListing = ({ globalState }) => {
             <div className="movie-details-cont">
                 <h1 className="movie-title">{movie.name}</h1>
                 <p className="movie-description">{movie.description}</p>
+                {!showReview && (
                 <div className="ticket-section">
                     <h3>Tickets</h3>
                     <Error />
@@ -125,8 +220,29 @@ const MovieListing = ({ globalState }) => {
                     ) : (
                         <p className="no-tickets">No tickets available</p>
                     )}
+                </div>) }
+                {showReview && (<>
+                    <div>
+                        <label for="rating">Rating: </label>
+                        <input type="range" value={rating} onChange={(e) => {setRating(e.target.value);}} id="rating-range" name="rating" min="1" max="5" />
+                        <label>{rating}</label>
+                    </div>
+                    <div>
+                        <label for="comment">Comment:</label>
+                    </div>
+                    <div>
+                        <textarea name="comment" rows="5" columns="50" onChange={(e) => {setComment(e.target.value);}}>{comment}</textarea>
+                    </div>
+                    <div>
+                        <label for="useName">Post Anonymously</label>
+                        <input type="checkbox" name="useName" value={showName ? "off" : "on"} onChange={(e)=>{setShowName(e.target.value == "on" ? false : true);}}/>
+                    </div>
+                    </>)}
+                <div className="column-allways">
+                    <button onClick={handleGoHome}>Go to Home</button>
+                    <button onClick={() => {onAddReview();}}>{addReviewText}</button>
+                    {(haveReviewed && showReview) && (<button onClick={() => {deleteReview();}}>Delete Review</button>)}
                 </div>
-                <button onClick={handleGoHome}>Go to Home</button>
             </div>
         </div>
     );
