@@ -160,11 +160,19 @@ namespace MovieManager.Server.Controllers
             var reviews = movieService.GetReviews(movieId);
             return Ok(reviews);
         }
+
         [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
-        public ActionResult<Movie> AddTicketsToMovie(int  movieId, int numberOfTickets, DateTime showtime, double price)
+        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
         {
-            movieService.AddTicketsToMovie(movieId, numberOfTickets, showtime, price);
-            return Ok();
+            try
+            {
+                movieService.AddTicketsToMovie(ticket);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message); // Return bad request if the messages fail
+            }
         }
     }
 }
