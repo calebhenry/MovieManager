@@ -305,6 +305,7 @@ namespace UnitTests
             _mockRepository.Verify(repo => repo.EditReview(updatedReview), Times.Once);
         }
 
+        [Test]
         public void EditTickets_CallsRepositoryEditTickets()
         {
             DateTime now = DateTime.UtcNow;
