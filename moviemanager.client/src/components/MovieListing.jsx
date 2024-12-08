@@ -6,9 +6,47 @@ const MovieListing = ({ globalState }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
+    const [showReview, setShowReview] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { cart, setCart } = globalState;
+    const [rating, setRating] = useState(3);
+    const [comment, setComment] = useState("");
+    const [showName, setShowName] = useState(true);
+    const [addReviewText, setAddReviewText] = useState("Add Review");
+    const { user, setUser } = globalState;
+
+    const submitReview = async() => {
+        const review = {
+            Id: 0,
+            MovieId: id,
+            UserId: user.id,
+            PostDate: new Date().toISOString(),
+            Rating: rating,
+            LikeCount: 0,
+            Comment: comment,
+            Anonymous: showName
+        };
+
+        const response = await fetch('/movie/addreview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(review),
+        }); 
+    };
+
+    const onAddReview = async() => {
+        if (showReview) {
+            submitReview();
+            setShowReview(false);
+            setAddReviewText("Add Review");
+        } else {
+            setShowReview(true);
+            setAddReviewText("Post Review");
+        }
+    };
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
@@ -106,6 +144,7 @@ const MovieListing = ({ globalState }) => {
             <div className="movie-details-cont">
                 <h1 className="movie-title">{movie.name}</h1>
                 <p className="movie-description">{movie.description}</p>
+                {!showReview && (
                 <div className="ticket-section">
                     <h3>Tickets</h3>
                     <Error />
@@ -125,8 +164,28 @@ const MovieListing = ({ globalState }) => {
                     ) : (
                         <p className="no-tickets">No tickets available</p>
                     )}
+                </div>) }
+                {showReview && (<>
+                    <div>
+                        <label for="rating">Rating: </label>
+                        <input type="range" value={rating} onChange={(e) => {setRating(e.target.value);}} id="rating-range" name="rating" min="1" max="5" />
+                        <label>{rating}</label>
+                    </div>
+                    <div>
+                        <label for="comment">Comment:</label>
+                    </div>
+                    <div>
+                        <textarea name="comment" rows="5" columns="50" onChange={(e) => {setComment(e.target.value);}}>{comment}</textarea>
+                    </div>
+                    <div>
+                        <label for="useName">Post Anonymously</label>
+                        <input type="checkbox" name="useName" onChange={(e)=>{setShowName(e.target.value == "on" ? true : false);}}/>
+                    </div>
+                    </>)}
+                <div className="column-allways">
+                    <button onClick={handleGoHome}>Go to Home</button>
+                    <button onClick={() => {onAddReview();}}>{addReviewText}</button>
                 </div>
-                <button onClick={handleGoHome}>Go to Home</button>
             </div>
         </div>
     );

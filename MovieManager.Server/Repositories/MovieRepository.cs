@@ -267,7 +267,27 @@ namespace MovieManager.Server.Repositories
 
         public List<Review> GetReviews(int movieId)
         {
-            return _context.Reviews.Where(r => r.MovieId == movieId).ToList();
+            return _context.Reviews.Where(r => r.MovieId == movieId).Include(_ => _.User).ToList();
+        }
+
+        public bool Liked(int userId, int reviewId)
+        {
+            return _context.Likes.Where(i => i.UserId == userId && i.ReviewId == reviewId).Any();
+        }
+        public bool AddLike(int userId, int reviewId)
+        {
+            var review = _context.Reviews.Where(i => i.Id == reviewId).ToList().FirstOrDefault();
+            if (review == null) { return false; }
+            var user = _context.Users.Where(i => i.Id == userId).ToList().FirstOrDefault();
+            if (user == null) { return false; }
+            _context.Update(review);
+            Like like = new Like();
+            like.UserId = user.Id;
+            like.ReviewId = review.Id;
+            _context.Likes.Add(like);
+            review.LikeCount++;
+            _context.SaveChanges();
+            return true;
         }
     }
 
@@ -280,11 +300,12 @@ namespace MovieManager.Server.Repositories
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
+            optionsBuilder.UseSqlServer(@"data source=maxbear123\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

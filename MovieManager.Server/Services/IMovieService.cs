@@ -12,6 +12,8 @@ namespace MovieManager.Server.Services
         Movie? GetMovieById(int id);
         void AddTicket(Ticket ticket);
         bool AddReview(Review review);
+        bool Liked(int userId,  int reviewId);
+        bool AddLike(int userId,  int reviewId);
         List<Movie> GetMovies();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);

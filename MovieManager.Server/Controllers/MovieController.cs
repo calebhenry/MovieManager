@@ -59,6 +59,22 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        [HttpGet("liked/{userId}:{reviewId}", Name = "Liked")]
+        public ActionResult<bool> Liked(int userId, int reviewId)
+        {
+            return Ok(movieService.Liked(userId, reviewId));
+        }
+
+        [HttpPost("like/{userId}:{reviewId}", Name = "Like")]
+        public ActionResult Like(int userId, int reviewId)
+        {
+            if (movieService.AddLike(userId, reviewId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
         [HttpPost("addreview", Name = "AddReview")]
         public ActionResult AddReview(Review review)
         {
@@ -164,10 +180,12 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpGet("getreviews", Name = "GetReviews")]
-        public ActionResult<List<Review>> GetReviews(int movieId)
+        public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
         {
             var reviews = movieService.GetReviews(movieId);
-            return Ok(reviews);
+            // we don't want to give the client the whole user object, but we do want them
+            // to have a username for the review if not anonymous
+            return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
     }
 }

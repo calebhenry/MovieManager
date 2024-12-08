@@ -114,3 +114,23 @@
     text-align: center;
     font-size: 16px;
 }
+
+.column-allways {
+    display: flex;
+}
+
+.movie-details-cont button {
+    margin: 5px;
+}
+
+
+.movie-details-cont textarea {
+    width: 400px;
+    height: 100px;
+    resize: none;
+    border-radius: 5px;
+}
+
+.one {
+    flex: 1;
+}

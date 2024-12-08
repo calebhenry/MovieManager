@@ -24,5 +24,7 @@ namespace MovieManager.Server.Repositories
         Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         Movie? EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
+        bool Liked(int userId, int reviewId);
+        bool AddLike(int userId, int reviewId);
     }
 }
