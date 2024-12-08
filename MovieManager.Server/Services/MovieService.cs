@@ -274,5 +274,10 @@ namespace MovieManager.Server.Services
         {
             movieRepository.AddTicketsToMovie(ticket);
         }
+
+        public bool RemoveLike(int userId, int reviewId)
+        {
+            return movieRepository.RemoveLike(userId, reviewId);
+        }
     }
 }

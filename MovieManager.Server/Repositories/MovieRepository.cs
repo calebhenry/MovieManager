@@ -9,6 +9,24 @@ namespace MovieManager.Server.Repositories
 
         private MovieContext _context;
 
+        public bool RemoveLike(int userId, int reviewId)
+        {
+            var like = (from i in _context.Likes where i.UserId == userId &&
+                        i.ReviewId == reviewId select i).ToList().FirstOrDefault();
+            var review = (from i in _context.Reviews where i.Id == reviewId select i).ToList().FirstOrDefault();
+            if (like != null && review != null)
+            {
+                _context.Update(review);
+                review.LikeCount--;
+                _context.Likes.Remove(like);
+                _context.SaveChanges();
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
         public MovieRepository(MovieContext context)
         {
             _context = context;
@@ -39,6 +57,7 @@ namespace MovieManager.Server.Repositories
         public int AddReview(Review review)
         {
             review.Id = 0;
+            review.LikeCount = 0;
             var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
             if (movie == null)
                 return 0;
@@ -160,6 +179,7 @@ namespace MovieManager.Server.Repositories
         public void AddUser(User user)
         {
             user.Id = 0;
+            user.PermissionLevel = PermissionLevel.USER;
             _context.Users.Add(user);
             _context.SaveChanges();
         }
