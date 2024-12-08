@@ -17,8 +17,6 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Rebase registry
-      run: npm config set registry http://registry.npmjs.org
     - name: Build
       run: dotnet build --no-restore
     - name: Test
