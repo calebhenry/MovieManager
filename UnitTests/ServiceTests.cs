@@ -55,8 +55,8 @@ namespace UnitTests
         {
             var users = new List<User>
             {
-                new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL },
-                new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE }
+                new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER },
+                new User { Id = 2, Username = "Username 2", Password = "Password 2", Name = "Name 2", Gender = Gender.FEMALE, Age = 40, Email = "Email 2", PhoneNumber = "PhoneNumber 2", Preference = Preference.PHONE, PermissionLevel = PermissionLevel.USER }
             };
             _mockRepository.Setup(repo => repo.GetUser("Username 1", "Password 1")).Returns(users[0]);
             var result = _movieService.GetUser("Username 1", "Password 1");
@@ -66,7 +66,7 @@ namespace UnitTests
         [Test]
         public void AddUser_CallsRepositoryAddUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             _movieService.AddUser(user);
             _mockRepository.Verify(repo => repo.AddUser(user), Times.Once);
         }
@@ -74,9 +74,9 @@ namespace UnitTests
         [Test]
         public void UpdateUser_CallsRepositoryUpdateUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             var updatedUser = new UpdatedUser { Id = 1, Name = "Name 3", Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
-            var expectedUser = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 3", Gender = Gender.MALE, Age = 40, Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE };
+            var expectedUser = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 3", Gender = Gender.MALE, Age = 40, Email = "Email 3", PhoneNumber = "PhoneNumber 3", Preference = Preference.PHONE, PermissionLevel = PermissionLevel.USER };
             _mockRepository.Setup(repo => repo.UpdateUser(updatedUser)).Returns(expectedUser);
             var result = _movieService.UpdateUser(updatedUser);
 
@@ -87,6 +87,7 @@ namespace UnitTests
             Assert.AreEqual(user.Username, result.Username);
             Assert.AreEqual(user.Password, result.Password);
             Assert.AreEqual(user.Age, result.Age);
+            Assert.AreEqual(user.PermissionLevel, result.PermissionLevel);
 
             _mockRepository.Verify(repo => repo.UpdateUser(updatedUser), Times.Once);
         }
@@ -94,7 +95,7 @@ namespace UnitTests
         [Test]
         public void RemoveUser_CallsRepositoryRemoveUser()
         {
-            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
             _movieService.RemoveUser(user);
             _mockRepository.Verify(repo => repo.RemoveUser(user), Times.Once);
         }
@@ -211,22 +212,46 @@ namespace UnitTests
             _mockRepository.Setup(repo => repo.GetCarts()).Returns(new List<Cart> { cart });
             _mockRepository.Setup(repo => repo.GetTickets()).Returns(new List<Ticket> { cart.Tickets.First().Ticket });
 
-            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2025", "John Doe", "123"));
+            Assert.DoesNotThrow(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2025", "John Doe", "123"));
             Assert.AreEqual(0, cart.Tickets.Count);
         }
 
         [Test]
         public void ProcessPayment_InvalidCardNumber_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123", "12/2025", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "123", "12/2025", "John Doe", "123"));
             Assert.AreEqual("Card number is invalid. Payment could not be processed.", ex.Message);
         }
 
         [Test]
         public void ProcessPayment_ExpiredCard_ThrowsException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "1234567812345678", "12/2020", "John Doe", "123"));
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
             Assert.AreEqual("Card is expired. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidStreetAddress_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main", "Columbia", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid street number. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidCity_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columb1a", "SC", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid city. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidState_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "29201", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid state abbreviation. Payment could not be processed.", ex.Message);
+        }
+
+        public void ProcessPayment_InvalidZipCode_ThrowsException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _movieService.ProcessPayment(1, "123 Main St", "Columbia", "S", "2920", "1234567812345678", "12/2020", "John Doe", "123"));
+            Assert.AreEqual("Invalid zip code. Payment could not be processed.", ex.Message);
         }
 
         [Test]
@@ -258,6 +283,52 @@ namespace UnitTests
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Id);
             _mockRepository.Verify(repo => repo.AddCart(It.IsAny<Cart>()), Times.Once);
+        }
+        
+        [Test]
+        public void EditReview_ReturnsEditedReview()
+        {
+            DateTime now = DateTime.UtcNow;
+
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var review = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 1", Rating = 5, LikeCount = 1 };
+            var updatedReview = new UpdatedReview { Id = 1, PostDate = now, Comment = "Comment 2", Rating = 4, Anonymous = false};
+            var expectedReview = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = now, Comment = "Comment 2", Rating = 4 , LikeCount = 2 };
+            _mockRepository.Setup(repo => repo.EditReview(updatedReview)).Returns(expectedReview);
+            var result = _movieService.EditReview(updatedReview);
+
+            Assert.AreEqual(updatedReview.PostDate, result.PostDate);
+            Assert.AreEqual(updatedReview.Comment, result.Comment);
+            Assert.AreEqual(updatedReview.Rating, result.Rating);
+            Assert.AreEqual(updatedReview.Anonymous, result.Anonymous);
+
+            _mockRepository.Verify(repo => repo.EditReview(updatedReview), Times.Once);
+        }
+
+        [Test]
+        public void EditTickets_CallsRepositoryEditTickets()
+        {
+            DateTime now = DateTime.UtcNow;
+            var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 2.50, NumAvailible = 20 };
+            var updatedTicket = new UpdatedTicket { Id = 1, MovieId = 1, Price = 3.50, NumAvailible = 15 };
+            var expectedTicket = new Ticket { Id = 1, MovieId = 1, Showtime = now, Price = 3.50, NumAvailible = 15 };
+            _mockRepository.Setup(repo => repo.EditTickets(1, updatedTicket)).Returns(expectedTicket);
+            var result = _movieService.EditTickets(1, updatedTicket);
+
+            Assert.AreEqual(updatedTicket.Price, result.Price);
+            Assert.AreEqual(updatedTicket.NumAvailible, result.NumAvailible);
+            Assert.AreEqual(ticket.Showtime, result.Showtime);
+
+            _mockRepository.Verify(repo => repo.EditTickets(1, updatedTicket), Times.Once);
+        }
+
+        [Test]
+        public void AddTicketToMovie_CallsRepositoryAddMovie()
+        {
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var ticket = new Ticket { Id = 1, MovieId = 1, Showtime = DateTime.UtcNow, Price = 2.50, NumAvailible = 20 };
+            _movieService.AddTicketsToMovie(ticket);
+            _mockRepository.Verify(repo => repo.AddTicketsToMovie(ticket), Times.Once);
         }
 
     }

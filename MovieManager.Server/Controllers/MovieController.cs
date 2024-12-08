@@ -23,7 +23,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
-        
+
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {
@@ -55,6 +55,33 @@ namespace MovieManager.Server.Controllers
             if (movie != null)
             {
                 return Ok(movie);
+            }
+            return NotFound();
+        }
+
+        [HttpGet("liked/{userId}:{reviewId}", Name = "Liked")]
+        public ActionResult<bool> Liked(int userId, int reviewId)
+        {
+            return Ok(movieService.Liked(userId, reviewId));
+        }
+
+        [HttpPost("like/{userId}:{reviewId}", Name = "Like")]
+        public ActionResult Like(int userId, int reviewId)
+        {
+            if (movieService.AddLike(userId, reviewId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult<int> AddReview(Review review)
+        {
+            int result = movieService.AddReview(review);
+            if (result != 0)
+            {
+                return Ok(result);
             }
             return NotFound();
         }
@@ -110,11 +137,11 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("processpayment", Name = "ProcessPayment")]
-        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
             try
             {
-                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                movieService.ProcessPayment(cartId, streetAddress, city, state, zipCode, cardNumber, exp, cardholderName, cvc);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
@@ -126,11 +153,54 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
+
         [HttpGet("getcart", Name = "GetCart")]
+
         public ActionResult<Cart> GetCart(int? cartId)
         {
             var cart = movieService.GetCart(cartId);
             return Ok(cart);
+        }
+
+        [HttpPut("editreview", Name = "EditReview")]
+        public ActionResult<Review> EditReview(UpdatedReview updatedReview)
+        {
+            return Ok(movieService.EditReview(updatedReview));
+        }
+
+        [HttpPut("edittickets", Name = "EditTickets")]
+        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return Ok(movieService.EditTickets(movieId, updatedTicket));
+        }
+
+        [HttpPut("editmovie", Name = "EditMovie")]
+        public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
+        {
+            return Ok(movieService.EditMovie(updatedMovie));
+        }
+
+        [HttpGet("getreviews", Name = "GetReviews")]
+        public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
+        {
+            var reviews = movieService.GetReviews(movieId);
+            // we don't want to give the client the whole user object, but we do want them
+            // to have a username for the review if not anonymous
+            return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
+        }
+
+        [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
+        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
+        {
+            try
+            {
+                movieService.AddTicketsToMovie(ticket);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

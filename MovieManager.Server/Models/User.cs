@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieManager.Server.Models
 {
@@ -13,6 +14,8 @@ namespace MovieManager.Server.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public Preference Preference { get; set; }
+        public PermissionLevel PermissionLevel { get; set; }
+        [InverseProperty("User")]
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
 
@@ -36,5 +39,11 @@ namespace MovieManager.Server.Models
     {
         EMAIL,
         PHONE
+    }
+
+    public enum PermissionLevel
+    {
+        USER,
+        ADMIN
     }
 }

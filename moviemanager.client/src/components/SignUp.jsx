@@ -12,6 +12,7 @@ const SignUp = ({ globalState }) => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [preference, setPreference] = useState(0);
+    const [permissionLevel, setPermissionLevel] = useState(0);
     const [error, setError] = useState('');
     const { user, setUser } = globalState;
     const navigate = useNavigate();
@@ -32,7 +33,8 @@ const SignUp = ({ globalState }) => {
             age: parseInt(age),
             email,
             phoneNumber,
-            preference
+            preference,
+            permissionLevel
         };
 
         try {
@@ -147,6 +149,12 @@ const SignUp = ({ globalState }) => {
                     <select id="preference" value={preference} onChange={(e) => setPreference(parseInt(e.target.value))} required>
                         <option value={0}>Email</option>
                         <option value={1}>Phone</option>
+                    </select>
+
+                    <label htmlFor="permissionLevel">Access Level</label>
+                    <select id="permissionLevel" value={permissionLevel} onChange={(e) => setPermissionLevel(parseInt(e.target.value))} required>
+                        <option value={0}>Normal</option>
+                        <option value={1}>Admin</option>
                     </select>
 
                     <button type="submit">Sign Up</button>

@@ -1,4 +1,5 @@
-﻿using MovieManager.Server.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MovieManager.Server.Models;
 using MovieManager.Server.Repositories;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +8,6 @@ namespace MovieManager.Server.Services
     public class MovieService : IMovieService
     {
         private IMovieRepository movieRepository;
-        private User? currentUser;
 
         public MovieService(IMovieRepository repository)
         {
@@ -23,13 +23,17 @@ namespace MovieManager.Server.Services
             return movieRepository.GetMovieById(id);
         }
 
+        public bool Liked(int userId, int reviewId)
+        {
+            return movieRepository.Liked(userId, reviewId);
+        }
+        public bool AddLike(int userId, int reviewId)
+        {
+            return movieRepository.AddLike(userId, reviewId);
+        }
+
         public void AddMovie(Movie movie)
         {
-            foreach (var ticket in movie.Tickets)
-            {
-                ticket.MovieId = movie.Id;
-                ticket.Movie = movie;
-            }
             movieRepository.AddMovie(movie);
         }
 
@@ -60,6 +64,7 @@ namespace MovieManager.Server.Services
                         if (ticket.TicketId == ticketId)
                         {
                             cart.Tickets.Remove(ticket);
+                            movieRepository.UpdateCart(cart);
                             return cart;
                         }
                     }
@@ -67,6 +72,15 @@ namespace MovieManager.Server.Services
                 }
             }
             return null;
+        }
+        public int AddReview(Review review)
+        {
+            return movieRepository.AddReview(review);
+        }
+
+        public void AddTicket(Ticket ticket)
+        {
+            movieRepository.AddTicket(ticket);
         }
 
         /// <summary>
@@ -118,6 +132,7 @@ namespace MovieManager.Server.Services
                 cartItem.Quantity = 0;
                 return false;
             }
+            movieRepository.UpdateCart(cart);
             return true;
         }
 
@@ -140,7 +155,6 @@ namespace MovieManager.Server.Services
 
         public User UpdateUser(UpdatedUser updatedUser)
         {
-            Console.WriteLine("Updating user");
             return movieRepository.UpdateUser(updatedUser);
         }
 
@@ -149,8 +163,34 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveUser(user);
         }
 
-        public void ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
+            string[] streetAddressParts = streetAddress.Split(' ');
+            if (!int.TryParse(streetAddressParts[0], out _))
+            {
+                throw new ArgumentException("Invalid street number. Payment could not be processed.");
+            }
+
+            if (streetAddressParts.Length < 3)
+            {
+                throw new ArgumentException("Invalid street address. Payment could not be processed.");
+            }
+
+            if (city.Any(char.IsDigit))
+            {
+                throw new ArgumentException("Invalid city. Payment could not be processed.");
+            }
+
+            if (state.Length != 2 || state.Any(char.IsDigit))
+            {
+                throw new ArgumentException("Invalid state abbreviation. Payment could not be processed.");
+            }
+
+            if (zipCode.Length != 5 || !int.TryParse(zipCode, out _))
+            {
+                throw new ArgumentException("Invalid zip code. Payment could not be processed.");
+            }
+
             if (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(cardholderName) || string.IsNullOrEmpty(cvc))
             {
                 throw new ArgumentException("Each field needs to be filled out. Payment could not be processed.");
@@ -187,11 +227,13 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
             return movie?.Tickets ?? Enumerable.Empty<Ticket>();
         }
+
         public Cart GetCart(int? cartId)
         {
             var cart = movieRepository.GetCarts().FirstOrDefault(c => c.Id == cartId);
@@ -205,6 +247,32 @@ namespace MovieManager.Server.Services
                 movieRepository.AddCart(cart);
             }
             return cart;
+        }
+
+        public Review EditReview(UpdatedReview updatedReview)
+        {
+            return movieRepository.EditReview(updatedReview);
+        }
+
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return movieRepository.EditTickets(movieId, updatedTicket);
+        }
+
+        public Movie EditMovie(UpdatedMovie updatedMovie)
+        {
+            Console.WriteLine("Updating movie");
+            return movieRepository.EditMovie(updatedMovie);
+        }
+        
+        public List<Review> GetReviews(int movieId)
+        {
+            return movieRepository.GetReviews(movieId);
+        }
+        
+        public void AddTicketsToMovie(Ticket ticket)
+        {
+            movieRepository.AddTicketsToMovie(ticket);
         }
     }
 }
