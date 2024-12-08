@@ -23,7 +23,7 @@ namespace MovieManager.Server.Controllers
         {
             return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
-        
+
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {
@@ -55,6 +55,16 @@ namespace MovieManager.Server.Controllers
             if (movie != null)
             {
                 return Ok(movie);
+            }
+            return NotFound();
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult AddReview(Review review)
+        {
+            if (movieService.AddReview(review))
+            {
+                return Ok();
             }
             return NotFound();
         }
@@ -110,11 +120,11 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpPost("processpayment", Name = "ProcessPayment")]
-        public ActionResult ProcessPayment(int cartId, string cardNumber, string exp, string cardholderName, string cvc)
+        public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
             try
             {
-                movieService.ProcessPayment(cartId, cardNumber, exp, cardholderName, cvc);
+                movieService.ProcessPayment(cartId, streetAddress, city, state, zipCode, cardNumber, exp, cardholderName, cvc);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
