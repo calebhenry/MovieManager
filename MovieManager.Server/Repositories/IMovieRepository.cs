@@ -2,6 +2,10 @@
 
 namespace MovieManager.Server.Repositories
 {
+    /// <summary>
+    /// Interface for interacting with the Movie repository.
+    /// Defines methods for managing movies, users, carts, tickets, and reviews.
+    /// </summary>
     public interface IMovieRepository
     {
         void AddCart(Cart cart);
