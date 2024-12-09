@@ -219,7 +219,7 @@ namespace MovieManager.Server.Repositories
             return review;
         }
 
-        public Ticket EditTickets(UpdatedTicket updatedTicket)
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
             var db = new MovieContext();
             var ticket = (from i in db.Tickets where i.Id == updatedTicket.Id select i).ToList().FirstOrDefault();
