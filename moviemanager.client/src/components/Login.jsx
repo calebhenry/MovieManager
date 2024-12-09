@@ -9,6 +9,7 @@ const Login = ({ globalState }) => {
     const navigate = useNavigate();
     const { setUser } = globalState;
 
+    // login logic
     const handleLogin = async (e) => {
         e.preventDefault();
         const response = await fetch(`movie/getuser?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {

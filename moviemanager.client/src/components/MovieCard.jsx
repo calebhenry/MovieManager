@@ -1,3 +1,5 @@
+// What is shown on the home page, a movie with all its information
+
 import React from 'react';
 import './MovieCard.css';
 import { Link } from 'react-router-dom';

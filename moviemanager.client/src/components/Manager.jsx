@@ -20,6 +20,7 @@ const Manager = () => {
     }
   }, [movies]);
 
+  // Get all movies
   const fetchMovies = async () => {
     try {
       const response = await fetch("/movie/getmovies");
@@ -31,6 +32,7 @@ const Manager = () => {
     }
   };
 
+  // Get all tickets
   const fetchTickets = () => {
     try {
       const allTickets = movies.flatMap(movie => movie.tickets);
@@ -40,6 +42,7 @@ const Manager = () => {
     }
   };
 
+  // Add movie
   const handleAddMovie = async () => {
     try {
       const response = await fetch("/movie/addmovie", {
@@ -57,6 +60,7 @@ const Manager = () => {
     }
   };
 
+  // Remove Movie
   const handleRemoveMovie = (movie) => {
     fetch(`/movie/removemovie/`, {
       method: "DELETE",
@@ -77,6 +81,7 @@ const Manager = () => {
       });
   };
 
+  // Update Movie
   const handleUpdateMovie = async (movie) => {
     try {
       const { id, name, description, genre, ageRating } = movie; // Keep only essential properties
@@ -94,6 +99,7 @@ const Manager = () => {
     }
   };
 
+  // Add ticket
   const handleAddTicket = async () => {
     try {
       const response = await fetch("/movie/addticketstomovie", {
@@ -112,6 +118,7 @@ const Manager = () => {
     }
   };
 
+  // Update Ticket
   const handleUpdateTicket = async (ticket) => {
     try {
       const response = await fetch(`/movie/edittickets?movieId=${ticket.movieId}`, {
@@ -130,6 +137,7 @@ const Manager = () => {
     }
   };
 
+  //Delete Ticket
   const handleDeleteTicket = async (ticket) => {
     try {
       const response = await fetch(`/movie/removeticketfrommovie`, {
