@@ -119,8 +119,32 @@ const MovieListing = ({ globalState }) => {
     };
 
     const deleteReview = async() => {
-        // TODO: fill out once endpoint is written
-        setHaveReviewed(false);
+        const myReview = reviews.filter((i) => (i.id == reviewId));
+        const reviewDelete = {
+            Id: reviewId,
+            PostDate: myReview.id,
+            Comment: myReview.id,
+            MovieId: myReview.movieId,
+            UserId: myReview.userId,
+            Rating: myReview.rating,
+            Anonymous: myReview.anonymous,
+            LikeCount: myReview.likeCount
+        };
+        const response = await fetch(`/movie/removereview`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reviewDelete),
+        });
+        if (response.ok) {
+            setShowReview(false);
+            const newReviews = JSON.parse(JSON.stringify(reviews)).filter((i) => (i.id != reviewId));
+            setReviews(newReviews);
+            setHaveReviewed(false);
+        } else {
+            alert("Failed to delete review.");
+        }
     };
 
     useEffect(() => {
