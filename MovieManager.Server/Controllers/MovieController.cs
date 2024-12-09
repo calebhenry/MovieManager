@@ -178,14 +178,14 @@ namespace MovieManager.Server.Controllers
         }
 
         [HttpDelete("removeticketfrommovie", Name="RemoveTicketFromMovie")]
-        public ActionResult RemoveTicketFromMovie(int movieId, int NumAvailible)
+        public ActionResult RemoveTicketFromMovie(Ticket ticket)
         { 
-             try
+            try
             {
-                movieService.RemoveTicketsFromMovie(movieId, NumAvailible);
-                return Ok();
+               movieService.RemoveTicket(ticket);
+               return Ok();
             } catch (ArgumentException ex) {
-                return BadRequest(ex.Message);
+               return BadRequest(ex.Message);
             }
         }
 
@@ -267,6 +267,5 @@ namespace MovieManager.Server.Controllers
                 return Ok();
             } else return NotFound();
         }
-
     }
 }

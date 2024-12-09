@@ -164,10 +164,12 @@ namespace MovieManager.Server.Repositories
         public void RemoveTicket(Ticket ticket)
         {
             var tick = (from i in _context.Tickets where i.Id == ticket.Id select i).FirstOrDefault();
-            if (tick == null) { return; }
+            var movie = (from i in _context.Movies where i.Id == tick.MovieId select i).FirstOrDefault();
+            if (tick == null || movie == null) { return; }
             _context.Tickets.Remove(tick);
+            movie.Tickets.Remove(tick);
+            _context.Update(movie);
             _context.SaveChanges();
-            // TODO: remove all other references ?
         }
 
         public List<Cart> GetCarts()

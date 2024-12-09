@@ -6,12 +6,19 @@ const Manager = () => {
   const [movies, setMovies] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [newMovie, setNewMovie] = useState({ name: "", description: "", genre: "ACTION" });
-  const [newTicket, setNewTicket] = useState({ movieId: "", showtime: "", price: "", numAvailable: "" });
+  const [newTicket, setNewTicket] = useState(null);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [editTicket, setEditTicket] = useState(null);
 
   useEffect(() => {
     fetchMovies();
-    fetchTickets();
   }, []);
+
+  useEffect(() => {
+    if (movies.length > 0) {
+      fetchTickets();
+    }
+  }, [movies]);
 
   const fetchMovies = async () => {
     try {
@@ -24,14 +31,12 @@ const Manager = () => {
     }
   };
 
-  const fetchTickets = async () => {
+  const fetchTickets = () => {
     try {
-      const response = await fetch("/movie/gettickets");
-      if (!response.ok) throw new Error("Failed to fetch tickets");
-      const data = await response.json();
-      setTickets(data);
+      const allTickets = movies.flatMap(movie => movie.tickets);
+      setTickets(allTickets);
     } catch (error) {
-      console.error("Error fetching tickets:", error);
+      console.error("Error processing tickets:", error);
     }
   };
 
@@ -71,8 +76,6 @@ const Manager = () => {
       console.error("Error removing movie:", error);
     });
   };
-  
-  
 
   const handleUpdateMovie = async (movie) => {
     try {
@@ -93,42 +96,79 @@ const Manager = () => {
 
   const handleAddTicket = async () => {
     try {
-      const response = await fetch("/movie/addticket", {
+      const response = await fetch("/movie/addticketstomovie", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(newTicket)
+        body: JSON.stringify({ ...newTicket, movieId: selectedMovieId })
       });
       if (!response.ok) throw new Error("Failed to add ticket");
       alert("Ticket added successfully!");
-      fetchTickets();
+      fetchMovies();
+      setNewTicket(null);
     } catch (error) {
       console.error("Error adding ticket:", error);
     }
   };
 
-  const handleUpdateTicket = async (id, updatedTicket) => {
+  const handleUpdateTicket = async (ticket) => {
     try {
-      const response = await fetch(`/api/tickets/${id}`, {
+      const response = await fetch(`/movie/edittickets?movieId=${ticket.movieId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(updatedTicket)
+        body: JSON.stringify(ticket)
       });
       if (!response.ok) throw new Error("Failed to update ticket");
       alert("Ticket updated successfully!");
-      fetchTickets();
+      setEditTicket(null);
+      fetchMovies();
     } catch (error) {
       console.error("Error updating ticket:", error);
     }
   };
 
+  const handleDeleteTicket = async (ticket) => {
+    try {
+      const response = await fetch(`/movie/removeticketfrommovie`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(ticket) 
+      });
+      if (!response.ok) throw new Error("Failed to delete ticket");
+      alert("Ticket deleted successfully!");
+      setEditTicket(null);
+      fetchMovies();
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+    }
+  };
+
+  const openTicketWindow = (movieId) => {
+    setSelectedMovieId(movieId);
+    setEditTicket(null);
+    setNewTicket(null);
+  };
+
+  const openEditTicketWindow = (ticket) => {
+    setEditTicket(ticket);
+    setNewTicket(null);
+  };
+
+  const openAddTicketWindow = () => {
+    setNewTicket({ showtime: "", price: "", numAvailible: "", movieId: selectedMovieId });
+    setEditTicket(null);
+  };
+  
+
   return (
     <div className="manager-screen">
       <h1 className="manager-h1">Manager Page</h1>
-  
+
       <div className="manager-grid-container">
         {/* Add New Movie */}
         <div className="manager-grid-item">
@@ -160,7 +200,7 @@ const Manager = () => {
           </select>
           <button className="manager-button" onClick={handleAddMovie}>Add Movie</button>
         </div>
-  
+
         {/* Movie List */}
         <div className="manager-grid-item">
           <h2>Movies</h2>
@@ -196,64 +236,92 @@ const Manager = () => {
                   <option value="ROMANCE">Romance</option>
                   <option value="THRILLER">Thriller</option>
                 </select>
-                <button className="manager-button" onClick={() => handleUpdateMovie(movie)}>Save Changes</button>
-                <button className="manager-button manager-remove-button" onClick={() => handleRemoveMovie(movie)}>Remove Movie</button>
+                <button className="manager-button" onClick={() => handleUpdateMovie(movie)}>Update Movie</button>
+                <button className="manager-button" onClick={() => handleRemoveMovie(movie)}>Remove Movie</button>
+                <button className="manager-button" onClick={() => openTicketWindow(movie.id)}>Edit Tickets</button>
               </div>
             ))}
           </div>
         </div>
-  
-        {/* Add New Ticket */}
-        <div className="manager-grid-item">
-          <h2>Add New Ticket</h2>
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Movie ID"
-            value={newTicket.movieId}
-            onChange={(e) => setNewTicket({ ...newTicket, movieId: e.target.value })}
-          />
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Ticket ID"
-            value={newTicket.showtime}
-            onChange={(e) => setNewTicket({ ...newTicket, ticketId: e.target.value })}
-          />
 
-          <button className="manager-button" onClick={handleAddTicket}>Add Ticket</button>
-        </div>
-  
-        {/* Tickets List */}
-        <div className="manager-grid-item">
-          <h2>Tickets</h2>
-          <div className="manager-tickets-grid">
-            {tickets.map((ticket) => (
-              <div key={ticket.id} className="manager-ticket-card">
-                <input
-                  className="manager-input"
-                  type="number"
-                  value={ticket.price}
-                  onChange={(e) =>
-                    setTickets(tickets.map((t) => (t.id === ticket.id ? { ...t, price: e.target.value } : t)))
-                  }
-                />
-                <input
-                  className="manager-input"
-                  type="number"
-                  value={ticket.numAvailable}
-                  onChange={(e) =>
-                    setTickets(tickets.map((t) => (t.id === ticket.id ? { ...t, numAvailable: e.target.value } : t)))
-                  }
-                />
-                <button className="manager-button" onClick={() => handleUpdateTicket(ticket.id, ticket)}>Save Changes</button>
-              </div>
-            ))}
+        {/* Ticket list */}
+        {selectedMovieId && (
+          <div className="manager-grid-item">
+            <h2>Tickets for Selected Movie</h2>
+            <div className="manager-tickets-grid">
+              {tickets.filter((ticket) => ticket.movieId == selectedMovieId).map((ticket) => (
+                <div key={ticket.id} className="manager-ticket-card">
+                  <p>Showtime: {ticket.showtime}</p>
+                  <p>Price: {ticket.price}</p>
+                  <p>Quantity Available: {ticket.numAvailible}</p>
+                  <button className="manager-button" onClick={() => openEditTicketWindow(ticket)}>Edit Ticket</button>
+                  <button className="manager-button" onClick={() => handleDeleteTicket(ticket)}>Delete Ticket</button>
+                </div>
+              ))}
+            </div>
+            <button className="manager-button" onClick={() => openAddTicketWindow()}>Add Ticket</button>
           </div>
-        </div>
+        )}
+
+        {/* Edit Ticket Window */}
+        {editTicket && (
+          <div className="manager-grid-item">
+            <h2>Edit Ticket</h2>
+            <input
+              className="manager-input"
+              type="datetime-local"
+              value={editTicket.showtime}
+              onChange={(e) => setEditTicket({ ...editTicket, showtime: e.target.value })}
+            />
+            <input
+              className="manager-input"
+              type="number"
+              placeholder="Price"
+              value={editTicket.price}
+              onChange={(e) => setEditTicket({ ...editTicket, price: e.target.value })}
+            />
+            <input
+              className="manager-input"
+              type="number"
+              placeholder="Quantity Available"
+              value={editTicket.numAvailible}
+              onChange={(e) => setEditTicket({ ...editTicket, numAvailible: e.target.value })}
+            />
+            <button className="manager-button" onClick={() => handleUpdateTicket(editTicket)}>Update Ticket</button>
+            <button className="manager-button" onClick={() => handleDeleteTicket(editTicket)}>Delete Ticket</button>
+          </div>
+        )}
+
+        {/* Add Ticket Window */}
+        {newTicket && (
+          <div className="manager-grid-item">
+            <h2>Add New Ticket</h2>
+            <input
+              className="manager-input"
+              type="datetime-local"
+              value={newTicket.showtime}
+              onChange={(e) => setNewTicket({ ...newTicket, showtime: e.target.value })}
+            />
+            <input
+              className="manager-input"
+              type="number"
+              placeholder="Price"
+              value={newTicket.price}
+              onChange={(e) => setNewTicket({ ...newTicket, price: e.target.value })}
+            />
+            <input
+              className="manager-input"
+              type="number"
+              placeholder="Quantity Available"
+              value={newTicket.numAvailible}
+              onChange={(e) => setNewTicket({ ...newTicket, numAvailible: e.target.value })}
+            />
+            <button className="manager-button" onClick={handleAddTicket}>Add Ticket</button>
+          </div>
+        )}
       </div>
     </div>
-  );  
+  );
 };
 
 export default Manager;
