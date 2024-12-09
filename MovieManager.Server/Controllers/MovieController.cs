@@ -75,6 +75,16 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        [HttpDelete("removelike/{userId}:{reviewId}", Name = "RemoveLike")]
+        public ActionResult RemoveLike(int userId, int reviewId)
+        {
+            if (movieService.RemoveLike(userId, reviewId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
         [HttpPost("addreview", Name = "AddReview")]
         public ActionResult<int> AddReview(Review review)
         {
