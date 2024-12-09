@@ -11,7 +11,10 @@ namespace MovieManager.Server.Services
         Cart GetCart(int? cartId);
         Movie? GetMovieById(int id);
         void AddTicket(Ticket ticket);
-        bool AddReview(Review review);
+        int AddReview(Review review);
+        bool RemoveLike(int userId, int reviewId);
+        bool Liked(int userId,  int reviewId);
+        bool AddLike(int userId,  int reviewId);
         List<Movie> GetMovies();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
@@ -21,9 +24,12 @@ namespace MovieManager.Server.Services
         Cart? RemoveTicketFromCart(int ticketId, int cartId);
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
-        Review EditReview(int currentUserId, UpdatedReview updatedReview);
+        Review EditReview(UpdatedReview updatedReview);
         void RemoveTicketsFromMovie (int movieId, int numTickets);
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        Movie EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
+        void AddTicketsToMovie(Ticket ticket);
+        bool RemoveReview(Review review);
     }
 }

@@ -1,14 +1,127 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import MovieReview from "./MovieReview";
 import './MovieListing.css';
+
+                    //{(!showReview && reviews.length > 0) && (<button onClick={() => {showReviewsOnClick();}}>View Reviews</button>)}
 
 const MovieListing = ({ globalState }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
+    const [showReview, setShowReview] = useState(false);
+    const [haveReviewed, setHaveReviewed] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [reviews, setReviews] = useState([]);
     const { cart, setCart } = globalState;
+    const [rating, setRating] = useState(3);
+    const [comment, setComment] = useState("");
+    const [anonChecked, setAnonChecked] = useState(false);
+    const [reviewId, setReviewId] = useState(0)
+    const [addReviewText, setAddReviewText] = useState("Add Review");
+    const [viewReviews, setViewReviews] = useState(false);
+    const { user, setUser } = globalState;
+
+    const onChecked = () => {
+        setAnonChecked(!anonChecked);
+    }
+
+    const updateLikeCountLocal = (reviewIdArg, newVal) => {
+        reviews.forEach((i) => {
+            if (i.id == reviewIdArg) {
+                i.likeCount = newVal;
+            }
+        });
+    };
+
+    const showReviewsOnClick = () => {
+        setViewReviews(true);
+    };
+
+    const submitReview = async() => {
+        if (haveReviewed) {
+            const reviewUpdate = {
+                Id: reviewId,
+                PostDate: new Date().toISOString(),
+                Comment: comment,
+                MovieId: id,
+                UserId: user.id,
+                Rating: rating,
+                Anonymous: anonChecked
+            };
+            const response = await fetch('/movie/editreview', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewUpdate),
+            }); 
+            if (!response.ok) {
+                alert("Failed to edit review.");
+            } else {
+                let newReviews = JSON.parse(JSON.stringify(reviews));
+                newReviews.forEach((i) => {
+                    if (i.id == reviewId) {
+                        i.comment = reviewUpdate.Comment;
+                        i.rating = reviewUpdate.Rating;
+                        i.anonymous = reviewUpdate.Anonymous;
+                        i.postDate = reviewUpdate.PostDate;
+                        i.username = (reviewUpdate.Anonymous ? "Anon" : user.username);
+                    }
+                });
+                setReviews(newReviews);
+            }
+        } else {
+            const review = {
+                id: 0,
+                movieId: id,
+                userId: user.id,
+                postDate: new Date().toISOString(),
+                rating: rating,
+                likeCount: 0,
+                comment: comment,
+                anonymous: anonChecked,
+                username: (anonChecked ? "Anon" : user.username)
+            };
+
+            const response = await fetch('/movie/addreview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(review),
+            }); 
+            if (response.ok) {
+                review.id = await response.json();
+                setReviewId(review.id);
+                setReviews([...reviews, review]);
+                setHaveReviewed(true);
+            } else {
+                alert("Failed to submit review.");
+            }
+        }
+    };
+
+    const onAddReview = async() => {
+        if (showReview) {
+            submitReview();
+            setShowReview(false);
+            setAddReviewText("Edit Review");
+        } else {
+            setShowReview(true);
+            if (!haveReviewed) {
+                setAddReviewText("Post Review");
+            } else {
+                setAddReviewText("Update Review");
+            }
+        }
+    };
+
+    const deleteReview = async() => {
+        // TODO: fill out once endpoint is written
+        setHaveReviewed(false);
+    };
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
@@ -18,16 +131,35 @@ const MovieListing = ({ globalState }) => {
                 if (!response.ok) {
                     throw new Error(`Server error: ${response.statusText}`);
                 }
-
                 const data = await response.json();
                 setMovie(data);
+                const response2 = await fetch(`/movie/getreviews?movieId=${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }); 
+                if (!response2.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+                const reviewsL = await response2.json();
+                setReviews(reviewsL);
+                reviewsL.forEach((i) => {
+                    if (i.userId == user.id) {
+                        setHaveReviewed(true);
+                        setComment(i.comment);
+                        setRating(i.rating);
+                        setAnonChecked(i.anonymous);
+                        setReviewId(i.id);
+                        setAddReviewText("Edit Review");
+                    }
+                });
             } catch (error) {
                 setError('Failed to load movie details: ' + error.message);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchMovieDetails();
     }, [id]);
 
@@ -106,6 +238,7 @@ const MovieListing = ({ globalState }) => {
             <div className="movie-details-cont">
                 <h1 className="movie-title">{movie.name}</h1>
                 <p className="movie-description">{movie.description}</p>
+                {(!showReview && !viewReviews) && (
                 <div className="ticket-section">
                     <h3>Tickets</h3>
                     <Error />
@@ -125,8 +258,46 @@ const MovieListing = ({ globalState }) => {
                     ) : (
                         <p className="no-tickets">No tickets available</p>
                     )}
+                </div>) }
+                {showReview && (<>
+                    <div>
+                        <label for="rating">Rating: </label>
+                        <input type="range" value={rating} onChange={(e) => {setRating(e.target.value);}} id="rating-range" name="rating" min="1" max="5" />
+                        <label>{rating}</label>
+                    </div>
+                    <div>
+                        <label for="comment">Comment:</label>
+                    </div>
+                    <div>
+                        <textarea value={comment} name="comment" rows="5" columns="50" onChange={(e) => {setComment(e.target.value);}}></textarea>
+                    </div>
+                    <div>
+                        <label for="useName">Post Anonymously</label>
+                        <input type="checkbox" name="useName" checked={anonChecked} onChange={onChecked}/>
+                    </div>
+                    </>)}
+                <div className="column-allways">
+                    <button onClick={handleGoHome}>Go to Home</button>
+                    <button onClick={() => {onAddReview();}}>{addReviewText}</button>
+                    {(haveReviewed && showReview) && (<button onClick={() => {deleteReview();}}>Delete Review</button>)}
                 </div>
-                <button onClick={handleGoHome}>Go to Home</button>
+                {(reviews.length > 0) && (<>
+                    <h2>Reviews</h2>
+                    {reviews.map((rev) => (
+                        <MovieReview 
+                            username={rev.username} 
+                            key={rev.id}
+                            comment={rev.comment}
+                            rating={rev.rating}
+                            likeCount={rev.likeCount}
+                            postDate={rev.postDate}
+                            formattedPostDate={formatDateTime(rev.postDate)}
+                            globalState={globalState}
+                            reviewId={rev.id}
+                            updateLikeCount={updateLikeCountLocal}
+                            />
+                    ))}
+                </>)}
             </div>
         </div>
     );

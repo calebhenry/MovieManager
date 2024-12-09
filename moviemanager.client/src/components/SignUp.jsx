@@ -12,6 +12,7 @@ const SignUp = ({ globalState }) => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [preference, setPreference] = useState(0);
+    const [permissionLevel, setPermissionLevel] = useState(0);
     const [error, setError] = useState('');
     const { user, setUser } = globalState;
     const navigate = useNavigate();
@@ -32,7 +33,8 @@ const SignUp = ({ globalState }) => {
             age: parseInt(age),
             email,
             phoneNumber,
-            preference
+            preference,
+            permissionLevel
         };
 
         try {
@@ -148,7 +150,6 @@ const SignUp = ({ globalState }) => {
                         <option value={0}>Email</option>
                         <option value={1}>Phone</option>
                     </select>
-
                     <button type="submit">Sign Up</button>
                 </form>
             </div>

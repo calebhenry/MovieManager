@@ -59,12 +59,39 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
-        [HttpPost("addreview", Name = "AddReview")]
-        public ActionResult AddReview(Review review)
+        [HttpGet("liked/{userId}:{reviewId}", Name = "Liked")]
+        public ActionResult<bool> Liked(int userId, int reviewId)
         {
-            if (movieService.AddReview(review))
+            return Ok(movieService.Liked(userId, reviewId));
+        }
+
+        [HttpPost("like/{userId}:{reviewId}", Name = "Like")]
+        public ActionResult Like(int userId, int reviewId)
+        {
+            if (movieService.AddLike(userId, reviewId))
             {
                 return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpDelete("removelike/{userId}:{reviewId}", Name = "RemoveLike")]
+        public ActionResult RemoveLike(int userId, int reviewId)
+        {
+            if (movieService.RemoveLike(userId, reviewId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult<int> AddReview(Review review)
+        {
+            int result = movieService.AddReview(review);
+            if (result != 0)
+            {
+                return Ok(result);
             }
             return NotFound();
         }
@@ -145,17 +172,10 @@ namespace MovieManager.Server.Controllers
             return Ok(cart);
         }
 
-        //currentUserId should come from the logged in user, this is to amke sure the user can only edit their own comments
         [HttpPut("editreview", Name = "EditReview")]
-        public ActionResult<Review> EditReview(int currentUserId, UpdatedReview updatedReview)
+        public ActionResult<Review> EditReview(UpdatedReview updatedReview)
         {
-            try
-            {
-                movieService.EditReview(currentUserId, updatedReview);
-                return Ok();
-            } catch (ArgumentException ex) {
-                return BadRequest(ex.Message);
-            }
+            return Ok(movieService.EditReview(updatedReview));
         }
 
         [HttpPut("edittickets", Name = "EditTickets")]
@@ -164,12 +184,45 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.EditTickets(movieId, updatedTicket));
         }
 
+        [HttpPut("editmovie", Name = "EditMovie")]
+        public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
+        {
+            return Ok(movieService.EditMovie(updatedMovie));
+        }
+
         [HttpGet("getreviews", Name = "GetReviews")]
-        public ActionResult<List<Review>> GetReviews(int movieId)
+        public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
         {
             var reviews = movieService.GetReviews(movieId);
-            return Ok(reviews);
+            // we don't want to give the client the whole user object, but we do want them
+            // to have a username for the review if not anonymous
+            return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
+
+        [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
+        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
+        {
+            try
+            {
+                movieService.AddTicketsToMovie(ticket);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("removereview", Name = "RemoveReview")]
+        public ActionResult RemoveReview(Review review)
+        {
+            bool result = movieService.RemoveReview(review);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+        
 
         [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
         public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
