@@ -227,8 +227,10 @@ namespace MovieManager.Server.Controllers
         [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
         public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
         {
-            var success = movieService.RemoveTicketsFromMovie(movieId, numTickets);
-            return Ok(success);
+            bool result  = movieService.RemoveTicketsFromMovie(movieId, numTickets);
+            if (result){
+                return Ok();
+            } else return NotFound();
         }
 
     }

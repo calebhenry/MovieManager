@@ -269,7 +269,7 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetReviews(movieId);
         }
-        public void RemoveTicketsFromMovie(int movieId, int numAvailable)
+        public bool RemoveTicketsFromMovie(int movieId, int numTickets)
         {
             return movieRepository.RemoveTicketsFromMovie(movieId, numTickets);
         }
