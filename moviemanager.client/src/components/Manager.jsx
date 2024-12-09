@@ -6,7 +6,7 @@ const Manager = () => {
   const [movies, setMovies] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [newMovie, setNewMovie] = useState({ name: "", description: "", genre: "ACTION" });
-  const [newTicket, setNewTicket] = useState({ movieId: "", showtime: "", price: "", numAvailable: "" });
+  const [newTicket, setNewTicket] = useState({ movieId: ""});
 
   useEffect(() => {
     fetchMovies();
@@ -26,7 +26,7 @@ const Manager = () => {
 
   const fetchTickets = async () => {
     try {
-      const response = await fetch("/movie/gettickets");
+      const response = await fetch("/movie/getalltickets");
       if (!response.ok) throw new Error("Failed to fetch tickets");
       const data = await response.json();
       setTickets(data);
@@ -93,7 +93,7 @@ const Manager = () => {
 
   const handleAddTicket = async () => {
     try {
-      const response = await fetch("/movie/addticket", {
+      const response = await fetch("/movie/addticketstomovie", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -108,9 +108,11 @@ const Manager = () => {
     }
   };
 
-  const handleUpdateTicket = async (id, updatedTicket) => {
+  const handleUpdateTicket = async (id, ticket) => {
+    const { ticketId, movieId, price, numAvailable } = ticket; // Keep only essential properties
+    const updatedTicket = { ticketId, movieId, price, numAvailable };
     try {
-      const response = await fetch(`/api/tickets/${id}`, {
+      const response = await fetch(`/movie/edittickets/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -123,6 +125,26 @@ const Manager = () => {
     } catch (error) {
       console.error("Error updating ticket:", error);
     }
+  };
+
+  const handleRemoveTicket = (ticket) => {
+    fetch(`/movie/removeticketsfrommovie/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(ticket) 
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to delete ticket");
+      }
+      alert("Movie removed successfully!");
+      fetchMovies();
+    })
+    .catch((error) => {
+      console.error("Error removing movie:", error);
+    });
   };
 
   return (
@@ -213,27 +235,7 @@ const Manager = () => {
             value={newTicket.movieId}
             onChange={(e) => setNewTicket({ ...newTicket, movieId: e.target.value })}
           />
-          <input
-            className="manager-input"
-            type="datetime-local"
-            placeholder="Showtime"
-            value={newTicket.showtime}
-            onChange={(e) => setNewTicket({ ...newTicket, showtime: e.target.value })}
-          />
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Price"
-            value={newTicket.price}
-            onChange={(e) => setNewTicket({ ...newTicket, price: e.target.value })}
-          />
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Number Available"
-            value={newTicket.numAvailable}
-            onChange={(e) => setNewTicket({ ...newTicket, numAvailable: e.target.value })}
-          />
+
           <button className="manager-button" onClick={handleAddTicket}>Add Ticket</button>
         </div>
   
@@ -246,9 +248,17 @@ const Manager = () => {
                 <input
                   className="manager-input"
                   type="number"
+                  value={ticket.id}
+                  onChange={(e) =>
+                    setTickets(tickets.map((t) => (t.id === ticket.id ? { ...t, id: e.target.value } : t)))
+                  }
+                />
+                <input
+                  className="manager-input"
+                  type="number"
                   value={ticket.price}
                   onChange={(e) =>
-                    setTickets(tickets.map((t) => (t.id === ticket.id ? { ...t, price: e.target.value } : t)))
+                    setTickets(tickets.map((t) => (t.id === ticket.price ? { ...t, price: e.target.value } : t)))
                   }
                 />
                 <input
@@ -256,10 +266,11 @@ const Manager = () => {
                   type="number"
                   value={ticket.numAvailable}
                   onChange={(e) =>
-                    setTickets(tickets.map((t) => (t.id === ticket.id ? { ...t, numAvailable: e.target.value } : t)))
+                    setTickets(tickets.map((t) => (t.id === ticket.numAvailable ? { ...t, numAvailable: e.target.value } : t)))
                   }
                 />
-                <button className="manager-button" onClick={() => handleUpdateTicket(ticket.id, ticket)}>Save Changes</button>
+                <button className="manager-button" onClick={() => handleUpdateTicket(ticket.movieId, ticket)}>Save Changes</button>
+                <button className="manager-button manager-remove-button" onClick={() => handleRemoveTicket(ticket)}>Remove Tickets</button>
               </div>
             ))}
           </div>
