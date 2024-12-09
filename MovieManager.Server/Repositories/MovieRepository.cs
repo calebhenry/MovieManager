@@ -326,23 +326,36 @@ namespace MovieManager.Server.Repositories
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
         }
-        public void RemoveTicketsFromMovie(int movieId, int numTickets)
+
+        public bool RemoveReview(Review review)
+        {
+            var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
+            if (revRemove == null) { return false; }
+            _context.Reviews.Remove(revRemove);
+            _context.SaveChanges();
+            return true;
+        }
+        public bool RemoveTicketsFromMovie(int movieId, int numTickets)
         {
             if (numTickets <= 0)
             {
+                return false;
                 throw new ArgumentException("Number of tickets to remove must be greater than zero.");
             }
             var movie = _context.Movies.SingleOrDefault(m => m.Id == movieId);
             if (movie == null)
             {
+                return false;
                 throw new ArgumentException("Movie not found.");
             }
-            if (movie.tickets < numTickets)
-            {
+            if (movie.Tickets.Count < numTickets)
+            {   
+                return false;
                 throw new ArgumentException("Movie does not have sufficient amount of tickets to remove. ");
             }
             movie.tickets -= numTickets;
             _context.SaveChanges();
+            return true;
         }
 
         public bool RemoveReview(Review review)
