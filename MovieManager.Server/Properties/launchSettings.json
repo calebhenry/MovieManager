@@ -19,10 +19,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
-        "movieDb": "data source=Calebs_PC\\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
+        "movieDb": "data source=DESKTOP-F5913G4;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "data source=DESKTOP-F5913G4;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True"
+      "applicationUrl": "https://localhost:7160;http://localhost:5018"
     },
     "KaylyProfile": {
       "commandName": "Project",
