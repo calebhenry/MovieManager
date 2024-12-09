@@ -28,6 +28,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetMovies();
         }
+        public List<Ticket> GetAllTickets()
+        {
+            return movieRepository.GetAllTickets();
+        }
         public Movie? GetMovieById(int id)
         {
             return movieRepository.GetMovieById(id);
@@ -237,10 +241,7 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
-        public List<Ticket> GetAllTickets()
-        {
-            return movieRepository.GetTickets();
-        }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
@@ -269,7 +270,7 @@ namespace MovieManager.Server.Services
 
         public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
-            return movieRepository.EditTickets(updatedTicket);
+            return movieRepository.EditTickets(movieId, updatedTicket);
         }
 
         public Movie EditMovie(UpdatedMovie updatedMovie)

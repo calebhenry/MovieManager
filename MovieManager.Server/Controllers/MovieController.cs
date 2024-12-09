@@ -177,6 +177,18 @@ namespace MovieManager.Server.Controllers
             return Ok(cart);
         }
 
+        [HttpDelete("removeticketfrommovie", Name="RemoveTicketFromMovie")]
+        public ActionResult RemoveTicketFromMovie(Ticket ticket)
+        { 
+            try
+            {
+               movieService.RemoveTicket(ticket);
+               return Ok();
+            } catch (ArgumentException ex) {
+               return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("editreview", Name = "EditReview")]
         public ActionResult<Review> EditReview(UpdatedReview updatedReview)
         {
@@ -255,6 +267,5 @@ namespace MovieManager.Server.Controllers
                 return Ok();
             } else return NotFound();
         }
-
     }
 }

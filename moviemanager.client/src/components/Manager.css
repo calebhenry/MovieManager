@@ -9,6 +9,7 @@
   padding: 20px;
 }
 
+
 .manager-h1 {
   text-align: center;
   margin-bottom: 30px;
@@ -23,6 +24,7 @@
   gap: 30px; /* Space between each card */
   width: 100%; /* Full width of the screen */
   max-width: 1400px; /* Optional: Limit grid width on large screens */
+  padding: 20px;
 }
 
 /* Card item in the grid */
