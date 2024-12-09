@@ -14,6 +14,16 @@ namespace MovieManager.Server.Services
             movieRepository = repository;
         }
 
+        public bool AddComment(Comment comment)
+        {
+            return movieRepository.AddComment(comment);
+        }
+
+        public List<Comment> GetComments(int reviewId)
+        {
+            return movieRepository.GetComments(reviewId);
+        }
+
         public List<Movie> GetMovies()
         {
             return movieRepository.GetMovies();
@@ -272,10 +282,24 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetReviews(movieId);
         }
+        public bool RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            return movieRepository.RemoveTicketsFromMovie(movieId, numTickets);
+        }
         
         public void AddTicketsToMovie(Ticket ticket)
         {
             movieRepository.AddTicketsToMovie(ticket);
+        }
+        
+        public bool RemoveReview(Review review)
+        {
+            return movieRepository.RemoveReview(review);
+        }
+
+        public bool RemoveLike(int userId, int reviewId)
+        {
+            return movieRepository.RemoveLike(userId, reviewId);
         }
     }
 }

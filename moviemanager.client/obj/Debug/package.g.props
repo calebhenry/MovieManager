@@ -11,6 +11,7 @@
     <PackageJsonScriptsPreview Condition="$(PackageJsonScriptsPreview) == ''">vite preview</PackageJsonScriptsPreview>
     <PackageJsonScriptsTest Condition="$(PackageJsonScriptsTest) == ''">jest --ci --reporters=default --reporters=jest-junit</PackageJsonScriptsTest>
     <PackageJsonDependenciesBabelPresetEnv Condition="$(PackageJsonDependenciesBabelPresetEnv) == ''">^7.26.0</PackageJsonDependenciesBabelPresetEnv>
+    <PackageJsonDependenciesVitejsPluginReact Condition="$(PackageJsonDependenciesVitejsPluginReact) == ''">^4.3.4</PackageJsonDependenciesVitejsPluginReact>
     <PackageJsonDependenciesJestJunit Condition="$(PackageJsonDependenciesJestJunit) == ''">^16.0.0</PackageJsonDependenciesJestJunit>
     <PackageJsonDependenciesReact Condition="$(PackageJsonDependenciesReact) == ''">^18.3.1</PackageJsonDependenciesReact>
     <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^18.3.1</PackageJsonDependenciesReactDom>
@@ -23,7 +24,6 @@
     <PackageJsonDevdependenciesTypesJest Condition="$(PackageJsonDevdependenciesTypesJest) == ''">^29.5.14</PackageJsonDevdependenciesTypesJest>
     <PackageJsonDevdependenciesTypesReact Condition="$(PackageJsonDevdependenciesTypesReact) == ''">^18.3.10</PackageJsonDevdependenciesTypesReact>
     <PackageJsonDevdependenciesTypesReactDom Condition="$(PackageJsonDevdependenciesTypesReactDom) == ''">^18.3.0</PackageJsonDevdependenciesTypesReactDom>
-    <PackageJsonDevdependenciesVitejsPluginReact Condition="$(PackageJsonDevdependenciesVitejsPluginReact) == ''">^4.3.2</PackageJsonDevdependenciesVitejsPluginReact>
     <PackageJsonDevdependenciesBabelJest Condition="$(PackageJsonDevdependenciesBabelJest) == ''">^29.7.0</PackageJsonDevdependenciesBabelJest>
     <PackageJsonDevdependenciesEslint Condition="$(PackageJsonDevdependenciesEslint) == ''">^9.11.1</PackageJsonDevdependenciesEslint>
     <PackageJsonDevdependenciesEslintPluginReact Condition="$(PackageJsonDevdependenciesEslintPluginReact) == ''">^7.37.0</PackageJsonDevdependenciesEslintPluginReact>

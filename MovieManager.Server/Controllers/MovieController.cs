@@ -75,6 +75,16 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        [HttpDelete("removelike/{userId}:{reviewId}", Name = "RemoveLike")]
+        public ActionResult RemoveLike(int userId, int reviewId)
+        {
+            if (movieService.RemoveLike(userId, reviewId))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
         [HttpPost("addreview", Name = "AddReview")]
         public ActionResult<int> AddReview(Review review)
         {
@@ -194,6 +204,24 @@ namespace MovieManager.Server.Controllers
             return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
 
+        [HttpPost("addcomment", Name = "AddComment")]
+        public ActionResult AddComment(Comment comment)
+        {
+            if (movieService.AddComment(comment))
+            {
+                return Ok();
+            } else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("getcomments", Name = "GetComments")]
+        public ActionResult<List<Comment>> GetComments(int reviewId)
+        {
+                return Ok(movieService.GetComments(reviewId));
+        }
+
         [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
         public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
         {
@@ -207,5 +235,26 @@ namespace MovieManager.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("removereview", Name = "RemoveReview")]
+        public ActionResult RemoveReview(Review review)
+        {
+            bool result = movieService.RemoveReview(review);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+        
+
+        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
+        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            bool result  = movieService.RemoveTicketsFromMovie(movieId, numTickets);
+            if (result){
+                return Ok();
+            } else return NotFound();
+        }
+
     }
 }

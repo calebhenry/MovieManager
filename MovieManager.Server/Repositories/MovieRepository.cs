@@ -9,6 +9,55 @@ namespace MovieManager.Server.Repositories
 
         private MovieContext _context;
 
+        public bool AddComment(Comment comment)
+        {
+            comment.Id = 0;
+            if (comment.Message == "" || comment.Username == "")
+            {
+                return false;
+            }
+            var review = (from i in _context.Reviews where i.Id == comment.ReviewId select i).ToList().FirstOrDefault();
+            if (review == null)
+                return false;
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public List<Comment> GetComments(int reviewId)
+        {
+            List<Comment> rtn = new List<Comment>();
+            var review = (from i in _context.Reviews where i.Id == reviewId select i).ToList().FirstOrDefault();
+            if (review == null)
+                return rtn;
+            var comments = (from i in _context.Comments where i.ReviewId == review.Id select i).ToList();
+            if (comments == null)
+                return rtn;
+            foreach (var comment in comments)
+            {
+                rtn.Add(comment);
+            }
+            return rtn;
+        }
+
+        public bool RemoveLike(int userId, int reviewId)
+        {
+            var like = (from i in _context.Likes where i.UserId == userId &&
+                        i.ReviewId == reviewId select i).ToList().FirstOrDefault();
+            var review = (from i in _context.Reviews where i.Id == reviewId select i).ToList().FirstOrDefault();
+            if (like != null && review != null)
+            {
+                _context.Update(review);
+                review.LikeCount--;
+                _context.Likes.Remove(like);
+                _context.SaveChanges();
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
         public MovieRepository(MovieContext context)
         {
             _context = context;
@@ -39,6 +88,7 @@ namespace MovieManager.Server.Repositories
         public int AddReview(Review review)
         {
             review.Id = 0;
+            review.LikeCount = 0;
             var movie = (from i in _context.Movies where i.Id == review.MovieId select i).ToList().FirstOrDefault();
             if (movie == null)
                 return 0;
@@ -60,15 +110,23 @@ namespace MovieManager.Server.Repositories
 
         public bool RemoveMovie(Movie movie)
         {
-            var db = new MovieContext();
-            var movieRem = (from i in db.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
+            var movieRem = (from i in _context.Movies where i.Id == movie.Id select i).ToList().FirstOrDefault();
             if (movieRem == null)
             {
                 return false;
             }
-            // TODO: remove everything that references that movie, or references a ticket for that movie ?
-            db.Movies.Remove(movieRem);
-            db.SaveChanges();
+            var tickets = (from i in _context.Tickets where i.MovieId == movie.Id select i).ToList();
+            foreach (var ticket in tickets)
+            {
+                _context.Tickets.Remove(ticket);
+            }
+            var reviews = (from i in _context.Reviews where i.MovieId == movie.Id select i).ToList();
+            foreach (var review in reviews)
+            {
+                _context.Reviews.Remove(review);
+            }
+            _context.Movies.Remove(movieRem);
+            _context.SaveChanges();
             return true;
 
         }
@@ -151,6 +209,7 @@ namespace MovieManager.Server.Repositories
         public void AddUser(User user)
         {
             user.Id = 0;
+            user.PermissionLevel = PermissionLevel.USER;
             _context.Users.Add(user);
             _context.SaveChanges();
         }
@@ -298,6 +357,37 @@ namespace MovieManager.Server.Repositories
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
         }
+
+        public bool RemoveReview(Review review)
+        {
+            var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
+            if (revRemove == null) { return false; }
+            _context.Reviews.Remove(revRemove);
+            _context.SaveChanges();
+            return true;
+        }
+        public bool RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            if (numTickets <= 0)
+            {
+                return false;
+                throw new ArgumentException("Number of tickets to remove must be greater than zero.");
+            }
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == movieId);
+            if (movie == null)
+            {
+                return false;
+                throw new ArgumentException("Movie not found.");
+            }
+            if (movie.Tickets.Count < numTickets)
+            {   
+                return false;
+                throw new ArgumentException("Movie does not have sufficient amount of tickets to remove. ");
+            }
+            movie.Tickets.RemoveRange(0, numTickets);
+            _context.SaveChanges();
+            return true;
+        }
     }
 
     public class MovieContext : DbContext
@@ -310,6 +400,7 @@ namespace MovieManager.Server.Repositories
         public DbSet<Review> Reviews { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -341,6 +432,7 @@ namespace MovieManager.Server.Repositories
                 .IsRequired();
             modelBuilder.Entity<CartItem>()
                 .HasOne(e => e.Ticket);
+            modelBuilder.Entity<Comment>();
         }
     }
 }

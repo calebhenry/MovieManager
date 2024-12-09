@@ -331,5 +331,14 @@ namespace UnitTests
             _mockRepository.Verify(repo => repo.AddTicketsToMovie(ticket), Times.Once);
         }
 
+        [Test]
+        public void RemoveReview_CallsRepositoryRemoveReview()
+        {
+            var movie = new Movie { Id = 1, Name = "Movie 1", Description = "Description 1" };
+            var user = new User { Id = 1, Username = "Username 1", Password = "Password 1", Name = "Name 1", Gender = Gender.MALE, Age = 40, Email = "Email 1", PhoneNumber = "PhoneNumber 1", Preference = Preference.EMAIL, PermissionLevel = PermissionLevel.USER };
+            var review = new Review { Id = 1, MovieId = 1, UserId = 1, PostDate = DateTime.UtcNow, Comment = "Comment 1", Rating = 5, LikeCount = 1 };
+            _movieService.RemoveReview(review);
+            _mockRepository.Verify(repo => repo.RemoveReview(review), Times.Once);
+        }
     }
 }
