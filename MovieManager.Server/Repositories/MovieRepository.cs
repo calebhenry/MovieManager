@@ -68,6 +68,10 @@ namespace MovieManager.Server.Repositories
             var movies = _context.Movies.Include(_ => _.Tickets).Include(_ => _.Reviews).ToList();
             return _context.Movies.ToList();
         }
+        public List<Ticket> GetAllTickets()
+        {
+            return _context.Tickets.ToList();
+        }
 
         public Movie? GetMovieById(int id)
         {
@@ -130,7 +134,8 @@ namespace MovieManager.Server.Repositories
             return true;
 
         }
-    
+
+
         public List<Ticket> GetTickets()
         {
             return _context.Tickets.ToList();
@@ -384,16 +389,7 @@ namespace MovieManager.Server.Repositories
                 return false;
                 throw new ArgumentException("Movie does not have sufficient amount of tickets to remove. ");
             }
-            movie.tickets -= numTickets;
-            _context.SaveChanges();
-            return true;
-        }
-
-        public bool RemoveReview(Review review)
-        {
-            var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
-            if (revRemove == null) { return false; }
-            _context.Reviews.Remove(revRemove);
+            movie.Tickets.RemoveRange(0, numTickets);
             _context.SaveChanges();
             return true;
         }

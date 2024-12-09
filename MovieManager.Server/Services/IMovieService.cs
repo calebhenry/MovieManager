@@ -28,13 +28,11 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
         Review EditReview(UpdatedReview updatedReview);
-        void RemoveTicketsFromMovie (int movieId, int numTickets);
-        public Ticket EditTickets(UpdatedTicket updatedTicket);
+        bool RemoveTicketsFromMovie (int movieId, int numTickets);
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
         Movie EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
         void AddTicketsToMovie(Ticket ticket);
-        
-        void RemoveTicketFromMovie (int movieId, int NumAvailible);
-        void RemoveReview(Review review);
+        bool RemoveReview(Review review);
     }
 }

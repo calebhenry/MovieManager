@@ -182,7 +182,7 @@ namespace MovieManager.Server.Controllers
         { 
              try
             {
-                movieService.RemoveTicketFromMovie(movieId, NumAvailible);
+                movieService.RemoveTicketsFromMovie(movieId, NumAvailible);
                 return Ok();
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
@@ -246,13 +246,6 @@ namespace MovieManager.Server.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
-        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
-        {
-            var success = movieService.RemoveTicketsFromMovie(movieId, numTickets);
-            return Ok(success);
         }
 
         [HttpDelete("removereview", Name = "RemoveReview")]

@@ -28,6 +28,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetMovies();
         }
+        public List<Ticket> GetAllTickets()
+        {
+            return movieRepository.GetAllTickets();
+        }
         public Movie? GetMovieById(int id)
         {
             return movieRepository.GetMovieById(id);
@@ -237,10 +241,7 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
-        public List<Ticket> GetAllTickets()
-        {
-            return movieRepository.GetTickets();
-        }
+
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
@@ -267,9 +268,9 @@ namespace MovieManager.Server.Services
             return movieRepository.EditReview(updatedReview);
         }
 
-        public Ticket EditTickets(int movideId, UpdatedTicket updatedTicket)
+        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
-            return movieRepository.EditTickets(movideId, updatedTicket);
+            return movieRepository.EditTickets(movieId, updatedTicket);
         }
 
         public Movie EditMovie(UpdatedMovie updatedMovie)
@@ -291,18 +292,8 @@ namespace MovieManager.Server.Services
         {
             movieRepository.AddTicketsToMovie(ticket);
         }
-        public void RemoveTicketFromMovie (int movieId, int NumAvailible){
-            var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);
-            foreach (var ticket in movie.Tickets.ToList()){
-                    movie.Tickets.Remove(ticket);
-            }
-             NumAvailible--;
-        }
-        public void RemoveTicketsFromMovie(int movieId, int numAvailable)
-        {
-            return movieRepository.RemoveTicketsFromMovie(movieId, numTickets);
-        }
-        public void RemoveReview(Review review)
+        
+        public bool RemoveReview(Review review)
         {
             return movieRepository.RemoveReview(review);
         }
