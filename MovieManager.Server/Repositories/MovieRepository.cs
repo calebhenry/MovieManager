@@ -336,6 +336,28 @@ namespace MovieManager.Server.Repositories
             _context.SaveChanges();
             return true;
         }
+        public bool RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            if (numTickets <= 0)
+            {
+                return false;
+                throw new ArgumentException("Number of tickets to remove must be greater than zero.");
+            }
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == movieId);
+            if (movie == null)
+            {
+                return false;
+                throw new ArgumentException("Movie not found.");
+            }
+            if (movie.Tickets.Count < numTickets)
+            {   
+                return false;
+                throw new ArgumentException("Movie does not have sufficient amount of tickets to remove. ");
+            }
+            movie.Tickets.RemoveRange(0, numTickets);
+            _context.SaveChanges();
+            return true;
+        }
     }
 
     public class MovieContext : DbContext
