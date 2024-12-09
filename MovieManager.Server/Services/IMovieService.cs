@@ -4,6 +4,8 @@ namespace MovieManager.Server.Services
 {
     public interface IMovieService
     {
+        List<Comment> GetComments(int reviewId);
+        bool AddComment(Comment comment);
         void AddCart(Cart cart);
         void AddMovie(Movie movie);
         bool AddTicketToCart(int cartId, int ticketId, int quantity);

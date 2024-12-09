@@ -216,6 +216,24 @@ namespace MovieManager.Server.Controllers
             return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
 
+        [HttpPost("addcomment", Name = "AddComment")]
+        public ActionResult AddComment(Comment comment)
+        {
+            if (movieService.AddComment(comment))
+            {
+                return Ok();
+            } else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("getcomments", Name = "GetComments")]
+        public ActionResult<List<Comment>> GetComments(int reviewId)
+        {
+                return Ok(movieService.GetComments(reviewId));
+        }
+
         [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
         public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
         {

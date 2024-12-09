@@ -14,6 +14,16 @@ namespace MovieManager.Server.Services
             movieRepository = repository;
         }
 
+        public bool AddComment(Comment comment)
+        {
+            return movieRepository.AddComment(comment);
+        }
+
+        public List<Comment> GetComments(int reviewId)
+        {
+            return movieRepository.GetComments(reviewId);
+        }
+
         public List<Movie> GetMovies()
         {
             return movieRepository.GetMovies();

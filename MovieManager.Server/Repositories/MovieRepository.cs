@@ -9,6 +9,37 @@ namespace MovieManager.Server.Repositories
 
         private MovieContext _context;
 
+        public bool AddComment(Comment comment)
+        {
+            comment.Id = 0;
+            if (comment.Message == "" || comment.Username == "")
+            {
+                return false;
+            }
+            var review = (from i in _context.Reviews where i.Id == comment.ReviewId select i).ToList().FirstOrDefault();
+            if (review == null)
+                return false;
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public List<Comment> GetComments(int reviewId)
+        {
+            List<Comment> rtn = new List<Comment>();
+            var review = (from i in _context.Reviews where i.Id == reviewId select i).ToList().FirstOrDefault();
+            if (review == null)
+                return rtn;
+            var comments = (from i in _context.Comments where i.ReviewId == review.Id select i).ToList();
+            if (comments == null)
+                return rtn;
+            foreach (var comment in comments)
+            {
+                rtn.Add(comment);
+            }
+            return rtn;
+        }
+
         public bool RemoveLike(int userId, int reviewId)
         {
             var like = (from i in _context.Likes where i.UserId == userId &&
@@ -378,6 +409,7 @@ namespace MovieManager.Server.Repositories
         public DbSet<Review> Reviews { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -409,6 +441,7 @@ namespace MovieManager.Server.Repositories
                 .IsRequired();
             modelBuilder.Entity<CartItem>()
                 .HasOne(e => e.Ticket);
+            modelBuilder.Entity<Comment>();
         }
     }
 }
