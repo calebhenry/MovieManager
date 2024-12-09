@@ -18,6 +18,8 @@ namespace MovieManager.Server.Controllers
             this.movieService = movieService;
         }
 
+        #region Required Endpoints Phase One
+
         [HttpGet("getmovies", Name = "GetMovies")]
         public ActionResult<IEnumerable<Movie>> GetMovies()
         {
@@ -48,6 +50,138 @@ namespace MovieManager.Server.Controllers
                 return NotFound();
         }
 
+        [HttpGet("gettickets", Name = "GetTickets")]
+        public ActionResult<IEnumerable<Ticket>> GetTickets(int movieId)
+        {
+            return Ok(movieService.GetTickets(movieId).ToArray());
+        }
+
+        [HttpPost("addtickettocart", Name = "AddTicketToCart")]
+        public ActionResult AddTicketToCart(int cartId, int ticketId, int quantity)
+        {
+            if (movieService.AddTicketToCart(cartId, ticketId, quantity))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPut("removeticketfromcart")]
+        public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId)
+        {
+            var cart = movieService.RemoveTicketFromCart(ticketId, cartId);
+            if (cart != null)
+            {
+                return Ok(cart);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("getcart", Name = "GetCart")]
+        public ActionResult<Cart> GetCart(int? cartId)
+        {
+            var cart = movieService.GetCart(cartId);
+            return Ok(cart);
+        }
+
+        [HttpPost("processpayment", Name = "ProcessPayment")]
+        public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
+        {
+            try
+            {
+                movieService.ProcessPayment(cartId, streetAddress, city, state, zipCode, cardNumber, exp, cardholderName, cvc);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Required Endpoints Phase Two
+
+        [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
+        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
+        {
+            try
+            {
+                movieService.AddTicketsToMovie(ticket);
+                return Ok();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
+        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
+        {
+            bool result = movieService.RemoveTicketsFromMovie(movieId, numTickets);
+            if (result)
+            {
+                return Ok();
+            }
+            else return NotFound();
+        }
+
+        [HttpPut("edittickets", Name = "EditTickets")]
+        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
+        {
+            return Ok(movieService.EditTickets(movieId, updatedTicket));
+        }
+
+        [HttpPost("addreview", Name = "AddReview")]
+        public ActionResult<int> AddReview(Review review)
+        {
+            int result = movieService.AddReview(review);
+            if (result != 0)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
+        [HttpDelete("removereview", Name = "RemoveReview")]
+        public ActionResult RemoveReview(Review review)
+        {
+            bool result = movieService.RemoveReview(review);
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+
+        [HttpPut("editreview", Name = "EditReview")]
+        public ActionResult<Review> EditReview(UpdatedReview updatedReview)
+        {
+            return Ok(movieService.EditReview(updatedReview));
+        }
+
+        [HttpGet("getreviews", Name = "GetReviews")]
+        public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
+        {
+            var reviews = movieService.GetReviews(movieId);
+            // we don't want to give the client the whole user object, but we do want them
+            // to have a username for the review if not anonymous
+            return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
+        }
+
+        [HttpPut("editmovie", Name = "EditMovie")]
+        public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
+        {
+            return Ok(movieService.EditMovie(updatedMovie));
+        }
+
+        #endregion
+
+        #region Supporting Endpoints
+
         [HttpGet("getmovie/{id}", Name = "GetMovie")]
         public ActionResult<Movie> GetMovie(int id)
         {
@@ -57,6 +191,26 @@ namespace MovieManager.Server.Controllers
                 return Ok(movie);
             }
             return NotFound();
+        }
+
+        [HttpGet("getalltickets", Name = "GetAllTickets")]
+        public ActionResult<IEnumerable<Ticket>> GetAllTickets()
+        {
+            return Ok(movieService.GetAllTickets().ToArray());
+        }
+
+        [HttpDelete("removeticketfrommovie", Name = "RemoveTicketFromMovie")]
+        public ActionResult RemoveTicketFromMovie(Ticket ticket)
+        {
+            try
+            {
+                movieService.RemoveTicket(ticket);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("liked/{userId}:{reviewId}", Name = "Liked")]
@@ -85,39 +239,23 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
-        [HttpPost("addreview", Name = "AddReview")]
-        public ActionResult<int> AddReview(Review review)
+        [HttpPost("addcomment", Name = "AddComment")]
+        public ActionResult AddComment(Comment comment)
         {
-            int result = movieService.AddReview(review);
-            if (result != 0)
-            {
-                return Ok(result);
-            }
-            return NotFound();
-        }
-
-        [HttpPost("addtickettocart", Name = "AddTicketToCart")]
-        public ActionResult AddTicketToCart(int cartId, int ticketId, int quantity)
-        {
-            if (movieService.AddTicketToCart(cartId, ticketId, quantity))
+            if (movieService.AddComment(comment))
             {
                 return Ok();
-            }
-            return NotFound();
-        }
-
-        [HttpPut("removeticketfromcart")]
-        public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId)
-        { 
-            var cart = movieService.RemoveTicketFromCart(ticketId, cartId);
-            if (cart != null)
-            {
-                return Ok(cart);
             }
             else
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet("getcomments", Name = "GetComments")]
+        public ActionResult<List<Comment>> GetComments(int reviewId)
+        {
+            return Ok(movieService.GetComments(reviewId));
         }
 
         [HttpGet("getuser", Name = "GetUser")]
@@ -146,126 +284,6 @@ namespace MovieManager.Server.Controllers
             return Ok();
         }
 
-        [HttpPost("processpayment", Name = "ProcessPayment")]
-        public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
-        {
-            try
-            {
-                movieService.ProcessPayment(cartId, streetAddress, city, state, zipCode, cardNumber, exp, cardholderName, cvc);
-                return Ok();
-            } catch (ArgumentException ex) {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet("getalltickets", Name = "GetAllTickets")]
-        public ActionResult<IEnumerable<Ticket>> GetAllTickets()
-        {
-            return Ok(movieService.GetAllTickets().ToArray());
-        }
-
-        [HttpGet("gettickets", Name = "GetTickets")]
-        public ActionResult<IEnumerable<Ticket>> GetTickets(int movieId)
-        {
-            return Ok(movieService.GetTickets(movieId).ToArray());
-        }
-
-        [HttpGet("getcart", Name = "GetCart")]
-
-        public ActionResult<Cart> GetCart(int? cartId)
-        {
-            var cart = movieService.GetCart(cartId);
-            return Ok(cart);
-        }
-
-        [HttpDelete("removeticketfrommovie", Name="RemoveTicketFromMovie")]
-        public ActionResult RemoveTicketFromMovie(Ticket ticket)
-        { 
-            try
-            {
-               movieService.RemoveTicket(ticket);
-               return Ok();
-            } catch (ArgumentException ex) {
-               return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("editreview", Name = "EditReview")]
-        public ActionResult<Review> EditReview(UpdatedReview updatedReview)
-        {
-            return Ok(movieService.EditReview(updatedReview));
-        }
-
-        [HttpPut("edittickets", Name = "EditTickets")]
-        public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
-        {
-            return Ok(movieService.EditTickets(movieId, updatedTicket));
-        }
-
-        [HttpPut("editmovie", Name = "EditMovie")]
-        public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
-        {
-            return Ok(movieService.EditMovie(updatedMovie));
-        }
-
-        [HttpGet("getreviews", Name = "GetReviews")]
-        public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
-        {
-            var reviews = movieService.GetReviews(movieId);
-            // we don't want to give the client the whole user object, but we do want them
-            // to have a username for the review if not anonymous
-            return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
-        }
-
-        [HttpPost("addcomment", Name = "AddComment")]
-        public ActionResult AddComment(Comment comment)
-        {
-            if (movieService.AddComment(comment))
-            {
-                return Ok();
-            } else
-            {
-                return NotFound();
-            }
-        }
-
-        [HttpGet("getcomments", Name = "GetComments")]
-        public ActionResult<List<Comment>> GetComments(int reviewId)
-        {
-                return Ok(movieService.GetComments(reviewId));
-        }
-
-        [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
-        public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
-        {
-            try
-            {
-                movieService.AddTicketsToMovie(ticket);
-                return Ok();
-            }
-            catch (ArgumentNullException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete("removereview", Name = "RemoveReview")]
-        public ActionResult RemoveReview(Review review)
-        {
-            bool result = movieService.RemoveReview(review);
-            if (result)
-                return Ok();
-            else
-                return NotFound();
-        }
-        
-
-        [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
-        public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
-        {
-            bool result  = movieService.RemoveTicketsFromMovie(movieId, numTickets);
-            if (result){
-                return Ok();
-            } else return NotFound();
-        }
+        #endregion
     }
 }
