@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Represents a ticket of a movie. 
+    /// </summary>
     public class Ticket
     {
         public int Id { get; set; }
@@ -16,7 +19,9 @@ namespace MovieManager.Server.Models
         [JsonIgnore]
         public Movie Movie { get; set; } = null!;
     }
-
+    /// <summary>
+    /// When ticket infomation is changed or updated. 
+    /// </summary>
     public class UpdatedTicket 
     {
         public int Id { get; set; }

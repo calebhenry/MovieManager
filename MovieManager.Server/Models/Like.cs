@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Like a movie.
+    /// </summary>
     public class Like
     {
         public int Id { get; set; }

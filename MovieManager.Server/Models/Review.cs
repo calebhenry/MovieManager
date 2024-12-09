@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Review of a movie. 
+    /// </summary>
     public class Review
     {
         public int Id { get; set; }
@@ -22,7 +25,9 @@ namespace MovieManager.Server.Models
         [JsonIgnore]
         public User User { get; set; } = null!;
     }
-
+    /// <summary>
+    /// Review of a user. 
+    /// </summary>
     public class ReviewDTO
     {
         public ReviewDTO(Review review, string userName)
@@ -60,7 +65,9 @@ namespace MovieManager.Server.Models
         public bool Anonymous { get; set; }
         public string Username { get; set; }
     }
-
+    /// <summary>
+    /// When a review is updated/changed.
+    /// </summary>
     public class UpdatedReview
     {
         public int Id { get; set; }
