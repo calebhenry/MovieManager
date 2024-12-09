@@ -215,25 +215,12 @@ const Manager = () => {
           />
           <input
             className="manager-input"
-            type="datetime-local"
-            placeholder="Showtime"
+            type="number"
+            placeholder="Ticket ID"
             value={newTicket.showtime}
-            onChange={(e) => setNewTicket({ ...newTicket, showtime: e.target.value })}
+            onChange={(e) => setNewTicket({ ...newTicket, ticketId: e.target.value })}
           />
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Price"
-            value={newTicket.price}
-            onChange={(e) => setNewTicket({ ...newTicket, price: e.target.value })}
-          />
-          <input
-            className="manager-input"
-            type="number"
-            placeholder="Number Available"
-            value={newTicket.numAvailable}
-            onChange={(e) => setNewTicket({ ...newTicket, numAvailable: e.target.value })}
-          />
+
           <button className="manager-button" onClick={handleAddTicket}>Add Ticket</button>
         </div>
   
