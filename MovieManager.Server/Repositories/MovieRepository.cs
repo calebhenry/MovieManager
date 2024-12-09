@@ -325,6 +325,7 @@ namespace MovieManager.Server.Repositories
                     movie.Name = updatedMovie.Name ?? movie.Name;
                     movie.Description = updatedMovie.Description ?? movie.Description;
                     movie.Genre = updatedMovie.Genre;
+                    movie.AgeRating = updatedMovie.AgeRating;
 
                     db.SaveChanges();
 

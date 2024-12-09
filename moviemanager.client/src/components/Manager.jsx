@@ -5,7 +5,7 @@ import './Manager.css';
 const Manager = () => {
   const [movies, setMovies] = useState([]);
   const [tickets, setTickets] = useState([]);
-  const [newMovie, setNewMovie] = useState({ name: "", description: "", genre: "ACTION" });
+  const [newMovie, setNewMovie] = useState({ name: "", description: "", genre: "ACTION", ageRating: 13 });
   const [newTicket, setNewTicket] = useState(null);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [editTicket, setEditTicket] = useState(null);
@@ -63,24 +63,24 @@ const Manager = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(movie) 
+      body: JSON.stringify(movie)
     })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to delete movie");
-      }
-      alert("Movie removed successfully!");
-      fetchMovies();
-    })
-    .catch((error) => {
-      console.error("Error removing movie:", error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete movie");
+        }
+        alert("Movie removed successfully!");
+        fetchMovies();
+      })
+      .catch((error) => {
+        console.error("Error removing movie:", error);
+      });
   };
 
   const handleUpdateMovie = async (movie) => {
     try {
-      const { id, name, description, genre } = movie; // Keep only essential properties
-      const updatedMovie = { id, name, description, genre };
+      const { id, name, description, genre, ageRating } = movie; // Keep only essential properties
+      const updatedMovie = { id, name, description, genre, ageRating };
       const response = await fetch("/movie/editmovie", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -137,7 +137,7 @@ const Manager = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(ticket) 
+        body: JSON.stringify(ticket)
       });
       if (!response.ok) throw new Error("Failed to delete ticket");
       alert("Ticket deleted successfully!");
@@ -163,7 +163,7 @@ const Manager = () => {
     setNewTicket({ showtime: "", price: "", numAvailible: "", movieId: selectedMovieId });
     setEditTicket(null);
   };
-  
+
 
   return (
     <div className="manager-screen">
@@ -198,6 +198,13 @@ const Manager = () => {
             <option value="ROMANCE">Romance</option>
             <option value="THRILLER">Thriller</option>
           </select>
+          <input
+            className="manager-input"
+            type="number"
+            placeholder="Age Rating"
+            value={newMovie.ageRating}
+            onChange={(e) => setNewMovie({ ...newMovie, ageRating: e.target.value })}
+          />
           <button className="manager-button" onClick={handleAddMovie}>Add Movie</button>
         </div>
 
@@ -236,6 +243,15 @@ const Manager = () => {
                   <option value="ROMANCE">Romance</option>
                   <option value="THRILLER">Thriller</option>
                 </select>
+                <input
+                  className="manager-input"
+                  type="number"
+                  placeholder="Age Rating"
+                  value={movie.ageRating}
+                  onChange={(e) =>
+                    setMovies(movies.map((m) => (m.id === movie.id ? { ...m, ageRating: e.target.value } : m)))
+                  }
+                />
                 <button className="manager-button" onClick={() => handleUpdateMovie(movie)}>Update Movie</button>
                 <button className="manager-button" onClick={() => handleRemoveMovie(movie)}>Remove Movie</button>
                 <button className="manager-button" onClick={() => openTicketWindow(movie.id)}>Edit Tickets</button>
