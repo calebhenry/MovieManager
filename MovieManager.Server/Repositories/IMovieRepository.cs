@@ -13,6 +13,7 @@ namespace MovieManager.Server.Repositories
         void UpdateCart(Cart cart);
         Movie? GetMovieById(int id);
         List<Movie> GetMovies();
+        List<Ticket> GetAllTickets();
         List<Ticket> GetTickets();
         User? GetUser(string username, string password);
         List<User> GetUsers();
