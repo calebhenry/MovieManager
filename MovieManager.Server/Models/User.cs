@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Represents a user.
+    /// </summary>
     public class User
     {
         public int Id { get; set; }
@@ -18,7 +21,9 @@ namespace MovieManager.Server.Models
         [InverseProperty("User")]
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
-
+    /// <summary>
+    /// When user information if changed/updated. 
+    /// </summary>
     public class UpdatedUser
     {
         public int Id { get; set; }
