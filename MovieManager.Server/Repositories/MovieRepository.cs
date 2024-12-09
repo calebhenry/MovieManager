@@ -363,7 +363,23 @@ namespace MovieManager.Server.Repositories
         {
             var revRemove = (from i in _context.Reviews where i.Id == review.Id select i).ToList().FirstOrDefault();
             if (revRemove == null) { return false; }
+            var comments = (from i in _context.Comments where i.ReviewId == revRemove.Id select i).ToList();
+            var likes = (from i in _context.Likes where i.ReviewId == revRemove.Id select i).ToList();
             _context.Reviews.Remove(revRemove);
+            if (comments != null)
+            {
+                foreach (var comment in comments)
+                {
+                    _context.Comments.Remove(comment);
+                }
+            }
+            if (likes != null)
+            {
+                foreach (var like in likes)
+                {
+                    _context.Likes.Remove(like);
+                } 
+            }
             _context.SaveChanges();
             return true;
         }
