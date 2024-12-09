@@ -73,6 +73,11 @@ namespace MovieManager.Server.Repositories
 
         }
 
+        public List<Ticket> GetAllTickets();
+        {
+            return _context.Tickets.ToList();
+        }
+
 
         public List<Ticket> GetTickets()
         {
@@ -315,7 +320,7 @@ namespace MovieManager.Server.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlServer(@"data source=maxbear123\SQLEXPRESS;initial catalog=Movies;trusted_connection=true;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -227,7 +227,10 @@ namespace MovieManager.Server.Services
             }
             cart?.Tickets.Clear();
         }
-
+        public List<Ticket> GetAllTickets()
+        {
+            return movieRepository.GetTickets();
+        }
         public IEnumerable<Ticket> GetTickets(int movieId)
         {
             var movie = movieRepository.GetMovies().FirstOrDefault(m => m.Id == movieId);

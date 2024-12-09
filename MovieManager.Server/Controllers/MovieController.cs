@@ -147,6 +147,11 @@ namespace MovieManager.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("getalltickets", Name = "GetAllTickets")]
+        public ActionResult<IEnumerable<Ticket>> GetAllTickets()
+        {
+            return Ok(movieService.GetAllTickets().ToArray());
+        }
 
         [HttpGet("gettickets", Name = "GetTickets")]
         public ActionResult<IEnumerable<Ticket>> GetTickets(int movieId)
