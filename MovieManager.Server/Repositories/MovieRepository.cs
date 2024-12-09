@@ -130,13 +130,7 @@ namespace MovieManager.Server.Repositories
             return true;
 
         }
-
-        public List<Ticket> GetAllTickets();
-        {
-            return _context.Tickets.ToList();
-        }
-
-
+    
         public List<Ticket> GetTickets()
         {
             return _context.Tickets.ToList();

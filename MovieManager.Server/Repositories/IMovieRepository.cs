@@ -14,7 +14,6 @@ namespace MovieManager.Server.Repositories
         Movie? GetMovieById(int id);
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
-        List<Ticket> GetAllTickets();
         User? GetUser(string username, string password);
         List<User> GetUsers();
         bool RemoveMovie(Movie movie);
