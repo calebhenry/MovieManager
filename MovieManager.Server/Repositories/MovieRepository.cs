@@ -68,6 +68,10 @@ namespace MovieManager.Server.Repositories
             var movies = _context.Movies.Include(_ => _.Tickets).Include(_ => _.Reviews).ToList();
             return _context.Movies.ToList();
         }
+        public List<Ticket> GetAllTickets()
+        {
+            return _context.Tickets.ToList();
+        }
 
         public Movie? GetMovieById(int id)
         {
@@ -160,10 +164,12 @@ namespace MovieManager.Server.Repositories
         public void RemoveTicket(Ticket ticket)
         {
             var tick = (from i in _context.Tickets where i.Id == ticket.Id select i).FirstOrDefault();
-            if (tick == null) { return; }
+            var movie = (from i in _context.Movies where i.Id == tick.MovieId select i).FirstOrDefault();
+            if (tick == null || movie == null) { return; }
             _context.Tickets.Remove(tick);
+            movie.Tickets.Remove(tick);
+            _context.Update(movie);
             _context.SaveChanges();
-            // TODO: remove all other references ?
         }
 
         public List<Cart> GetCarts()
@@ -319,6 +325,7 @@ namespace MovieManager.Server.Repositories
                     movie.Name = updatedMovie.Name ?? movie.Name;
                     movie.Description = updatedMovie.Description ?? movie.Description;
                     movie.Genre = updatedMovie.Genre;
+                    movie.AgeRating = updatedMovie.AgeRating;
 
                     db.SaveChanges();
 

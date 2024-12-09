@@ -28,6 +28,10 @@ namespace MovieManager.Server.Services
         {
             return movieRepository.GetMovies();
         }
+        public List<Ticket> GetAllTickets()
+        {
+            return movieRepository.GetAllTickets();
+        }
         public Movie? GetMovieById(int id)
         {
             return movieRepository.GetMovieById(id);

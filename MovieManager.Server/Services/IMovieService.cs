@@ -18,6 +18,7 @@ namespace MovieManager.Server.Services
         bool Liked(int userId,  int reviewId);
         bool AddLike(int userId,  int reviewId);
         List<Movie> GetMovies();
+        List<Ticket> GetAllTickets();
         IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
         void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc);

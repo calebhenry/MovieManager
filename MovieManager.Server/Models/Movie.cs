@@ -34,6 +34,7 @@ namespace MovieManager.Server.Models
         public string Description { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Genre Genre { get; set; } = Genre.ACTION;
+        public int AgeRating { get; set; } = 13;
     }
 
     public enum Genre
