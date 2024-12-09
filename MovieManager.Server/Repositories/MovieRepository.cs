@@ -72,13 +72,7 @@ namespace MovieManager.Server.Repositories
             return true;
 
         }
-
-        public List<Ticket> GetAllTickets();
-        {
-            return _context.Tickets.ToList();
-        }
-
-
+    
         public List<Ticket> GetTickets()
         {
             return _context.Tickets.ToList();
@@ -225,7 +219,7 @@ namespace MovieManager.Server.Repositories
             return review;
         }
 
-        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        public Ticket EditTickets(UpdatedTicket updatedTicket)
         {
             var db = new MovieContext();
             var ticket = (from i in db.Tickets where i.Id == updatedTicket.Id select i).ToList().FirstOrDefault();

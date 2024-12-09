@@ -14,7 +14,6 @@ namespace MovieManager.Server.Repositories
         Movie? GetMovieById(int id);
         List<Movie> GetMovies();
         List<Ticket> GetTickets();
-        List<Ticket> GetAllTickets();
         User? GetUser(string username, string password);
         List<User> GetUsers();
         bool RemoveMovie(Movie movie);
@@ -22,7 +21,7 @@ namespace MovieManager.Server.Repositories
         void RemoveUser(User user);
         User? UpdateUser(UpdatedUser updatedUser);
         Review? EditReview(UpdatedReview updatedReview);
-        Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        Ticket EditTickets(UpdatedTicket updatedTicket);
         Movie? EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
         void AddTicketsToMovie(Ticket ticket);

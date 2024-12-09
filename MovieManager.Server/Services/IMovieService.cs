@@ -15,7 +15,8 @@ namespace MovieManager.Server.Services
         bool Liked(int userId,  int reviewId);
         bool AddLike(int userId,  int reviewId);
         List<Movie> GetMovies();
-        IEnumerable<Ticket> GetTickets(int? movieId);
+        List<Ticket> GetAllTickets();
+        IEnumerable<Ticket> GetTickets(int movieId);
         User? GetUser(string username, string password);
         void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc);
         bool RemoveMovie(Movie movie);
@@ -24,7 +25,7 @@ namespace MovieManager.Server.Services
         void RemoveUser(User user);
         User UpdateUser(UpdatedUser updatedUser);
         Review EditReview(UpdatedReview updatedReview);
-        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket);
+        public Ticket EditTickets(UpdatedTicket updatedTicket);
         Movie EditMovie(UpdatedMovie updatedMovie);
         List<Review> GetReviews(int movieId);
         void AddTicketsToMovie(Ticket ticket);

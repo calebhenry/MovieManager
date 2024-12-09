@@ -257,9 +257,9 @@ namespace MovieManager.Server.Services
             return movieRepository.EditReview(updatedReview);
         }
 
-        public Ticket EditTickets(int movieId, UpdatedTicket updatedTicket)
+        public Ticket EditTickets(UpdatedTicket updatedTicket)
         {
-            return movieRepository.EditTickets(movieId, updatedTicket);
+            return movieRepository.EditTickets(updatedTicket);
         }
 
         public Movie EditMovie(UpdatedMovie updatedMovie)
