@@ -10,7 +10,16 @@ namespace MovieManager.Server.Repositories
         /// Constructor to initialize the context
         /// </summary>
         private MovieContext _context;
-        
+
+        /// <summary>
+        /// Initializing context with and instance of MovieContext
+        /// </summary>
+        /// <param name="context"></param>
+        public MovieRepository(MovieContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// Adds a comment to a review if the review exists and message/username are not empty
         /// </summary>
@@ -74,15 +83,6 @@ namespace MovieManager.Server.Repositories
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Initializing context with and instance of MovieContext
-        /// </summary>
-        /// <param name="context"></param>
-        public MovieRepository(MovieContext context)
-        {
-            _context = context;
         }
 
         /// <summary>
@@ -562,7 +562,149 @@ namespace MovieManager.Server.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
-            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"));
+            optionsBuilder.UseSqlServer(System.Environment.GetEnvironmentVariable("movieDb"))
+            .UseSeeding((context, _) =>
+            {
+                if (!context.Set<Movie>().Any())
+                {
+                    var random = new Random();
+                    var movies = new List<Movie>();
+
+                    movies.Add(new Movie { Name = "Action Movie 1", Description = "Description 1", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Action Movie: The sequel", Description = "Description 2", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Action Movie 3", Description = "Description 3", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Action Movie 4", Description = "Description 4", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Comedy Movie 1", Description = "Description 1", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "2 Comedy 2 Movie", Description = "Description 2", Genre = Genre.COMEDY, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Comedy Movi3", Description = "Description 3", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Comedy Movie 4", Description = "Description 4", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Drama Movie 1", Description = "Description 1", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Drama Movie 2", Description = "Description 2", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Drama Movie 3", Description = "Description 3", Genre = Genre.DRAMA, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Drama Movie 4", Description = "Description 4", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Horror Movie 1", Description = "Description 1", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Horror Movie 2", Description = "Description 2", Genre = Genre.HORROR, AgeRating = 19 });
+                    movies.Add(new Movie { Name = "Horror Movie 3", Description = "Description 3", Genre = Genre.HORROR, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Horror Movie 4", Description = "Description 4", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Romance Movie 1", Description = "Description 1", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 2: Debugging our relationship", Description = "Description 2", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 3", Description = "Description 3", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 4", Description = "Description 4", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Thriller Movie 1", Description = "Description 1", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Thriller Movie 2", Description = "Description 2", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Thriller Movie 3", Description = "Description 3", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Thriller Movie 4", Description = "Description 4", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    context.Set<Movie>().AddRange(movies);
+                    context.SaveChanges();
+
+                    var tickets = new List<Ticket>();
+
+                    foreach (var movie in context.Set<Movie>().ToList())
+                    {
+                        for (int j = 1; j <= 2; j++)
+                        {
+                            tickets.Add(new Ticket
+                            {
+                                MovieId = movie.Id,
+                                Showtime = DateTime.Now.AddDays(random.Next(1, 30)),
+                                Price = random.NextDouble() * 20 + 5,
+                                NumAvailible = random.Next(50, 200)
+                            });
+                        }
+                    }
+                    context.Set<Ticket>().AddRange(tickets);
+                    context.SaveChanges();
+
+                    context.Set<User>().Add(new User
+                    {
+                        Username = "admin",
+                        Password = "admin",
+                        Name = "Admin User",
+                        Gender = Gender.OTHER,
+                        Age = 30,
+                        Email = "admin@example.com",
+                        PhoneNumber = "123-456-7890",
+                        Preference = Preference.EMAIL,
+                        PermissionLevel = PermissionLevel.ADMIN
+                    });
+                    context.SaveChanges();
+                }
+            })
+            .UseAsyncSeeding(async (context, _, cancelationToken) =>
+            {
+                if (! await context.Set<Movie>().AnyAsync())
+                {
+                    var random = new Random();
+
+                    var movies = new List<Movie>();
+
+                    movies.Add(new Movie { Name = "Action Movie 1", Description = "Description 1", Genre = Genre.ACTION, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Action Movie: The sequel", Description = "Description 2", Genre = Genre.ACTION, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Action Movie 3", Description = "Description 3", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Action Movie 4", Description = "Description 4", Genre = Genre.ACTION, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Comedy Movie 1", Description = "Description 1", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "2 Comedy 2 Movie", Description = "Description 2", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Comedy Movi3", Description = "Description 3", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Comedy Movie 4", Description = "Description 4", Genre = Genre.COMEDY, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Drama Movie 1", Description = "Description 1", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Drama Movie 2", Description = "Description 2", Genre = Genre.DRAMA, AgeRating =  random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Drama Movie 3", Description = "Description 3", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Drama Movie 4", Description = "Description 4", Genre = Genre.DRAMA, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Horror Movie 1", Description = "Description 1", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Horror Movie 2", Description = "Description 2", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Horror Movie 3", Description = "Description 3", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Horror Movie 4", Description = "Description 4", Genre = Genre.HORROR, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Romance Movie 1", Description = "Description 1", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 2: Debugging our relationship", Description = "Description 2", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 3", Description = "Description 3", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Romance Movie 4", Description = "Description 4", Genre = Genre.ROMANCE, AgeRating = random.Next(0, 18) });
+
+                    movies.Add(new Movie { Name = "Thriller Movie 1", Description = "Description 1", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Thriller Movie 2", Description = "Description 2", Genre = Genre.THRILLER, AgeRating = random.Next(0, 19) });
+                    movies.Add(new Movie { Name = "Thriller Movie 3", Description = "Description 3", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    movies.Add(new Movie { Name = "Thriller Movie 4", Description = "Description 4", Genre = Genre.THRILLER, AgeRating = random.Next(0, 18) });
+                    await context.Set<Movie>().AddRangeAsync(movies);
+
+                    var tickets = new List<Ticket>();
+
+                    foreach (var movie in context.Set<Movie>().ToList())
+                    {
+                        for (int j = 1; j <= 2; j++)
+                        {
+                            tickets.Add(new Ticket
+                            {
+                                MovieId = movie.Id,
+                                Showtime = DateTime.Now.AddDays(random.Next(1, 30)),
+                                Price = random.NextDouble() * 20 + 5,
+                                NumAvailible = random.Next(50, 200)
+                            });
+                        }
+                    }
+                    await context.Set<Ticket>().AddRangeAsync(tickets);
+                    await context.Set<User>().AddAsync(new User
+                    {
+                        Username = "admin",
+                        Password = "admin",
+                        Name = "Admin User",
+                        Gender = Gender.OTHER,
+                        Age = 30,
+                        Email = "admin@example.com",
+                        PhoneNumber = "123-456-7890",
+                        Preference = Preference.EMAIL,
+                        PermissionLevel = PermissionLevel.ADMIN
+                    });
+                    await context.SaveChangesAsync(cancelationToken);
+                }
+            });
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
