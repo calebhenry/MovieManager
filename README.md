@@ -1,4 +1,4 @@
-<h1>Movie Manager</h1>
+<h1>Movie Manager - Stackoverflow-ers</h1>
 
 <p>Welcome to Movie Manager, a powerful application for managing movies, reviews, users, carts, and tickets. This project allows users to browse movies, purchase tickets, and leave reviews.</p>
 
