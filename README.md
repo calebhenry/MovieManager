@@ -29,7 +29,17 @@
 //TODO
 
 <h2>Endpoint Changes</h2>
-//TODO
+<p>In order to accommodate for changes made during development, some of the endpoints had to have slight changes made. They mostly consist of changes involving tickets (each of our ticket objects represents a showtime), using an object id in an endpoint instead of the object, and using DTOs because they are good practice with controllers. All of these are documented below, and all required endpoints are present.</p>
+<ul>
+  <li>ProcessPayment: This endpoint has had additional parameters for address added to match one of the shown use cases.</li>
+  <li>AddTicketsToMovie: Our ticket object already contains the movie id and quantity, as well as additional information like the showing date. This means that the endpoint takes in a ticket object instead to ensure the correct information is included.</li>
+  <li>RemoveTicketsFromMovie: Because our front end may not necessarily have access to the full movie object at all times, this endpoint uses movie id instead.</li>
+  <li>EditTickets: This takes in a movie id for the same reason, as well as a ticket DTO to avoid unnecessary information.</li>
+  <li>AddReview: Our review object already contains the movie, so it does not need that as a parameter.  In addition, it returns an integer id so the front end can track the new object.</li>
+  <li>EditReview: This takes in a DTO containing the original id and the new object to avoid attaching unneeded user data.</li>
+  <li>GetReviews: This takes in a movie id instead of an object for the reasons outlined above.</li>
+  <li>EditMovie: Similar to edit review, it uses a movie DTO.</li>
+</ul>
 
 <h2>Developers</h2>
 
