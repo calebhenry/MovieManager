@@ -258,29 +258,9 @@ namespace MovieManager.Server.Repositories
 
             if (existingCart != null)
             {
-                foreach (var existingItem in existingCart.Tickets.ToList())
-                {
-                    if (!cart.Tickets.Any(t => t.Id == existingItem.Id))
-                    {
-                        _context.CartItems.Remove(existingItem);
-                    }
-                }
-
-                _context.Entry(existingCart).CurrentValues.SetValues(cart);
-                foreach (var item in cart.Tickets)
-                {
-                    var existingItem = existingCart.Tickets.FirstOrDefault(t => t.Id == item.Id);
-                    if (existingItem != null)
-                    {
-                        _context.Entry(existingItem).CurrentValues.SetValues(item);
-                    }
-                    else
-                    {
-                        existingCart.Tickets.Add(item);
-                    }
-                }
-
+                _context.Carts.Update(cart);
                 _context.SaveChanges();
+                return;
             }
         }
 
