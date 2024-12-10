@@ -19,7 +19,7 @@ const UserSettings = ({ globalState }) => {
             name,
             email,
             phoneNumber,
-            preference
+            preference: Number(preference)
         };
 
         try {
@@ -39,6 +39,7 @@ const UserSettings = ({ globalState }) => {
                 user.preference = updatedUser.preference;
                 setUser(user);
                 navigate('/home');
+                alert("Successfully updated user settings!");
             } else {
                 setError('Failed to update user preferences. Please try again.');
             }
@@ -88,8 +89,8 @@ const UserSettings = ({ globalState }) => {
 
                     <label htmlFor="preference">Contact Preference</label>
                     <select id="preference" value={preference} onChange={(e) => setPreference(e.target.value)}>
-                        <option value="EMAIL">Email</option>
-                        <option value="PHONE">Phone</option>
+                        <option value="1">Email</option>
+                        <option value="2">Phone</option>
                     </select>
 
                     <button type="submit">Update Preferences</button>
