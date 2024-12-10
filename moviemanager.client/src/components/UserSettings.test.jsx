@@ -17,7 +17,7 @@ describe('UserSettings Component', () => {
         name: 'Test User',
         email: 'test@example.com',
         phoneNumber: '1234567890',
-        preference: '1',
+        preference: 1,
     };
 
     beforeEach(() => {
@@ -60,7 +60,7 @@ describe('UserSettings Component', () => {
             name: 'Updated User',
             email: 'updated@example.com',
             phoneNumber: '0987654321',
-            preference: '2',
+            preference: 2,
         };
         global.fetch = jest.fn(() =>
             Promise.resolve({
