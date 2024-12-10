@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
 import './Manager.css';
 
 const Manager = () => {
@@ -10,6 +11,7 @@ const Manager = () => {
   const [newTicket, setNewTicket] = useState(null);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [editTicket, setEditTicket] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch movies
   useEffect(() => {
@@ -77,6 +79,7 @@ const Manager = () => {
           throw new Error("Failed to delete movie");
         }
         alert("Movie removed successfully!");
+        setSelectedMovieId(null);
         fetchMovies();
       })
       .catch((error) => {
@@ -173,6 +176,11 @@ const Manager = () => {
   const openAddTicketWindow = () => {
     setNewTicket({ showtime: "", price: "", numAvailible: "", movieId: selectedMovieId });
     setEditTicket(null);
+  };
+
+  // Navigate to Home page
+  const handleGoHome = () => {
+    navigate('/home');
   };
 
 
@@ -274,7 +282,7 @@ const Manager = () => {
         {/* Ticket list */}
         {selectedMovieId && (
           <div className="manager-grid-item">
-            <h2>Tickets for Selected Movie</h2>
+            <h2>Tickets for {movies.filter((movie) => movie.id == selectedMovieId)[0].name}</h2>
             <div className="manager-tickets-grid">
               {tickets.filter((ticket) => ticket.movieId == selectedMovieId).map((ticket) => (
                 <div key={ticket.id} className="manager-ticket-card">
@@ -347,6 +355,8 @@ const Manager = () => {
           </div>
         )}
       </div>
+
+      <button onClick={handleGoHome}>Go to Home</button>
     </div>
   );
 };

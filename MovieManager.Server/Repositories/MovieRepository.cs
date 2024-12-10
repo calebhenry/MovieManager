@@ -339,7 +339,6 @@ namespace MovieManager.Server.Repositories
             if (userRemove == null) { return; }
             _context.Users.Remove(userRemove);
             _context.SaveChanges();
-            // TODO: Remove all user data ?
         }
 
         /// <summary>
