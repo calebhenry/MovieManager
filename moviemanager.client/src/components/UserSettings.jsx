@@ -39,6 +39,7 @@ const UserSettings = ({ globalState }) => {
                 user.preference = updatedUser.preference;
                 setUser(user);
                 navigate('/home');
+                alert("Successfully updated user preferences!");
             } else {
                 setError('Failed to update user preferences. Please try again.');
             }

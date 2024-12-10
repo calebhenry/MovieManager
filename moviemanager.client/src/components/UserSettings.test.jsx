@@ -17,7 +17,7 @@ describe('UserSettings Component', () => {
         name: 'Test User',
         email: 'test@example.com',
         phoneNumber: '1234567890',
-        preference: 'EMAIL',
+        preference: '1',
     };
 
     beforeEach(() => {
@@ -47,7 +47,7 @@ describe('UserSettings Component', () => {
         fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Updated User' } });
         fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'updated@example.com' } });
         fireEvent.change(screen.getByLabelText('Phone Number'), { target: { value: '0987654321' } });
-        fireEvent.change(screen.getByLabelText('Contact Preference'), { target: { value: 'PHONE' } });
+        fireEvent.change(screen.getByLabelText('Contact Preference'), { target: { value: '2' } });
         fireEvent.click(screen.getByRole('button', { name: /update preferences/i }));
 
         const errorMessage = await screen.findByText('Failed to update user preferences. Please try again.');
@@ -60,7 +60,7 @@ describe('UserSettings Component', () => {
             name: 'Updated User',
             email: 'updated@example.com',
             phoneNumber: '0987654321',
-            preference: 'PHONE',
+            preference: '2',
         };
         global.fetch = jest.fn(() =>
             Promise.resolve({
@@ -72,7 +72,7 @@ describe('UserSettings Component', () => {
         fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Updated User' } });
         fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'updated@example.com' } });
         fireEvent.change(screen.getByLabelText('Phone Number'), { target: { value: '0987654321' } });
-        fireEvent.change(screen.getByLabelText('Contact Preference'), { target: { value: 'PHONE' } });
+        fireEvent.change(screen.getByLabelText('Contact Preference'), { target: { value: '2' } });
         fireEvent.click(screen.getByRole('button', { name: /update preferences/i }));
 
         await screen.findByRole('button', { name: /update preferences/i }); // Wait for the update process to complete
