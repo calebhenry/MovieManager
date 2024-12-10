@@ -27,6 +27,9 @@ namespace MovieManager.Server.Controllers
 
         #region Required Endpoints Phase One
 
+        /// <summary>
+        /// Gets a list of all movies
+        /// </summary>
         [HttpGet("getmovies", Name = "GetMovies")]
         public ActionResult<IEnumerable<Movie>> GetMovies()
         {
@@ -65,12 +68,22 @@ namespace MovieManager.Server.Controllers
                 return NotFound();
         }
 
+        /// <summary>
+        /// Gets a list of all tickets of a movie from its movie ID
+        /// </summary>
+        /// <param name="movieId"></param>
         [HttpGet("gettickets", Name = "GetTickets")]
         public ActionResult<IEnumerable<Ticket>> GetTickets(int movieId)
         {
             return Ok(movieService.GetTickets(movieId).ToArray());
         }
 
+        /// <summary>
+        ///  Adds tickets to a cart
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="ticketId"></param>
+        /// <param name="quantity"></param>
         [HttpPost("addtickettocart", Name = "AddTicketToCart")]
         public ActionResult AddTicketToCart(int cartId, int ticketId, int quantity)
         {
@@ -81,6 +94,12 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Remove tickets from a cart
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="ticketId"></param>
+        /// <returns></returns>
         [HttpPut("removeticketfromcart")]
         public ActionResult<Cart> RemoveTicketFromCart(int cartId, int ticketId)
         {
@@ -95,6 +114,10 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a cart, returing a new cart if the parameter is empty
+        /// </summary>
+        /// <param name="cartId"></param>
         [HttpGet("getcart", Name = "GetCart")]
         public ActionResult<Cart> GetCart(int? cartId)
         {
@@ -102,6 +125,19 @@ namespace MovieManager.Server.Controllers
             return Ok(cart);
         }
 
+        /// <summary>
+        /// Checks if all the inputs are valid
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="streetAddress"></param>
+        /// <param name="city"></param>
+        /// <param name="state"></param>
+        /// <param name="zipCode"></param>
+        /// <param name="cardNumber"></param>
+        /// <param name="exp"></param>
+        /// <param name="cardholderName"></param>
+        /// <param name="cvc"></param>
+        /// <exception cref="ArgumentException"></exception>
         [HttpPost("processpayment", Name = "ProcessPayment")]
         public ActionResult ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
@@ -120,6 +156,10 @@ namespace MovieManager.Server.Controllers
 
         #region Required Endpoints Phase Two
 
+        /// <summary>
+        /// Adds a ticket to a movie using movie ID
+        /// </summary>
+        /// <param name="ticket"></param>
         [HttpPost("addticketstomovie", Name = "AddTicketsToMovie")]
         public ActionResult<Movie> AddTicketsToMovie(Ticket ticket)
         {
@@ -134,6 +174,13 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Removes a ticket from a movie (manager)
+        /// </summary>
+        /// <param name="movieId"></param>
+        /// <param name="numTickets"></param>
+        /// <returns>bool</returns>
+        /// <exception cref="ArgumentException"></exception>
         [HttpDelete("removeticketsfrommovie", Name = "RemoveTicketsFromMovie")]
         public ActionResult RemoveTicketsFromMovie(int movieId, int numTickets)
         {
@@ -145,12 +192,23 @@ namespace MovieManager.Server.Controllers
             else return NotFound();
         }
 
+        /// <summary>
+        /// Update Ticket, actually adding timeshow and number of avaiable tickets
+        /// </summary>
+        /// <param name="movieId"></param>
+        /// <param name="updatedTicket"></param>
+        /// <returns>Updated Ticket</returns>
         [HttpPut("edittickets", Name = "EditTickets")]
         public ActionResult<Movie> EditTickets(int movieId, UpdatedTicket updatedTicket)
         {
             return Ok(movieService.EditTickets(movieId, updatedTicket));
         }
 
+        /// <summary>
+        /// Adds a review to a movie if both the movie and user exists
+        /// </summary>
+        /// <param name="review"></param>
+        /// <returns>Bool or review ID</returns>
         [HttpPost("addreview", Name = "AddReview")]
         public ActionResult<int> AddReview(Review review)
         {
@@ -162,6 +220,10 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Remove review
+        /// </summary>
+        /// <param name="review"></param>
         [HttpDelete("removereview", Name = "RemoveReview")]
         public ActionResult RemoveReview(Review review)
         {
@@ -172,12 +234,21 @@ namespace MovieManager.Server.Controllers
                 return NotFound();
         }
 
+        /// <summary>
+        /// Edit a review
+        /// </summary>
+        /// <param name="updatedReview"></param>
+        /// <returns>Updated Review</returns>
         [HttpPut("editreview", Name = "EditReview")]
         public ActionResult<Review> EditReview(UpdatedReview updatedReview)
         {
             return Ok(movieService.EditReview(updatedReview));
         }
 
+        /// <summary>
+        /// Gets all review of a movie
+        /// </summary>
+        /// <param name="movieId"></param>
         [HttpGet("getreviews", Name = "GetReviews")]
         public ActionResult<List<ReviewDTO>> GetReviews(int movieId)
         {
@@ -187,6 +258,12 @@ namespace MovieManager.Server.Controllers
             return Ok((from i in reviews select new ReviewDTO(i, i.User.Username)).ToList());
         }
 
+        /// <summary>
+        /// Edit a Movie's information
+        /// </summary>
+        /// <param name="updatedMovie"></param>
+        /// <returns>Updated Movie</returns>
+        /// <exception cref="ArgumentException"></exception>
         [HttpPut("editmovie", Name = "EditMovie")]
         public ActionResult<Movie> EditMovie(UpdatedMovie updatedMovie)
         {
@@ -197,6 +274,10 @@ namespace MovieManager.Server.Controllers
 
         #region Supporting Endpoints
 
+        /// <summary>
+        /// Get a movie by movie ID
+        /// </summary>
+        /// <param name="id"></param>
         [HttpGet("getmovie/{id}", Name = "GetMovie")]
         public ActionResult<Movie> GetMovie(int id)
         {
@@ -207,12 +288,21 @@ namespace MovieManager.Server.Controllers
             }
             return NotFound();
         }
+
+        /// <summary>
+        /// Gets a list of all tickets of all movies
+        /// </summary>
         [HttpGet("getalltickets", Name = "GetAllTickets")]
         public ActionResult<IEnumerable<Ticket>> GetAllTickets()
         {
             return Ok(movieService.GetAllTickets().ToArray());
         }
 
+        /// <summary>
+        /// Remove ticket from one movie
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
         [HttpDelete("removeticketfrommovie", Name = "RemoveTicketFromMovie")]
         public ActionResult RemoveTicketFromMovie(Ticket ticket)
         {
@@ -227,12 +317,23 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets if a user has liked a review
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="reviewId"></param>
+        /// <returns>Liked Reviews</returns>
         [HttpGet("liked/{userId}:{reviewId}", Name = "Liked")]
         public ActionResult<bool> Liked(int userId, int reviewId)
         {
             return Ok(movieService.Liked(userId, reviewId));
         }
 
+        /// <summary>
+        /// Like a review
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="reviewId"></param>
         [HttpPost("like/{userId}:{reviewId}", Name = "Like")]
         public ActionResult Like(int userId, int reviewId)
         {
@@ -243,6 +344,11 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Remove a like from a review
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="reviewId"></param>
         [HttpDelete("removelike/{userId}:{reviewId}", Name = "RemoveLike")]
         public ActionResult RemoveLike(int userId, int reviewId)
         {
@@ -280,6 +386,11 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.GetComments(reviewId));
         }
 
+        /// <summary>
+        /// Gets user (login)
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         [HttpGet("getuser", Name = "GetUser")]
         public ActionResult<User> GetUser(string username, string password)
         {
@@ -287,18 +398,30 @@ namespace MovieManager.Server.Controllers
             return user == null ? NotFound() : Ok(user);
         }
 
+        /// <summary>
+        /// Adds a user (signup)
+        /// </summary>
+        /// <param name="user"></param>
         [HttpPost("adduser", Name = "AddUser")]
         public ActionResult<User> AddUser(User user)
         {
             return Ok(movieService.AddUser(user));
         }
 
+        /// <summary>
+        /// Update a user information
+        /// </summary>
+        /// <param name="updatedUser"></param>
         [HttpPut("updateuser", Name = "UpdateUser")]
         public ActionResult<User> UpdateUser(UpdatedUser updatedUser)
         { 
             return Ok(movieService.UpdateUser(updatedUser));
         }
 
+        /// <summary>
+        /// Remove a user
+        /// </summary>
+        /// <param name="user"></param>
         [HttpPost("removeuser", Name = "RemoveUser")]
         public ActionResult RemoveUser(User user)
         {
