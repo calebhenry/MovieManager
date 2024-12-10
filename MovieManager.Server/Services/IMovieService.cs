@@ -2,6 +2,10 @@
 
 namespace MovieManager.Server.Services
 {
+    /// <summary>
+    /// Interface for the MovieService. 
+    /// Defines the contract for all movie-related business logic operations.
+    /// </summary>
     public interface IMovieService
     {
         List<Comment> GetComments(int reviewId);

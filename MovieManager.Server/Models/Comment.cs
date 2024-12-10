@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Comment of a review.
+    /// </summary>
     public class Comment
     {
         public int Id { get; set; }

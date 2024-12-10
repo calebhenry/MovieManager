@@ -6,6 +6,9 @@ using System.Net;
 
 namespace MovieManager.Server.Controllers
 {
+    /// <summary>
+    /// Controller for handing all API endpoints. 
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class MovieController : ControllerBase
@@ -13,6 +16,10 @@ namespace MovieManager.Server.Controllers
 
         private IMovieService movieService;
 
+        /// <summary>
+        /// Constructor to initialize the controller with the movie service
+        /// </summary>
+        /// <param name="movieService"></param>
         public MovieController(IMovieService movieService)
         {
             this.movieService = movieService;
@@ -26,6 +33,10 @@ namespace MovieManager.Server.Controllers
             return Ok(movieService.GetMovies().ToArray()); // Returns the array of movies
         }
 
+        /// <summary>
+        /// Adds a movie
+        /// </summary>
+        /// <param name="movie"></param>
         [HttpPost("addmovie", Name = "AddMovie")]
         public ActionResult AddMovie(Movie movie)
         {
@@ -40,6 +51,10 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove a movie
+        /// </summary>
+        /// <param name="movie"></param>
         [HttpDelete("removemovie", Name = "RemoveMovie")]
         public ActionResult RemoveMovie(Movie movie)
         {
@@ -192,7 +207,6 @@ namespace MovieManager.Server.Controllers
             }
             return NotFound();
         }
-
         [HttpGet("getalltickets", Name = "GetAllTickets")]
         public ActionResult<IEnumerable<Ticket>> GetAllTickets()
         {
@@ -239,6 +253,10 @@ namespace MovieManager.Server.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Add a comment to a review
+        /// </summary>
+        /// <param name="comment"></param>
         [HttpPost("addcomment", Name = "AddComment")]
         public ActionResult AddComment(Comment comment)
         {
@@ -252,6 +270,10 @@ namespace MovieManager.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all comments of a review
+        /// </summary>
+        /// <param name="reviewId"></param>
         [HttpGet("getcomments", Name = "GetComments")]
         public ActionResult<List<Comment>> GetComments(int reviewId)
         {

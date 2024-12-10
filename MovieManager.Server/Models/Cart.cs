@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Represents a shopping cart containing a list of tickets and the total cost.
+    /// </summary>
     public class Cart
     {
         public int Id { get; set; }
@@ -13,7 +16,9 @@ namespace MovieManager.Server.Models
             }
         }
     }
-
+    /// <summary>
+    /// Represents a request to process a payment for a specific cart.
+    /// </summary>
     public class PaymentRequest
     {
         public int CartId { get; set; }

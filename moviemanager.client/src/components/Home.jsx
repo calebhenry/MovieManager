@@ -68,6 +68,7 @@ const Home = ({ globalState }) => {
         }
     }
 
+    // Filter by genre
     const filteredMoviesByGenre = movies.filter(m => {
         console.log("Sort" + meetsRating(m));
         return meetsRating(m);

@@ -5,10 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieManager.Server.Services
 {
+    /// <summary>
+    /// Service class to handle all business logic for movies, reviews, tickets, users, and carts.
+    /// </summary>
     public class MovieService : IMovieService
     {
         private IMovieRepository movieRepository;
 
+        /// <summary>
+        /// Constructor to initialize the movie service with the repository.
+        /// </summary>
         public MovieService(IMovieRepository repository)
         {
             movieRepository = repository;
@@ -87,6 +93,7 @@ namespace MovieManager.Server.Services
             }
             return null;
         }
+
         public int AddReview(Review review)
         {
             return movieRepository.AddReview(review);
@@ -177,6 +184,19 @@ namespace MovieManager.Server.Services
             movieRepository.RemoveUser(user);
         }
 
+        /// <summary>
+        /// Checks if all the inputs are valid
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="streetAddress"></param>
+        /// <param name="city"></param>
+        /// <param name="state"></param>
+        /// <param name="zipCode"></param>
+        /// <param name="cardNumber"></param>
+        /// <param name="exp"></param>
+        /// <param name="cardholderName"></param>
+        /// <param name="cvc"></param>
+        /// <exception cref="ArgumentException"></exception>
         public void ProcessPayment(int cartId, string streetAddress, string city, string state, string zipCode, string cardNumber, string exp, string cardholderName, string cvc)
         {
             string[] streetAddressParts = streetAddress.Split(' ');
