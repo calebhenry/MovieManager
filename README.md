@@ -47,16 +47,16 @@
 from sys.server_principals
 where name = suser_name()</li> 
   <li>Clone the repo somewhere.</li>
-  <li>Open MovieManager.sln in the root of the repo in Visual Studio. Click the prompt to install required components.</li>
+  <li>Open MovieManager.sln in the root of the repo in Visual Studio. Click the prompt to install the required components.</li>
   <li>Open MovieRepository.cs in MovieManager.Server/Repositories, find and replace "System.Environment.GetEnvironmentVariable("movieDb")" with "@"your connection string here"" (outer quotations in each is not included and actually add your connection string)</li>
   <li>dotnet tool install --global dotnet-ef</li>
   <li>dotnet add package Microsoft.EntityFrameworkCore.Design</li>
   <li>Inside MovieManager.Server, delete the .bin directory and run: dotnet add package Microsoft.EntityFrameworkCore.SqlServer</li>
   <li>Then run: dotnet ef database update</li>
-  <li>You can then optionally undo the find and replace you did MovieRepository.cs. If you do revert it, make sure to set an enviornment variable containing your connection string called "movieDb" in your runtime configuration in VS.</li>
-  <li><p>In SQL Server Mangment Studio in the Movies database, run the following query to create an Admin account (replace username and password as desired):</p><p>INSERT INTO Users (Username, Name, Password, Email, PermissionLevel, PhoneNumber, Preference, Gender, Age) VALUES ('username3', 'Bill', 'password', 'email@gmail.com', 1, '8652341111', 0, 1, 50);</p></li>
+  <li>You can then optionally undo the find and replace you did MovieRepository.cs. If you do revert it, make sure to set an environment variable containing your connection string called "movieDb" in your runtime configuration in VS.</li>
   <li>In visual studio, right click on moviemanager.client and click "Reload with dependencies" if it says application is not installed. Then build and run the project.</li>
   <li>Click trust/yes on all the certificate warnings.</li>
+  <li>The database comes preseeded with some values. In order to view the movie manager screen, you must login as an admin account. By default, one will be included with the seeding. It will have the username 'admin' and the password 'admin'. All other functionality can be accessed by a normal account you create through signup.</li>
 </ol>
 
 <h2>Endpoint Changes</h2>
