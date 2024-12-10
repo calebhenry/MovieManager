@@ -137,7 +137,6 @@ namespace MovieManager.Server.Services
             { // cart does not already have that ticket
                 var newCartItem = new CartItem
                 {
-                    Id = cart.Tickets.Count,
                     CartId = cart.Id,
                     TicketId = ticket.Id,
                     Quantity = 0,
