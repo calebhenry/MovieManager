@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './SignUp.css';
 
 const SignUp = ({ globalState }) => {
+
+    // State Variables
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,17 +16,21 @@ const SignUp = ({ globalState }) => {
     const [preference, setPreference] = useState(0);
     const [permissionLevel, setPermissionLevel] = useState(0);
     const [error, setError] = useState('');
+
     const { user, setUser } = globalState;
     const navigate = useNavigate();
 
+    // Handles the sign-up process by validating the form and submitting the user information to the server
     const handleSignUp = async (e) => {
         e.preventDefault();
 
+        // Check if the passwords match
         if (password !== confirmPassword) {
             setError('Passwords do not match.');
             return;
         }
 
+        // Create a user object with all the input data
         const user = {
             username,
             password,
@@ -38,6 +44,7 @@ const SignUp = ({ globalState }) => {
         };
 
         try {
+            // Send the user data to the API to create a new account
             const response = await fetch('movie/adduser', {
                 method: 'POST',
                 headers: {
@@ -65,6 +72,7 @@ const SignUp = ({ globalState }) => {
         <div className="screen">
             <div className="signup-container">
                 <h1>Sign Up</h1>
+                {/* Sign-up form */}
                 <form onSubmit={handleSignUp} className="signup-form">
                     {error && <p className="error-message">{error}</p>}
 

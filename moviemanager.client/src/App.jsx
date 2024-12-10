@@ -1,3 +1,6 @@
+// This component serves as the main entry point for the React application, 
+// setting up routing, global state, and user authentication for navigation.
+
 import React, { useState } from 'react';
 import {
     BrowserRouter as Router,
@@ -30,6 +33,7 @@ function App() {
     return (
         <div className="App">
             <Router>
+                {/* Route to pages */}
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="/login" element={<Login globalState={globalState} />} />

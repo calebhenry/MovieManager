@@ -5,8 +5,11 @@ import MovieReview from "./MovieReview";
 import './MovieListing.css';
 
 const MovieListing = ({ globalState }) => {
+
     const { id } = useParams();
     const navigate = useNavigate();
+
+    // State Variables
     const [movie, setMovie] = useState(null);
     const [showReview, setShowReview] = useState(false);
     const [haveReviewed, setHaveReviewed] = useState(false);
@@ -22,10 +25,12 @@ const MovieListing = ({ globalState }) => {
     const [viewReviews, setViewReviews] = useState(false);
     const { user, setUser } = globalState;
 
+    // Toggless checkbox for the review
     const onChecked = () => {
         setAnonChecked(!anonChecked);
     }
 
+    // Updates the elike countt of the review
     const updateLikeCountLocal = (reviewIdArg, newVal) => {
         reviews.forEach((i) => {
             if (i.id == reviewIdArg) {
@@ -34,10 +39,12 @@ const MovieListing = ({ globalState }) => {
         });
     };
 
+    // Toggles the visibility of reviews
     const showReviewsOnClick = () => {
         setViewReviews(true);
     };
 
+    // Submits reviewe for a movie
     const submitReview = async() => {
         if (haveReviewed) {
             const reviewUpdate = {
@@ -102,6 +109,7 @@ const MovieListing = ({ globalState }) => {
         }
     };
 
+    // Add Review
     const onAddReview = async() => {
         if (showReview) {
             submitReview();
@@ -117,6 +125,7 @@ const MovieListing = ({ globalState }) => {
         }
     };
 
+    // Deleetes a review
     const deleteReview = async() => {
         const myReview = reviews.filter((i) => (i.id == reviewId));
         const reviewDelete = {
@@ -146,6 +155,7 @@ const MovieListing = ({ globalState }) => {
         }
     };
 
+    // Fetches the movie details and its reveiws
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
@@ -191,6 +201,7 @@ const MovieListing = ({ globalState }) => {
         if (error) return <p>{error}</p>;
     }
 
+    // Adding a ticket to a cart
     const handleAddToCart = async (ticket, add) => {
         if (cart == null) {
             try {
@@ -238,10 +249,12 @@ const MovieListing = ({ globalState }) => {
         }
     };
 
+    // Navigate to Home page
     const handleGoHome = () => {
         navigate('/home');
     };
 
+    // Returns the amounts of tickets
     const GetQuantity = (ticketId) => {
         if (cart != null) {
             const num = cart.tickets.find(item => item.ticketId === ticketId)?.quantity;
@@ -259,10 +272,13 @@ const MovieListing = ({ globalState }) => {
     return (
         <div className="screen">
             <div className="movie-details-cont">
+                {/* Movie Details */}
                 <h1 className="movie-title">{movie.name}</h1>
                 <p className="movie-description">{movie.description}</p>
+                {/* Review Details */}
                 {(!showReview && !viewReviews) && (
                 <div className="ticket-section">
+                    {/* Ticket Details */}
                     <h3>Tickets</h3>
                     <Error />
                     {movie.tickets && movie.tickets.length > 0 ? (
@@ -282,6 +298,7 @@ const MovieListing = ({ globalState }) => {
                         <p className="no-tickets">No tickets available</p>
                     )}
                 </div>) }
+                {/* Review Section */}
                 {showReview && (<>
                     <div>
                         <label for="rating">Rating: </label>

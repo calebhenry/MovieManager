@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './Payment.css';
 
 const Payment = ({ globalState }) => {
+
+    // State Varriables
     const [streetAddress, setStreetAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -15,10 +17,12 @@ const Payment = ({ globalState }) => {
     const navigate = useNavigate();
     const { user, cart, setCart } = globalState;
 
+    // Handles the payment process by sending user billing and card information to the server
     const handlePayment = async (e) => {
         e.preventDefault();
 
         try {
+            // Send the payment data to the server
             const response = await fetch(`/movie/processpayment?cartId=${cart.id}&streetAddress=${streetAddress}&city=${city}&state=${state}&zipCode=${zipCode}&cardNumber=${cardNumber}&exp=${expiryDate}&cardholderName=${cardName}&cvc=${cvv}`, {
                 method: 'POST',
                 headers: {
@@ -27,12 +31,13 @@ const Payment = ({ globalState }) => {
             });
 
             if (response.ok) {
+                // Payment successful
                 if(user.preference == 1) {
                     alert(`Payment was processed successfully! Email confirmation was sent to ${user.email}.`);
                 } else {
                     alert(`Payment was processed successfully! Text confirmation was sent to ${user.phoneNumber}.`)
                 }
-                setCart(null);
+                setCart(null); // Clear the cart
                 navigate('/home'); // Redirect to home page on successful payment
             } else {
                 const errorData = await response.text();
@@ -43,6 +48,7 @@ const Payment = ({ globalState }) => {
         }
     };
 
+    // Navigates back to the home page
     const handleGoHome = () => {
         navigate('/home');
     };
@@ -51,6 +57,7 @@ const Payment = ({ globalState }) => {
         <div className="screen">
             <div className="payment-container">
                 <h1>Payment Page</h1>
+                {/* Payment Form */}
                 <form onSubmit={handlePayment} className="payment-form">
                     
                     <h2>Billing Information</h2>
@@ -139,8 +146,10 @@ const Payment = ({ globalState }) => {
                         required
                     />
 
+                    {/* Error Message */}
                     {error && <p className="error-message">{error}</p>}
 
+                    {/* Buttons to submit payment or go back to the home page */}
                     <button type="submit">Pay Now</button>
                     <button type="button" onClick={handleGoHome}>Go to Home</button>
                 </form>
