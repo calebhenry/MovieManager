@@ -26,7 +26,38 @@
 </ul>
 
 <h2>Installation and set up</h3>
-//TODO
+<ol>
+  <li><a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16">Install SQL Server Managment Studio</a></li>
+  <li><a href="https://nodejs.org/en">Install Node.js (npm version 10.8.2  and Node version v20.18.0 is known to work, other versions do not)</a></li>
+  <li>Install Visual Studio and the ASAP.NET and .NET 8 Runtime (Long Term Support) components (must be .NET 8, not 9).</li>
+  <li><a href="https://dotnet.microsoft.com/en-us/download">Install Dotnet</a></li>
+  <li><a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads">Install SQL Server Express. In the installer, select the basic install. You can connect to the server in SQL Server Managment Studio by selecting the server in the "server name" dropdown, selecting "optional" for encryption, and checking the "trust server certificate" box.</a></li>
+  <li>In SQL Server Managment Studio, right click on the databases folder icon and create a new database called "Movies".</li>
+  <li><p>Right click on the Movies db icon and run the following query (don't need to add your password if you followed these directions). Add ";TrustServerCertificate=True" to the end of the result and save it as your connection string.</p>
+   select
+    'data source=' + @@servername +
+    ';initial catalog=' + db_name() +
+    case type_desc
+        when 'WINDOWS_LOGIN' 
+            then ';trusted_connection=true'
+        else
+            ';user id=' + suser_name() + ';password='
+    end
+    as ConnectionString
+from sys.server_principals
+where name = suser_name()</li> 
+  <li>Clone the repo somewhere.</li>
+  <li>Open MovieManager.sln in the root of the repo in Visual Studio. Click the prompt to install required components.</li>
+  <li>Open MovieRepository.cs in MovieManager.Server/Repositories, find and replace "System.Environment.GetEnvironmentVariable("movieDb")" with "@"your connection string here"" (outer quotations in each is not included and actually add your connection string)</li>
+  <li>dotnet tool install --global dotnet-ef</li>
+  <li>dotnet add package Microsoft.EntityFrameworkCore.Design</li>
+  <li>Inside MovieManager.Server, delete the .bin directory and run: dotnet add package Microsoft.EntityFrameworkCore.SqlServer</li>
+  <li>Then run: dotnet ef database update</li>
+  <li>You can then optionally undo the find and replace you did MovieRepository.cs. If you do revert it, make sure to set an enviornment variable containing your connection string called "movieDb" in your runtime configuration in VS.</li>
+  <li><p>In SQL Server Mangment Studio in the Movies database, run the following query to create an Admin account (replace username and password as desired):</p><p>INSERT INTO Users (Username, Name, Password, Email, PermissionLevel, PhoneNumber, Preference, Gender, Age) VALUES ('username3', 'Bill', 'password', 'email@gmail.com', 1, '8652341111', 0, 1, 50);</p></li>
+  <li>In visual studio, right click on moviemanager.client and click "Reload with dependencies" if it says application is not installed. Then build and run the project.</li>
+  <li>Click trust/yes on all the certificate warnings.</li>
+</ol>
 
 <h2>Endpoint Changes</h2>
 <p>In order to accommodate for changes made during development, some of the endpoints had to have slight changes made. They mostly consist of changes involving tickets (each of our ticket objects represents a showtime), using an object id in an endpoint instead of the object, and using DTOs because they are good practice with controllers. All of these are documented below, and all required endpoints are present.</p>
@@ -51,3 +82,4 @@
   <li>Caleb Henry - Test Analyst</li>
   <li>Kayly Tran - Scrum Analyst</li>
 </ul>
+
