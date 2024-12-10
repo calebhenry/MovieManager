@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 
 const MovieCard = ({ movie }) => {
 
+    // Formats a given date string into a readable MM/DD HH:MM format
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
         return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     }
 
+    // Converts the movie's numeric age rating to a text-base rating
     const textRating = (movie) => {
         if (movie.ageRating < 9) {
             return "G";
@@ -28,12 +30,14 @@ const MovieCard = ({ movie }) => {
     return (
         <Link to={`/movies/${movie.id}`} >
             <div className="movie-card" >
+                {/* Movie Details */}
                 <div className="movie-details">
                     <h2 className="movie-title">{movie.name}</h2>
                     <p className="movie-description">{movie.description}</p>
                     <p className="movie-description">{movie.reviewScore != -1 ? ("Score: " + movie.reviewScore + "/5") : ("No reviews")}</p>
                     <p className="movie-description">Rated {textRating(movie)}</p>
                     <div className="ticket-section">
+                        {/* Ticket Details */}
                         <h3>Showtimes</h3>
                         {movie.tickets && movie.tickets.length > 0 ? (
                             <ul className="ticket-list">

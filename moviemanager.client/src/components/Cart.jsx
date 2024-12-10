@@ -5,22 +5,28 @@ import './Cart.css';
 const Cart = ({ globalState }) => {
     const navigate = useNavigate();
     const { user, cart, setCart, movies } = globalState;
+
+    // State variables for total, discount, tax, total afteer tax, and error messages
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [tax, setTax] = useState(0);
     const [totalAfterTax, setTotalAfterTax] = useState(0);
     const [error, setError] = useState(null);
 
+    // Calculate totals, discount, tax, and totatl aftere tax whenever the cart changes
     useEffect(() => {
         if (cart != null) {
             const tempTotal = cart.tickets.reduce((sum, item) => sum + item.ticket.price * item.quantity, 0);
             var tempDiscount = 0;
+            
+            // 10% discount for senior citizens
             if(user.age >= 65) {
                 tempDiscount = tempTotal*0.1;
             }
             const tempTax = (tempTotal-tempDiscount)*0.07;
             const tempTotalAfterTax = tempTotal-tempDiscount+tempTax;
 
+            // Update state with calculated values
             setTotal(tempTotal);
             setDiscount(tempDiscount);
             setTax(tempTax);
@@ -57,7 +63,7 @@ const Cart = ({ globalState }) => {
             try {
                 const response = await fetch('/movie/getcart');
                 const data = await response.json();
-                setCart(data);
+                setCart(data); // Initialize cart if null
             } catch (error) {
                 setError('Failed to fetch cart. Please try again later.');
             }
@@ -65,6 +71,7 @@ const Cart = ({ globalState }) => {
 
         const currQuantity = GetQuantity(ticketId);
 
+        // Determine if adding or removing a ticket
         var quantity = 1;
         if (!add) {
             quantity = -1;
@@ -72,7 +79,7 @@ const Cart = ({ globalState }) => {
 
         if (currQuantity + quantity < 0) {
             setError('Cannot have less than 0 tickets.');
-            quantity = 0;
+            quantity = 0; // Prevent quantity from going negative
         }
         else {
             setError(null);
@@ -88,7 +95,7 @@ const Cart = ({ globalState }) => {
             try {
                 const response = await fetch(`/movie/getcart?cartId=${encodeURIComponent(cart.id)}`);
                 const data = await response.json();
-                setCart(data);
+                setCart(data); // Update cartt with new datta
             } catch (error) {
                 setError('Failed to fetch cart. Please try again later.');
             }
@@ -98,10 +105,11 @@ const Cart = ({ globalState }) => {
         }
     };
 
+    // Get the quantity of a specific ticket in the car
     const GetQuantity = (ticketId) => {
         if (cart != null) {
             const num = cart.tickets.find(item => item.ticketId === ticketId)?.quantity;
-            return num ?? 0;
+            return num ?? 0; // Returns 0 if the ticket is not found
         } else {
             return 0;
         }
@@ -112,15 +120,18 @@ const Cart = ({ globalState }) => {
         navigate('/payment');
     };
 
+    // Nagivate back to home page
     const handleGoHome = () => {
         navigate('/home');
     };
 
+    // Format a date string into MM/DD HH:MM format
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
         return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     }
 
+    // Get the name of a moviee by its ID
     const getMovieName = (movieId) => {
         var title = movies.find(movie => movie.id === movieId).name;
         if (title.length > 15) {
@@ -129,6 +140,7 @@ const Cart = ({ globalState }) => {
         return title;
     }
 
+    // Error message
     const Error = () => {
         if (error) return <p>{error}</p>;
     }

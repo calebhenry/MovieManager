@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import './Manager.css';
 
 const Manager = () => {
+
+  // Stattee variables for movies, ticketss, and form inputs
   const [movies, setMovies] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [newMovie, setNewMovie] = useState({ name: "", description: "", genre: "ACTION", ageRating: 13 });
@@ -10,17 +11,19 @@ const Manager = () => {
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [editTicket, setEditTicket] = useState(null);
 
+  // Fetch movies
   useEffect(() => {
     fetchMovies();
   }, []);
 
+  // Fetch tickets when the lisst of movies changes
   useEffect(() => {
     if (movies.length > 0) {
       fetchTickets();
     }
   }, [movies]);
 
-  // Get all movies
+  // Fetch all movies from the API
   const fetchMovies = async () => {
     try {
       const response = await fetch("/movie/getmovies");
@@ -32,7 +35,7 @@ const Manager = () => {
     }
   };
 
-  // Get all tickets
+  // Fetch all tickets from the API
   const fetchTickets = () => {
     try {
       const allTickets = movies.flatMap(movie => movie.tickets);
@@ -42,7 +45,7 @@ const Manager = () => {
     }
   };
 
-  // Add movie
+  // Adds a new movie, updated in database
   const handleAddMovie = async () => {
     try {
       const response = await fetch("/movie/addmovie", {
@@ -60,7 +63,7 @@ const Manager = () => {
     }
   };
 
-  // Remove Movie
+  // Remove Movie, updated in database
   const handleRemoveMovie = (movie) => {
     fetch(`/movie/removemovie/`, {
       method: "DELETE",
@@ -81,7 +84,7 @@ const Manager = () => {
       });
   };
 
-  // Update Movie
+  // Updates an existing movie's information
   const handleUpdateMovie = async (movie) => {
     try {
       const { id, name, description, genre, ageRating } = movie; // Keep only essential properties
@@ -99,7 +102,7 @@ const Manager = () => {
     }
   };
 
-  // Add ticket
+  // Adds a ticket to a movie given movie ID
   const handleAddTicket = async () => {
     try {
       const response = await fetch("/movie/addticketstomovie", {
@@ -118,7 +121,7 @@ const Manager = () => {
     }
   };
 
-  // Update Ticket
+  // Update Ticket details
   const handleUpdateTicket = async (ticket) => {
     try {
       const response = await fetch(`/movie/edittickets?movieId=${ticket.movieId}`, {
@@ -137,7 +140,7 @@ const Manager = () => {
     }
   };
 
-  //Delete Ticket
+  // Deletes a Ticket from a movie
   const handleDeleteTicket = async (ticket) => {
     try {
       const response = await fetch(`/movie/removeticketfrommovie`, {

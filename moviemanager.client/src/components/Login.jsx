@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = ({ globalState }) => {
+
+    // State variables for username, password, and error messages
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
     const navigate = useNavigate();
     const { setUser } = globalState;
 
     // login logic
     const handleLogin = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default form submission behavior
         const response = await fetch(`movie/getuser?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`, {
             method: 'GET',
             headers: {
@@ -37,6 +40,7 @@ const Login = ({ globalState }) => {
         }
     };
 
+    // Nagivate tot the Sign Up page
     const handleSignUp = () => {
         navigate('/signup');
     };
@@ -45,6 +49,7 @@ const Login = ({ globalState }) => {
         <div className="screen">
             <div className="login-container">
                 <h1>Login</h1>
+                {/* Form for logging in the user */}
                 <form onSubmit={handleLogin} className="login-form">
                     {error && <p className="error-message">{error}</p>}
 

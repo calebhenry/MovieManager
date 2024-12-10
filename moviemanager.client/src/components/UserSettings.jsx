@@ -4,16 +4,21 @@ import './UserSettings.css';
 
 const UserSettings = ({ globalState }) => {
     const { user, setUser } = globalState;
+
+    // State Variables
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
     const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
     const [preference, setPreference] = useState(user.preference);
     const [error, setError] = useState('');
+
     const navigate = useNavigate();
 
+    // Handles the process of updating user information by sending it to the API
     const handleUpdate = async (e) => {
         e.preventDefault();
 
+        // Create an updated user object with new data
         const updatedUser = {
             id: user.id,
             name,
@@ -23,6 +28,7 @@ const UserSettings = ({ globalState }) => {
         };
 
         try {
+            // Send updated user data to the API using a PUT request
             const response = await fetch('movie/updateuser/', {
                 method: 'PUT',
                 headers: {
@@ -48,6 +54,7 @@ const UserSettings = ({ globalState }) => {
         }
     };
 
+    // Logs the user out by clearing the user data from global state and redirecting to the login page
     const logout = () => {
         setUser(null);
         navigate("/");
@@ -57,6 +64,7 @@ const UserSettings = ({ globalState }) => {
         <div className="screen">
             <div className="preferences-container">
                 <h1>User Preferences</h1>
+                {/* Form to update user preferences */}
                 <form onSubmit={handleUpdate} className="preferences-form">
                     {error && <p className="error-message">{error}</p>}
 

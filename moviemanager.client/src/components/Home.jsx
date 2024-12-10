@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import '../components/Home.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Home = ({ globalState }) => {
+    // Destructure global state to access moviess, useer, cart, and setters
     const { movies, setMovies, user, cart, setCart } = globalState;
+    
+    // State variablees for rating filter, loading status, and error messsags
     const [rating, setRating] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
 
+    const navigate = useNavigate(); // Hook
+
+    // Using useffectt to fetch movies and cart data
     useEffect(() => { 
+        // Fucntion to ftch movies
         const fetchMovies = async () => {
             try {
-                const response = await fetch('movie/getmovies');
-                const data = await response.json();
-                setMovies(data);
+                const response = await fetch('movie/getmovies'); // endpoint
+                const data = await response.json(); // Parse reponse as JSON
+                setMovies(data); // Update th emovies state with fetched data
             } catch (error) {
-                setError('Failed to fetch movies. Please try again later.');
+                setError('Failed to fetch movies. Please try again later.'); // Error message if fetch fails
             } finally {
                 setLoading(false);
             }
         }
         fetchMovies();
+
+        // Functino to fetch car daata if the cartt is null
         const fetchCart = async () => {
             if (cart == null) {
                 try {
