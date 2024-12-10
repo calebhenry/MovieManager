@@ -2,6 +2,10 @@
 
 namespace MovieManager.Server.Repositories
 {
+    /// <summary>
+    /// Interface for interacting with the Movie repository.
+    /// Defines methods for managing movies, users, carts, tickets, and reviews.
+    /// </summary>
     public interface IMovieRepository
     {
         void AddCart(Cart cart);
@@ -13,6 +17,7 @@ namespace MovieManager.Server.Repositories
         void UpdateCart(Cart cart);
         Movie? GetMovieById(int id);
         List<Movie> GetMovies();
+        List<Ticket> GetAllTickets();
         List<Ticket> GetTickets();
         User? GetUser(string username, string password);
         List<User> GetUsers();
@@ -27,5 +32,10 @@ namespace MovieManager.Server.Repositories
         void AddTicketsToMovie(Ticket ticket);
         bool Liked(int userId, int reviewId);
         bool AddLike(int userId, int reviewId);
+        bool RemoveReview(Review review);
+        bool RemoveTicketsFromMovie(int movieId, int numTickets);
+        bool RemoveLike(int userId, int reviewId);
+        List<Comment> GetComments(int reviewId);
+        bool AddComment(Comment comment);
     }
 }

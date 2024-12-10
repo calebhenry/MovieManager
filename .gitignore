@@ -239,3 +239,4 @@ _Pvt_Extensions
 
 # JSON files
 *.json
+/moviemanager.client/obj/Debug/moviemanager.client.esproj.FileListAbsolute.txt

@@ -150,13 +150,6 @@ const SignUp = ({ globalState }) => {
                         <option value={0}>Email</option>
                         <option value={1}>Phone</option>
                     </select>
-
-                    <label htmlFor="permissionLevel">Access Level</label>
-                    <select id="permissionLevel" value={permissionLevel} onChange={(e) => setPermissionLevel(parseInt(e.target.value))} required>
-                        <option value={0}>Normal</option>
-                        <option value={1}>Admin</option>
-                    </select>
-
                     <button type="submit">Sign Up</button>
                 </form>
             </div>

@@ -4,12 +4,13 @@ using System.Text.Json.Serialization;
 namespace MovieManager.Server.Models
 {
     /// <summary>
-    /// Like a movie.
+    /// Comment of a review.
     /// </summary>
-    public class Like
+    public class Comment
     {
         public int Id { get; set; }
         public int ReviewId { get; set; }
-        public int UserId { get; set; }
+        public string Message { get; set; }
+        public string Username { get; set; }
     }
 }

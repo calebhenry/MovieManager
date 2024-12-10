@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MovieManager.Server.Models
 {
+    /// <summary>
+    /// Represents the item(s) (ticket) in one cart. 
+    /// </summary>
     public class CartItem
     {
         public int Id { get; set; }
