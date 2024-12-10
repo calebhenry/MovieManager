@@ -1,9 +1,8 @@
+// Shown on the home page, all movies and its information including ticket and reviews
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MovieReview from "./MovieReview";
 import './MovieListing.css';
-
-                    //{(!showReview && reviews.length > 0) && (<button onClick={() => {showReviewsOnClick();}}>View Reviews</button>)}
 
 const MovieListing = ({ globalState }) => {
     const { id } = useParams();
